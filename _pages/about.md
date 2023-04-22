@@ -19,7 +19,7 @@ Along with pursuing my studies, I am an active member of DevCom, a group of the 
 Research Experience
 ------
 * Currently, I am researching under [Dr. Qiongkai Xu](https://xuqiongkai.github.io/), [University of Melbourne](https://www.unimelb.edu.au/). I am investigating on various attacks that can be executed on NLP models, including data poisoning, adversarial examples, and model inversion attacks and developing strategies to mitigate security risks.
-* Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/), [IIT Bombay](https://www.iitb.ac.in/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I am working on finding new techniques to measure the accuracy of machine translation.
+* Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/), [IIT Bombay](https://www.iitb.ac.in/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I worked on finding new techniques to measure the accuracy of machine translation.
 
 Experience
 ------
