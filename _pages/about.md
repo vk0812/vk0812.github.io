@@ -12,7 +12,7 @@ Hi! I'm currently a sophomore at [IIT Bombay](https://www.iitb.ac.in/) and I'm p
 
 One of my primary interests is Natural Language Processing (NLP), and I find it fascinating how machines can be trained to understand and respond to natural language. I'm also interested in Security, specifically how we can ensure the safety and privacy of our data in an increasingly digital world. Lastly, I enjoy working on Backend Development projects and learning about how to create scalable and robust systems.
 
-Along with pursuing my studies, I am an active member of [DevCom](https://devcom-iitb.org/), [IIT Bombay](https://www.iitb.ac.in/), a group of the best developers in the Institute.
+Along with pursuing my studies, I am also a Project Lead at [DevCom](https://devcom-iitb.org/), a team envisioned as the best developers in the Institute.
 
 Research Experience
 ======
