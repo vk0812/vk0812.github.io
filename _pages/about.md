@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Home"
+title: "About"
 excerpt: "About me"
 author_profile: true
 redirect_from: 
@@ -8,8 +8,6 @@ redirect_from:
   - /about.html
 ---
 
-About
-------
 Hi! I'm currently a sophomore at IIT Bombay and I'm pursuing a major in Materials Science with a minor in Computer Science and Engineering.
 
 One of my primary interests is Natural Language Processing (NLP), and I find it fascinating how machines can be trained to understand and respond to natural language. I'm also interested in Security, specifically how we can ensure the safety and privacy of our data in an increasingly digital world. Lastly, I enjoy working on Backend Development projects and learning about how to create scalable and robust systems.
@@ -17,22 +15,22 @@ One of my primary interests is Natural Language Processing (NLP), and I find it 
 Along with pursuing my studies, I am an active member of DevCom, a group of the best developers in the Institute.
 
 Research Experience
-------
+======
 * Currently, I am researching under [Dr. Qiongkai Xu](https://xuqiongkai.github.io/), [University of Melbourne](https://www.unimelb.edu.au/). I am investigating on various attacks that can be executed on NLP models, including data poisoning, adversarial examples, and model inversion attacks and developing strategies to mitigate security risks.
 * Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/), [IIT Bombay](https://www.iitb.ac.in/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I worked on finding new techniques to measure the accuracy of machine translation.
 
 Experience
-------
+======
 * Incoming Research Intern at AIShield, Bosch, Bangalore, India
 * Software Developer Intern at Senzcraft, Kolkata, India
 
 Education
-------
+======
 * B.Tech, IIT Bombay, 2025 (expected)
 * High School, Don Bosco Park Circus, Kolkata, 2021
 
 Collaborate
-------
+======
 If you are working on a project and feel I could be worth collaborating, you can reach out to me [here](mailto:viditk0812@gmail.com)
 
 
