@@ -16,6 +16,11 @@ One of my primary interests is Natural Language Processing (NLP), and I find it 
 
 Along with pursuing my studies, I am an active member of DevCom, a group of the best developers in the Institute.
 
+Research Experience
+------
+* Currently, I am researching at [University of Melbourne](https://www.unimelb.edu.au/), under [Dr. Qiongkai Xu](https://xuqiongkai.github.io/). I am investigating on various attacks that can be executed on NLP models, including data poisoning, adversarial examples, and model inversion attacks and developing strategies to mitigate security risks.
+* Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I am working on finding new techniques to measure the accuracy of machine translation.
+
 Experience
 ------
 * Incoming Research Intern at AIShield, Bosch, Bangalore, India
@@ -23,8 +28,8 @@ Experience
 
 Education
 ------
-* High School, Don Bosco Park Circus, Kolkata, 2021
 * B.Tech, IIT Bombay, 2025 (expected)
+* High School, Don Bosco Park Circus, Kolkata, 2021
 
 Collaborate
 ------
