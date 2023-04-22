@@ -9,18 +9,26 @@ redirect_from:
 ---
 
 About
-======
+------
 Hi! I'm currently a sophomore at IIT Bombay and I'm pursuing a major in Materials Science with a minor in Computer Science and Engineering.
 
 One of my primary interests is Natural Language Processing (NLP), and I find it fascinating how machines can be trained to understand and respond to natural language. I'm also interested in Security, specifically how we can ensure the safety and privacy of our data in an increasingly digital world. Lastly, I enjoy working on Backend Development projects and learning about how to create scalable and robust systems.
 
 Along with pursuing my studies, I am an active member of DevCom, a group of the best developers in the Institute.
 
-Recent
-======
+Experience
+------
+* Incoming Research Intern at AIShield, Bosch, Bangalore, India
+* Software Developer Intern at Senzcraft, Kolkata, India
 
-Collaborate?
-======
+Education
+------
+* High School, Don Bosco Park Circus, Kolkata, 2021
+* B.Tech, IIT Bombay, 2025 (expected)
+
+Collaborate
+------
+If you are working on a project and feel I could be worth collaborating, you can reach out to me [here](mailto:viditk0812@gmail.com)
 
 
 <!-- This is the front page of a website that is powered by the [academicpages template](https://github.com/academicpages/academicpages.github.io) and hosted on GitHub pages. [GitHub pages](https://pages.github.com) is a free service in which websites are built and hosted from code and data stored in a GitHub repository, automatically updating when a new commit is made to the respository. This template was forked from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/) created by Michael Rose, and then extended to support the kinds of content that academics have: publications, talks, teaching, a portfolio, blog posts, and a dynamically-generated CV. You can fork [this repository](https://github.com/academicpages/academicpages.github.io) right now, modify the configuration and markdown files, add your own PDFs and other content, and have your own site for free, with no ads! An older version of this template powers my own personal website at [stuartgeiger.com](http://stuartgeiger.com), which uses [this Github repository](https://github.com/staeiou/staeiou.github.io).
