@@ -8,11 +8,11 @@ redirect_from:
   - /about.html
 ---
 
-Hello there! I'm an ambitious and driven undergraduate student at [IIT Bombay](https://www.iitb.ac.in/), where I'm pursuing a major in Materials Science, complemented by a minor in Computer Science and Engineering.
+Hello there! I'm an ambitious undergraduate student at [IIT Bombay](https://www.iitb.ac.in/), where I'm pursuing a major in Materials Science, complemented by a minor in Computer Science and Engineering.
 
 One of my primary interests is Natural Language Processing (NLP), and I find it fascinating how machines can be trained to understand and respond to natural language. To keep my knowledge sharp and up-to-date, I regularly immerse myself in the latest AI research and advancements. Outside of AI, I have a passion for backend development. I find fulfillment in architecting robust and scalable systems.
 
-In addition to my coursework, I actively take on projects and leadership roles. I lead a 20+ developer team at [DevCom](https://devcom-iitb.org/), mentor other students, and have spearheaded the creation of platforms like [ResoBin](https://github.com/DevCom-IITB/ResoBin).
+In addition to my coursework, I actively take on projects and leadership roles. I am leading a 20+ developer team at [DevCom](https://devcom-iitb.org/), and have spearheaded the creation of platforms like [ResoBin](https://github.com/DevCom-IITB/ResoBin).
 
 I'm constantly seeking new challenges and opportunities to expand my skills. I'm drawn to tough technical problems and am self-driven when it comes to learning. With my academic training, hands-on experiences, and enthusiasm, I'm excited to continue growing as a developer and AI specialist.
 
