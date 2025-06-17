@@ -8,22 +8,28 @@ redirect_from:
   - /about.html
 ---
 
-Hello there! I'm an ambitious undergraduate student at [IIT Bombay](https://www.iitb.ac.in/), where I'm pursuing a major in Materials Science, complemented by a minor in Computer Science and Engineering.
+Hey! I’m Vidit — freshly graduated from [IIT Bombay](https://www.iitb.ac.in/), where I majored in Metallurgical Engineering but spent most of my time wrangling AI models, scaling backend systems, and debugging things at 3AM that no one admitted to breaking.
 
-One of my primary interests is Natural Language Processing (NLP), and I find it fascinating how machines can be trained to understand and respond to natural language. To keep my knowledge sharp and up-to-date, I regularly immerse myself in the latest AI research and advancements. Outside of AI, I have a passion for backend development. I find fulfillment in architecting robust and scalable systems.
+I'll be joining Adobe in July 2025 as a Member of Technical Staff in Delhi, after building GenAI-powered features for Adobe Express as an intern — think auto-generated videos, captions, and intelligent media selection, all without the drama of editing timelines.
 
-In addition to my coursework, I actively take on projects and leadership roles. I am leading a 20+ developer team at [DevCom](https://devcom-iitb.org/), and have spearheaded the creation of platforms like [ResoBin](https://github.com/DevCom-IITB/ResoBin).
+Before that, I had a brief stint as a Institute System Administrator at IIT Bombay, where I helped maintain critical infrastructure for 20,000+ users, led server upgrades after years of glorious neglect, and coordinated a campus-wide tech committee.
 
-I'm constantly seeking new challenges and opportunities to expand my skills. I'm drawn to tough technical problems and am self-driven when it comes to learning. With my academic training, hands-on experiences, and enthusiasm, I'm excited to continue growing as a developer and AI specialist.
+I also built [ResoBin](https://resobin.gymkhana.iitb.ac.in/), a platform used by 10,000+ IIT Bombay students for course planning and review. Over time, I added a range of AI features including RAG pipelines and natural language interfaces—to make it smarter and more helpful for students.
+
+On the research side, I’ve worked on LLM bias evaluation in France as a Charpak Scholar, developed evasion attack techniques now integrated into Bosch security tools, and published at venues like ICLR 2024.
+
+I enjoy shipping real things that work, exploring the boundaries of ML systems, and occasionally making AI models question their life choices. Always up for learning, building, or geeking out over obscure bugs and good API design.
 
 # Research Experience
 
+- Worked under [Prof. Karen Fort](https://members.loria.fr/KFort/), [Loria](https://www.loria.fr/). I investigated on various stereotypical biases on Large Language Models.
 - Worked under [Dr. Qiongkai Xu](https://xuqiongkai.github.io/), [University of Melbourne](https://www.unimelb.edu.au/). I investigated on various attacks that can be executed on NLP models, including data poisoning, adversarial examples, and model inversion attacks and developed strategies to mitigate security risks.
 - Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/), [IIT Bombay](https://www.iitb.ac.in/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I worked on finding new techniques to measure the accuracy of machine translation.
 
 # Professional Experience
 
-- Incoming Product Engineering Intern at [Adobe](https://www.adobe.com/)
+- Incoming MTS at [Adobe](https://www.adobe.com/)
+- Product Engineering Intern at [Adobe](https://www.adobe.com/), Delhi, India, where I built GenAI-powered features for Adobe Express, including auto-generated videos, captions, and intelligent media selection, streamlining content creation for users globally.
 - Student Trainee at [AIShield](https://www.boschaishield.com/), Bosch, Bangalore, India, I thoroughly studied existing Evasion Attacks on Tabular Data using ML Models, gaining insights for research. I devised a novel evasion technique for tabular data, surpassing current methods and achieving superior scores. This innovation led to a patent application submission at Bosch, showcasing its uniqueness. Currently, I am actively crafting a research paper on the same technique, demonstrating my expertise in the field of AI Security.
 - Machine Learning Intern at [senzcraft](https://www.senzcraft.com/), Kolkata, India, I implemented the Human in the Loop (HITL) methodology across all existing products, leading to significant improvements in results.
 
