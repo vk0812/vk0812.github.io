@@ -22,7 +22,7 @@ I enjoy shipping real things that work, exploring the boundaries of ML systems, 
 
 # Research Experience
 
-- Worked under [Prof. Karen Fort](https://members.loria.fr/KFort/), [Loria](https://www.loria.fr/). I investigated on various stereotypical biases on Large Language Models.
+- Worked under [Prof. Karen Fort](https://members.loria.fr/KFort/), [Loria](https://www.loria.fr/). I am investigating various stereotypical biases in Large Language Models.
 - Worked under [Dr. Qiongkai Xu](https://xuqiongkai.github.io/), [University of Melbourne](https://www.unimelb.edu.au/). I investigated on various attacks that can be executed on NLP models, including data poisoning, adversarial examples, and model inversion attacks and developed strategies to mitigate security risks.
 - Worked under [Prof. Syaamantak Das](https://syaamantak-das.carrd.co/), [IIT Bombay](https://www.iitb.ac.in/) on the topic of Educational Text translation: A Cognitive Informativity-based approach where I worked on finding new techniques to measure the accuracy of machine translation.
 
@@ -30,7 +30,7 @@ I enjoy shipping real things that work, exploring the boundaries of ML systems, 
 
 - Incoming MTS at [Adobe](https://www.adobe.com/)
 - Product Engineering Intern at [Adobe](https://www.adobe.com/), Delhi, India, where I built GenAI-powered features for Adobe Express, including auto-generated videos, captions, and intelligent media selection, streamlining content creation for users globally.
-- Student Trainee at [AIShield](https://www.boschaishield.com/), Bosch, Bangalore, India, I thoroughly studied existing Evasion Attacks on Tabular Data using ML Models, gaining insights for research. I devised a novel evasion technique for tabular data, surpassing current methods and achieving superior scores. This innovation led to a patent application submission at Bosch, showcasing its uniqueness. Currently, I am actively crafting a research paper on the same technique, demonstrating my expertise in the field of AI Security.
+- Student Trainee at [AIShield](https://www.boschaishield.com/), Bosch, Bangalore, India, I thoroughly studied existing Evasion Attacks on Tabular Data using ML Models, gaining insights for research. I devised a novel evasion technique for tabular data, surpassing current methods and achieving superior scores. This innovation led to a patent application submission at Bosch, showcasing its uniqueness.
 - Machine Learning Intern at [senzcraft](https://www.senzcraft.com/), Kolkata, India, I implemented the Human in the Loop (HITL) methodology across all existing products, leading to significant improvements in results.
 
 # Education
