@@ -29,8 +29,8 @@ I'm constantly seeking new challenges and opportunities to expand my skills. I'm
 
 # Education
 
-- B.Tech, IIT Bombay, 2025 (expected)
-- High School, Don Bosco Park Circus, Kolkata, 2021
+- Bachelor of Technology, IIT Bombay, 2025, Mumbai, India
+- High School, Don Bosco Park Circus, 2021, Kolkata, India
 
 # Collaborate
 
