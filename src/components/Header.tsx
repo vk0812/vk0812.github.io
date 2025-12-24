@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 
+import { Link, useLocation } from "react-router-dom";
+
 const Header = () => {
-  const navItems = ["Home", "About", "Projects", "Contact", "Resume"];
+  const location = useLocation();
+  const navItems = ["Home", "About", "Contact", "Resume", "Writings"];
 
   return (
     <motion.header
@@ -25,13 +28,23 @@ const Header = () => {
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {navItems.map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              {item}
-            </a>
+            item === "Writings" ? (
+              <Link
+                key={item}
+                to="/writings"
+                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                {item}
+              </Link>
+            ) : (
+              <a
+                key={item}
+                href={item === "Home" ? "/" : `#${item.toLowerCase()}`}
+                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
+              >
+                {item}
+              </a>
+            )
           ))}
         </nav>
 
