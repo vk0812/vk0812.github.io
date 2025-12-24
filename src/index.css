@@ -55,23 +55,37 @@
   }
 
   .dark {
-    --background: 0 0% 8%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 12%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 12%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 0 100% 35%;
+    --background: 0 0% 6%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 85% 45%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 216 41% 40%;
+    --secondary: 216 50% 55%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 216 41% 40%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 216 50% 55%;
     --accent-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 100% 35%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 85% 45%;
+
+    /* Dark mode custom tokens */
+    --burgundy: 0 85% 45%;
+    --navy: 216 50% 55%;
+    --charcoal: 0 0% 90%;
+    --cream: 0 0% 6%;
+    --folder-bg: 0 0% 12%;
+    --folder-tab: 0 0% 15%;
+
+    /* Dark shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.4);
+    --shadow-hover: 0 12px 40px -10px hsl(0 0% 0% / 0.5);
+    --shadow-skeuomorphic: 0 2px 4px hsl(0 0% 0% / 0.2), 0 8px 16px hsl(0 0% 0% / 0.3);
   }
 }
 
