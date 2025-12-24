@@ -11,7 +11,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-background py-16 px-6 min-h-[500px] relative overflow-hidden">
+    <footer className="bg-[hsl(0_0%_10%)] text-white py-16 px-6 min-h-[500px] relative overflow-hidden">
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Top Row */}
         <div className="flex items-start justify-between mb-24">
@@ -19,7 +19,7 @@ const Footer = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm font-sans text-background/60"
+            className="text-sm font-sans text-white/60"
           >
             © 2025 Adith Narein. All rights reserved.
           </motion.p>
@@ -28,7 +28,7 @@ const Footer = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-sm font-sans text-background/60 text-right"
+            className="text-sm font-sans text-white/60 text-right"
           >
             When it comes to art, It's important not to hide the Madness.
           </motion.p>
@@ -44,7 +44,7 @@ const Footer = () => {
             transition={{ duration: 0.8 }}
             className="flex-1"
           >
-            <h2 className="font-serif text-8xl md:text-[10rem] lg:text-[14rem] font-bold leading-[0.8] tracking-tight text-background">
+            <h2 className="font-serif text-8xl md:text-[10rem] lg:text-[14rem] font-bold leading-[0.8] tracking-tight text-white">
               <span className="italic">A</span>DITH
               <br />
               <span className="italic">N</span>AREIN
@@ -69,14 +69,14 @@ const Footer = () => {
                   transition={{ delay: 0.3 + index * 0.1 }}
                   className="flex items-center justify-end gap-3"
                 >
-                  <span className="text-sm font-sans text-background/60">
+                  <span className="text-sm font-sans text-white/60">
                     {item.label}
                   </span>
                   {"link" in item && (
                     <motion.a
                       href="#"
                       whileHover={{ x: 4 }}
-                      className="social-link font-serif italic text-lg text-background hover:text-background/80 transition-colors"
+                      className="social-link font-serif italic text-lg text-white hover:text-white/80 transition-colors"
                     >
                       {item.link}
                     </motion.a>
@@ -88,7 +88,7 @@ const Footer = () => {
                           key={link}
                           href="#"
                           whileHover={{ x: 4 }}
-                          className="social-link font-serif italic text-lg text-background hover:text-background/80 transition-colors"
+                          className="social-link font-serif italic text-lg text-white hover:text-white/80 transition-colors"
                         >
                           {link}
                         </motion.a>
