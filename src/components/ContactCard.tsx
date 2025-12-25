@@ -23,13 +23,13 @@ const ContactCard = () => {
           <span className="italic text-primary text-5xl md:text-6xl">G</span>et in touch!
         </motion.h2>
 
-        <div className="flex items-center justify-center gap-8 flex-wrap">
+        <div className="flex items-center justify-center gap-8">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block"
+            className="text-muted-foreground font-sans hidden md:block flex-shrink-0 max-w-[180px]"
           >
             Hey, you made it till here
           </motion.p>
@@ -41,7 +41,7 @@ const ContactCard = () => {
             transition={{ delay: 0.3 }}
             onMouseEnter={() => setIsLifted(true)}
             onMouseLeave={() => setIsLifted(false)}
-            className="relative"
+            className="relative flex-shrink-0"
           >
             <motion.div
               animate={{
@@ -108,7 +108,7 @@ const ContactCard = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block"
+            className="text-muted-foreground font-sans hidden md:block flex-shrink-0 max-w-[180px] text-right"
           >
             It would be rude to not say{" "}
             <span className="text-primary underline cursor-pointer">Hi</span>
