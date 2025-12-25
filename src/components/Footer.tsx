@@ -11,10 +11,10 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="bg-[hsl(0_0%_10%)] text-white py-16 px-6 min-h-[500px] relative overflow-hidden">
+    <footer className="bg-[hsl(0_0%_10%)] text-white py-8 px-6 relative overflow-hidden">
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Top Row */}
-        <div className="flex items-start justify-between mb-24">
+        <div className="flex items-center justify-between">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
