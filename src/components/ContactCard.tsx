@@ -23,17 +23,7 @@ const ContactCard = () => {
           <span className="italic text-primary text-5xl md:text-6xl">G</span>et in touch!
         </motion.h2>
 
-        <div className="flex items-center justify-center gap-8 flex-wrap">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block"
-          >
-            Hey, you made it till here
-          </motion.p>
-
+        <div className="flex items-center justify-center">
           <motion.div
             initial={{ opacity: 0, y: 30, rotate: 0 }}
             whileInView={{ opacity: 1, y: 0, rotate: 2 }}
@@ -102,28 +92,7 @@ const ContactCard = () => {
               />
             </motion.div>
           </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block"
-          >
-            It would be rude to not say{" "}
-            <span className="text-secondary underline cursor-pointer">Hi</span>
-          </motion.p>
         </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="text-center text-muted-foreground font-sans mt-8"
-        >
-          Tap the card!
-        </motion.p>
       </div>
     </section>
   );
