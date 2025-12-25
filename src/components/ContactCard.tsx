@@ -29,7 +29,7 @@ const ContactCard = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block flex-shrink-0 max-w-[180px]"
+            className="text-muted-foreground font-sans hidden lg:block flex-shrink-0 whitespace-nowrap"
           >
             Hey, you made it till here
           </motion.p>
@@ -108,7 +108,7 @@ const ContactCard = () => {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-muted-foreground font-sans hidden md:block flex-shrink-0 max-w-[180px] text-right"
+            className="text-muted-foreground font-sans hidden lg:block flex-shrink-0 whitespace-nowrap text-right"
           >
             It would be rude to not say{" "}
             <span className="text-primary underline cursor-pointer">Hi</span>
