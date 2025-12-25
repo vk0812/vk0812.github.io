@@ -31,9 +31,9 @@ const Writings = () => {
   const years = [...new Set(blogPosts.map((post) => post.year))].sort((a, b) => b - a);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="pt-32 pb-20">
+      <main className="pt-32 pb-20 flex-1">
         <div className="container mx-auto px-6 max-w-4xl">
           {years.map((year, yearIndex) => (
             <motion.div

@@ -72,9 +72,9 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="pt-32 pb-20">
+        <main className="pt-32 pb-20 flex-1">
           <div className="container mx-auto px-6 max-w-4xl">
             <p className="text-foreground">Post not found.</p>
             <Link to="/writings" className="text-muted-foreground hover:text-foreground mt-4 inline-block">
@@ -88,9 +88,9 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <main className="pt-32 pb-20">
+      <main className="pt-32 pb-20 flex-1">
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
