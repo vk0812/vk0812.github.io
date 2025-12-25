@@ -35,8 +35,8 @@ const ContactCard = () => {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30, rotate: 0 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 2 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
             onMouseEnter={() => setIsLifted(true)}
@@ -45,27 +45,30 @@ const ContactCard = () => {
           >
             <motion.div
               animate={{
-                y: isLifted ? -8 : 0,
-                rotateX: isLifted ? 3 : 0,
-                scale: isLifted ? 1.02 : 1,
+                y: isLifted ? -12 : 0,
+                rotate: isLifted ? 0 : 2,
+                scale: isLifted ? 1.03 : 1,
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="relative"
-              style={{ perspective: "1000px" }}
+              style={{ 
+                perspective: "1000px",
+                transformStyle: "preserve-3d"
+              }}
             >
               {/* Index Card */}
-              <div className="index-card rounded-lg shadow-card overflow-hidden max-w-md">
-                {/* Card Header with dashed border */}
-                <div className="relative border-2 border-dashed border-primary/30 m-4 rounded">
+              <div className="bg-[#f5f5f3] rounded-sm shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)] overflow-hidden w-[420px] max-w-[90vw]">
+                {/* Card Content with dashed border */}
+                <div className="relative border-2 border-dashed border-primary m-3 rounded-sm">
                   {/* From field */}
-                  <div className="flex items-center gap-2 p-4 pb-2 border-b border-dashed border-primary/30">
-                    <span className="font-serif italic text-primary">From:</span>
+                  <div className="flex items-center gap-3 px-4 py-3 border-b border-dashed border-primary">
+                    <span className="font-serif italic text-primary font-medium">From:</span>
                     <input
                       type="text"
-                      placeholder="Leave empty to be anonymous :)"
+                      placeholder="Leave empty to be anonymous ;)"
                       value={formData.from}
                       onChange={(e) => setFormData({ ...formData, from: e.target.value })}
-                      className="flex-1 bg-transparent text-sm font-sans text-muted-foreground placeholder:text-muted-foreground/60 focus:outline-none"
+                      className="flex-1 bg-transparent text-sm font-sans text-[#666] placeholder:text-[#999] focus:outline-none"
                     />
                   </div>
 
@@ -75,25 +78,28 @@ const ContactCard = () => {
                       placeholder="Write your message here!"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={6}
-                      className="w-full bg-transparent font-serif text-muted-foreground placeholder:text-muted-foreground/60 focus:outline-none resize-none"
+                      rows={8}
+                      className="w-full bg-transparent font-serif text-[#666] placeholder:text-[#999] focus:outline-none resize-none leading-relaxed"
                     />
                   </div>
                 </div>
 
                 {/* Send Button */}
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={handleSubmit}
-                  className="w-full py-4 bg-primary text-primary-foreground font-serif text-lg"
+                  className="w-[calc(100%-1.5rem)] mx-3 mb-3 py-3 bg-primary text-primary-foreground font-serif text-lg rounded-sm"
                 >
                   Send
                 </motion.button>
               </div>
 
               {/* Card shadow/depth effect */}
-              <div className="absolute -bottom-2 left-2 right-2 h-4 bg-muted rounded-b-lg -z-10" />
+              <div 
+                className="absolute -bottom-3 left-4 right-0 h-6 bg-gradient-to-b from-black/10 to-transparent rounded-b-sm -z-10"
+                style={{ transform: "skewX(-2deg)" }}
+              />
             </motion.div>
           </motion.div>
 
