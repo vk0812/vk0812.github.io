@@ -206,23 +206,6 @@ const SkillsBento = () => {
                     <motion.div
                       key={tool.name}
                       whileHover={{ scale: 1.1 }}
-                      animate={
-                        (tool.name === "Figma" || tool.name === "Framer" || tool.name === "Notion") 
-                          ? { y: [0, -4, 0] } 
-                          : {}
-                      }
-                      transition={
-                        (tool.name === "Figma" || tool.name === "Framer" || tool.name === "Notion")
-                          ? { 
-                              y: { 
-                                duration: tool.name === "Figma" ? 3 : tool.name === "Framer" ? 3.5 : 4,
-                                repeat: Infinity, 
-                                ease: "easeInOut",
-                                delay: tool.name === "Figma" ? 0 : tool.name === "Framer" ? 0.5 : 1
-                              }
-                            }
-                          : {}
-                      }
                       className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer"
                       title={tool.name}
                     >
