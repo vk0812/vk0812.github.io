@@ -35,7 +35,7 @@ const Header = () => {
               <Link
                 key={item}
                 to="/writings"
-                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1.5px] after:bottom-[-2px] after:left-0 after:bg-foreground after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
               >
                 {item}
               </Link>
@@ -43,7 +43,7 @@ const Header = () => {
               <a
                 key={item}
                 href={item === "Home" ? "/" : `#${item.toLowerCase()}`}
-                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
+                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1.5px] after:bottom-[-2px] after:left-0 after:bg-foreground after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
               >
                 {item}
               </a>
@@ -59,11 +59,18 @@ const Header = () => {
           className="hidden md:flex p-2.5 rounded-lg bg-muted hover:bg-muted/80 text-foreground transition-colors duration-200"
           aria-label="Toggle theme"
         >
-          {theme === "dark" ? (
-            <Sun className="w-5 h-5" />
-          ) : (
-            <Moon className="w-5 h-5" />
-          )}
+          <motion.div
+            key={theme}
+            initial={{ rotate: -180, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+          </motion.div>
         </motion.button>
       </div>
     </motion.header>
