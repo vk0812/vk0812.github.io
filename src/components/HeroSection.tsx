@@ -11,24 +11,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="text-muted-foreground font-sans mb-4"
         >
-          I'm{" "}
-          {"Adith Narein".split("").map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.3,
-                delay: 0.5 + index * 0.05,
-                ease: "easeOut",
-              }}
-              className="inline-block"
-              style={{ display: char === " " ? "inline" : "inline-block" }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </motion.span>
-          ))}
-          *
+          I'm Adith Narein*
         </motion.p>
 
         <motion.h1

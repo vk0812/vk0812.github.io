@@ -28,17 +28,9 @@ const Footer = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            animate={{ opacity: [0.4, 0.7, 0.4] }}
-            transition={{ 
-              opacity: { 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              }
-            }}
-            className="text-sm font-sans text-white/60 text-right italic"
+            className="text-sm font-sans text-white/60 text-right"
           >
-            "When it comes to art, It's important not to hide the Madness."
+            When it comes to art, It's important not to hide the Madness.
           </motion.p>
         </div>
 
