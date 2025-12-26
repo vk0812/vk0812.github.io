@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -57,15 +56,8 @@ const Writings = () => {
                       transition={{ duration: 0.3, delay: yearIndex * 0.1 + postIndex * 0.05 }}
                       className="flex items-center py-6 border-b border-border/50 hover:bg-muted/30 transition-colors -mx-4 px-4 rounded-lg"
                     >
-                      {/* Arrow indicator */}
-                      <motion.div
-                        className="w-6 shrink-0 mr-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                      >
-                        <ArrowRight className="w-4 h-4 text-muted-foreground" />
-                      </motion.div>
-
                       {/* Year column - only show for first post of each year */}
-                      <div className="w-14 shrink-0">
+                      <div className="w-20 shrink-0">
                         {postIndex === 0 && (
                           <span className="font-serif text-muted-foreground text-lg">
                             {year}
