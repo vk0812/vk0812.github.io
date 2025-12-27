@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Handshake, FileText } from "lucide-react";
+import ScrambleText from "./ScrambleText";
 
 const HeroSection = () => {
   return (
@@ -11,7 +12,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="text-muted-foreground font-sans mb-4"
         >
-          I'm Adith Narein*
+          I'm <ScrambleText text="Adith Narein" delay={600} speed={80} scrambleSpeed={40} />*
         </motion.p>
 
         <motion.h1
