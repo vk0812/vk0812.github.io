@@ -12,7 +12,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="text-muted-foreground font-sans mb-4"
         >
-          <ScrambleText text="I'm Adith Narein" delay={600} speed={80} scrambleSpeed={40} />*
+          <ScrambleText text="I'm Adith Narein" delay={300} speed={100} scrambleSpeed={40} />*
         </motion.p>
 
         <motion.h1
