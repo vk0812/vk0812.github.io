@@ -96,13 +96,16 @@ const FolderCard = ({
       className="relative cursor-pointer"
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(null)}
+      style={{ zIndex: isSelected ? 10 : 1 }}
     >
       <motion.div
         animate={{
-          y: isSelected ? -8 : 0,
+          y: isSelected ? -10 : 0,
+          rotateZ: isSelected ? -2 : 0,
+          scale: isSelected ? 1.02 : 1,
         }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        className="relative"
+        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+        className="relative origin-center"
       >
         {/* Folder Tab - positioned at top right */}
         <div className="absolute -top-3 right-8 w-12 h-5 bg-muted rounded-t-lg z-10" />
@@ -145,47 +148,32 @@ const FolderGrid = () => {
         </div>
 
         {/* Bottom section with hint text and resume button - hides on hover */}
-        <AnimatePresence>
-          {selectedIndex === null && (
+        <AnimatePresence mode="wait">
+          {selectedIndex === null ? (
             <motion.div
-              initial={{ opacity: 1, y: 0 }}
+              key="hint"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
               className="flex items-center justify-between mt-8"
             >
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 }}
-                className="text-sm text-muted-foreground font-sans"
-              >
+              <p className="text-sm text-muted-foreground font-sans">
                 Hover over a company to see details
-              </motion.p>
+              </p>
 
-              <motion.button
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6 }}
-                className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-              >
+              <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors">
                 <FileText className="w-4 h-4 text-red-600" />
                 Grab my Resume
-              </motion.button>
+              </button>
             </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Details Card - appears below on hover */}
-        <AnimatePresence>
-          {selectedCompany && (
+          ) : (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              key="details"
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+              exit={{ opacity: 0, y: 15 }}
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
               className="mt-8 bg-muted rounded-2xl p-8 shadow-sm"
             >
               <div className="flex items-start justify-between mb-4">
