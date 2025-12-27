@@ -95,36 +95,48 @@ const BlogPost = () => {
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Check if title is scrolled past
-      if (titleRef.current) {
-        const titleRect = titleRef.current.getBoundingClientRect();
-        setShowProgressHeader(titleRect.bottom < 0);
-      }
+    const titleEl = titleRef.current;
+    const articleEl = articleRef.current;
 
-      // Calculate reading progress
-      if (articleRef.current) {
-        const articleRect = articleRef.current.getBoundingClientRect();
-        const articleTop = articleRef.current.offsetTop;
-        const articleHeight = articleRef.current.offsetHeight;
-        const windowHeight = window.innerHeight;
-        const scrollY = window.scrollY;
-        
-        const start = articleTop - windowHeight;
-        const end = articleTop + articleHeight - windowHeight;
-        const current = scrollY - start;
-        const total = end - start;
-        
-        const percentage = Math.min(Math.max((current / total) * 100, 0), 100);
-        setProgress(percentage);
-      }
+    const updateProgress = () => {
+      if (!articleEl) return;
+
+      const articleTop = articleEl.offsetTop;
+      const articleHeight = articleEl.offsetHeight;
+      const windowHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      const start = articleTop - windowHeight;
+      const end = articleTop + articleHeight - windowHeight;
+      const total = Math.max(end - start, 1);
+      const current = scrollY - start;
+
+      const percentage = Math.min(Math.max((current / total) * 100, 0), 100);
+      setProgress(percentage);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const onScroll = () => updateProgress();
+
+    const observer = titleEl
+      ? new IntersectionObserver(
+          ([entry]) => {
+            setShowProgressHeader(!entry.isIntersecting);
+          },
+          { root: null, threshold: 0, rootMargin: "-80px 0px 0px 0px" }
+        )
+      : null;
+
+    if (titleEl && observer) observer.observe(titleEl);
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    updateProgress();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (titleEl && observer) observer.unobserve(titleEl);
+      observer?.disconnect();
+    };
+  }, [slug]);
 
   if (!post) {
     return (
