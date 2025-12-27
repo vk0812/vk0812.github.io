@@ -17,7 +17,7 @@ const ReadingProgressHeader = ({ title, progress, isVisible }: ReadingProgressHe
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -100 }}
           transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-          className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50"
+          className="fixed top-[72px] left-0 right-0 z-[60] bg-background/95 backdrop-blur-md border-b border-border/50"
         >
           <div className="container mx-auto px-6">
             <div className="flex items-center gap-4 py-4">
