@@ -1,8 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ReadingProgressHeader from "@/components/ReadingProgressHeader";
 
 const blogContent: Record<string, { title: string; author?: string; date: string; content: string }> = {
   "llms-creation": {
@@ -87,6 +89,42 @@ Donec id elit non mi porta gravida at eget metus. Nullam quis risus eget urna mo
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? blogContent[slug] : null;
+  const [progress, setProgress] = useState(0);
+  const [showProgressHeader, setShowProgressHeader] = useState(false);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const articleRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if title is scrolled past
+      if (titleRef.current) {
+        const titleRect = titleRef.current.getBoundingClientRect();
+        setShowProgressHeader(titleRect.bottom < 0);
+      }
+
+      // Calculate reading progress
+      if (articleRef.current) {
+        const articleRect = articleRef.current.getBoundingClientRect();
+        const articleTop = articleRef.current.offsetTop;
+        const articleHeight = articleRef.current.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const scrollY = window.scrollY;
+        
+        const start = articleTop - windowHeight;
+        const end = articleTop + articleHeight - windowHeight;
+        const current = scrollY - start;
+        const total = end - start;
+        
+        const percentage = Math.min(Math.max((current / total) * 100, 0), 100);
+        setProgress(percentage);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+    
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   if (!post) {
     return (
@@ -107,6 +145,11 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <ReadingProgressHeader 
+        title={post.title} 
+        progress={progress} 
+        isVisible={showProgressHeader} 
+      />
       <Header />
       <main className="pt-32 pb-20 flex-1">
         <div className="container mx-auto px-6 max-w-4xl">
@@ -120,12 +163,12 @@ const BlogPost = () => {
             </Link>
 
             <header className="mb-12">
-              <h1 className="font-serif text-4xl md:text-5xl text-foreground mb-4">{post.title}</h1>
+              <h1 ref={titleRef} className="font-serif text-4xl md:text-5xl text-foreground mb-4">{post.title}</h1>
               {post.author && <p className="font-serif text-xl text-muted-foreground italic mb-2">{post.author}</p>}
               <p className="font-sans text-sm text-muted-foreground">{post.date}</p>
             </header>
 
-            <article className="prose prose-lg max-w-none">
+            <article ref={articleRef} className="prose prose-lg max-w-none">
               {post.content.split("\n\n").map((paragraph, index) => (
                 <motion.p
                   key={index}
