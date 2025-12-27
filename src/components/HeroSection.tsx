@@ -12,7 +12,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="text-muted-foreground font-sans mb-4"
         >
-          I'm <ScrambleText text="Adith Narein" delay={600} speed={80} scrambleSpeed={40} />*
+          <ScrambleText text="I'm Adith Narein" delay={600} speed={80} scrambleSpeed={40} />*
         </motion.p>
 
         <motion.h1
@@ -41,9 +41,8 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-muted-foreground font-sans max-w-2xl mx-auto mb-8 leading-relaxed"
         >
-          Over the past few years, I've helped launch cloud platforms, airport systems, restaurant
-          brands, and even drone configurators — blending user insight, technical thinking, and a
-          stubborn love of craft.
+          Over the past few years, I've helped launch cloud platforms, airport systems, restaurant brands, and even
+          drone configurators — blending user insight, technical thinking, and a stubborn love of craft.
         </motion.p>
 
         <motion.div
