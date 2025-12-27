@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Header from "@/components/Header";
@@ -162,7 +162,18 @@ const BlogPost = () => {
         progress={progress} 
         isVisible={showProgressHeader} 
       />
-      <Header />
+      <AnimatePresence>
+        {!showProgressHeader && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <Header />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <main className="pt-32 pb-20 flex-1">
         <div className="container mx-auto px-6 max-w-4xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
