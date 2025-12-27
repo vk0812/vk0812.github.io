@@ -118,7 +118,7 @@ const SkillsBento = () => {
           className="bg-card rounded-2xl border border-border/50 shadow-soft overflow-hidden"
         >
           {/* Top Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr]">
             {/* Left - Quote Section */}
             <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
               <p className="text-xs font-sans text-muted-foreground mb-6">
