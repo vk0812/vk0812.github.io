@@ -23,14 +23,14 @@ const Header = () => {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-charcoal rounded-full flex items-center justify-center">
-            <span className="text-background font-serif text-lg font-bold">A</span>
+            <span className="text-background font-serif text-lg font-bold">VK</span>
           </div>
-          <h1 className="font-sans font-semibold text-foreground">Adith Narein</h1>
+          <h1 className="font-sans font-semibold text-foreground">Vidit Khazanchi</h1>
         </div>
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) => (
+          {navItems.map((item) =>
             item === "Writings" ? (
               <Link
                 key={item}
@@ -47,8 +47,8 @@ const Header = () => {
               >
                 {item}
               </a>
-            )
-          ))}
+            ),
+          )}
         </nav>
 
         {/* Theme Toggle */}
@@ -65,11 +65,7 @@ const Header = () => {
             animate={{ rotate: 0, opacity: 1 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
+            {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </motion.div>
         </motion.button>
       </div>
