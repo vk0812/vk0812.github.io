@@ -1,72 +1,122 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { ExternalLink, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
+import { useTheme } from "next-themes";
+import adobeLogo from "@/assets/adobe_logo.png";
+import boschDarkLogo from "@/assets/bosch_dark_logo.png";
+import boschLightLogo from "@/assets/bosch_light_logo.png";
+import devcomDarkLogo from "@/assets/devcom_dark_logo.png";
+import devcomLightLogo from "@/assets/devcom_light_logo.png";
+import loriaLogo from "@/assets/loria_logo.png";
 
 interface Company {
   name: string;
-  logo: React.ReactNode;
+  logo: (theme: string | undefined) => React.ReactNode;
   role: string;
   details: string[];
 }
 
+const ThemeAwareLogo = ({ 
+  darkSrc, 
+  lightSrc, 
+  alt, 
+  className 
+}: { 
+  darkSrc: string; 
+  lightSrc: string; 
+  alt: string; 
+  className?: string;
+}) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
+  return (
+    <div className="relative">
+      <motion.img
+        key={isDark ? "dark" : "light"}
+        src={isDark ? darkSrc : lightSrc}
+        alt={alt}
+        className={className}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      />
+    </div>
+  );
+};
+
 const companies: Company[] = [
   {
     name: "Adobe",
-    logo: (
-      <span className="text-red-600 font-bold text-2xl tracking-tight">
-        Adobe<span className="text-red-500">.</span>
-      </span>
+    logo: () => (
+      <img 
+        src={adobeLogo} 
+        alt="Adobe" 
+        className="h-24 w-auto object-contain transition-opacity duration-300"
+      />
     ),
-    role: "Member of Technical Staff",
+    role: "Member of Technical Staff - Search, Discovery and Content AI",
     details: [
-      "Improving search and relevance for content search products across Adobe ecosystem",
+      "Improving search and relevance for content search products across various Adobe products",
       "Architecting techniques for foundational vision models — boosted video search accuracy by 8%+",
-      "Integrating semantic search into Adobe Firefly and Stock for millions of users",
+      "Integrating semantic search into Adobe Firefly and Stock for millions of users globally",
     ],
   },
   {
     name: "Loria France",
-    logo: (
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-blue-600 font-bold text-xl tracking-wide">LORIA</span>
-        <span className="text-xs text-muted-foreground">Charpak Scholar</span>
+    logo: () => (
+      <div className="flex flex-col items-center gap-2">
+        <img 
+          src={loriaLogo} 
+          alt="Loria" 
+          className="h-20 w-auto object-contain transition-opacity duration-300"
+        />
       </div>
     ),
-    role: "Research Intern",
+    role: "Research Intern - Awarded Charpak Scholarship (1 of 30 from India)",
     details: [
-      "Investigated stereotypical biases in Large Language Models under Prof. Karen Fort",
-      "Published findings at ICLR 2024 workshop on LLM evaluation and bias",
-      "Developed evaluation frameworks for bias detection in generative models",
+      "Evaluated stereotypical bias in LLMs under Prof. Karen Fort, identifying harmful content in 25% of responses",
+      "Architected an Explainable Decision Tree framework to detect covert racist biases across 84K+ text pairs",
+      "Co-authoring research and experiments targeting top NLP conferences to analyze bias in code-switched prompts",
     ],
   },
   {
-    name: "Bosch AIShield",
-    logo: (
-      <div className="flex items-center gap-2">
-        <span className="text-red-700 font-bold text-xl">BOSCH</span>
-      </div>
+    name: "AIShield - Bosch",
+    logo: () => (
+      <ThemeAwareLogo
+        darkSrc={boschDarkLogo}
+        lightSrc={boschLightLogo}
+        alt="Bosch"
+        className="h-12 w-auto object-contain"
+      />
     ),
     role: "Student Trainee",
     details: [
-      "Studied existing Evasion Attacks on Tabular Data using ML Models",
-      "Devised a novel evasion technique surpassing current methods with superior scores",
-      "Filed a patent application at Bosch for the innovative attack methodology",
+      "Thoroughly studied existing Evasion Attacks on Tabular Data using ML Models, gaining insights for research",
+      "Designed MISLEAD, a novel evasion method outperforming existing attacks across accuracy and stealth metrics",
+      "Filed a patent application (WO/2025/026616) at Bosch for the innovative attack methodology",
     ],
   },
   {
-    name: "DevCom IIT Bombay",
-    logo: (
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-foreground font-bold text-lg">DevCom</span>
-        <span className="text-xs text-muted-foreground">IIT Bombay</span>
+    name: "DevCom - IIT Bombay",
+    logo: () => (
+      <div className="flex flex-col items-center gap-2">
+        <ThemeAwareLogo
+          darkSrc={devcomDarkLogo}
+          lightSrc={devcomLightLogo}
+          alt="DevCom"
+          className="h-24 w-auto object-contain"
+        />
       </div>
     ),
-    role: "Institute System Administrator",
+    role: "Overall Coordinator & Institute System Administrator",
     details: [
-      "Maintained critical infrastructure for 20,000+ users across campus",
-      "Built ResoBin — a platform used by 10,000+ IIT Bombay students for course planning",
-      "Added AI features including RAG pipelines and natural language interfaces to ResoBin",
-      "Led server upgrades and coordinated campus-wide tech committee",
+      "Maintained the Gymkhana servers with 50+ websites and critical services for 20,000+ residents of IIT Bombay",
+      "Helped build ResoBin — a one-stop platform for course planning used by over 10,000 IIT Bombay students",
+      "Developed with Django REST backend and React frontend, integrated with IITB SSO authentication",
+      "Achieved 10,000+ users and catalogued 3,000+ courses, centralizing course access for the entire campus",
+      "Awarded Institute Technical Award for critical contributions to IIT Bombay’s digital infrastructure"
     ],
   },
 ];
@@ -82,6 +132,8 @@ const FolderCard = ({
   isSelected: boolean;
   onHover: (index: number | null) => void;
 }) => {
+  const { theme } = useTheme();
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -107,7 +159,7 @@ const FolderCard = ({
 
         {/* Folder Body */}
         <div className="relative bg-muted rounded-2xl min-h-[160px] flex items-center justify-center shadow-sm hover:shadow-md transition-shadow duration-300">
-          <div className="p-8">{company.logo}</div>
+          <div className="p-8">{company.logo(theme)}</div>
         </div>
       </motion.div>
     </motion.div>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import personalPhoto from "@/assets/vidit.jpg";
 
 const WhoAreYou = () => {
-  const bioText = `I'm Vidit — freshly graduated from IIT Bombay, where I majored in Metallurgical Engineering but spent most of my time wrangling AI models, scaling backend systems, and debugging things at 3AM that no one admitted to breaking. Currently I am a MTS at Adobe, where I focus on improving search and relevance for various content search products across the Adobe ecosystem. I've been architecting techniques for foundational vision models — boosting video search accuracy by over 8% — and integrating semantic search into Adobe Firefly and Stock to help millions of users discover content more intuitively.`;
+  const bioText = `I'm Vidit — graduated from IIT Bombay, where I majored in Metallurgical Engineering but spent most of my time wrangling AI models, scaling backend systems, and debugging things at 3AM that no one admitted to breaking. Currently I am a MTS at Adobe, where I focus on improving search and relevance for various content search products across the Adobe ecosystem. I've been architecting techniques for foundational vision models — boosting video search accuracy by over 8% — and integrating semantic search into Adobe Firefly and Stock to help millions of users discover content more intuitively.`;
 
   const creationCycle = ["Research it", "Build it", "Scale it", "Ship it", "Iterate"];
 
@@ -45,7 +45,6 @@ const WhoAreYou = () => {
               <div className="w-64 h-80 rounded-3xl shadow-card overflow-hidden">
                 <img src={personalPhoto} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
               </div>
-              <p className="text-center text-sm font-bold text-orange-500 font-sans mt-5">Yep, that's me</p>
             </div>
           </motion.div>
 
