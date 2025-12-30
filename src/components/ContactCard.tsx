@@ -4,11 +4,48 @@ import { useState } from "react";
 const ContactCard = () => {
   const [isLifted, setIsLifted] = useState(false);
   const [formData, setFormData] = useState({ from: "", message: "" });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission
+    
+    if (!formData.message.trim()) {
+      alert('Please write a message!');
+      return;
+    }
+
+    setStatus('sending');
+    
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "c2664ba8-fc9f-41c3-893a-d3a558c66c24",
+          from_name: formData.from || "Anonymous",
+          email: formData.from || "no-reply@anonymous.com",
+          message: formData.message,
+          subject: "New message from your portfolio website"
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setStatus('success');
+        setFormData({ from: "", message: "" });
+        setTimeout(() => setStatus('idle'), 3000);
+      } else {
+        setStatus('error');
+        setTimeout(() => setStatus('idle'), 3000);
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
   };
 
   return (
@@ -64,8 +101,8 @@ const ContactCard = () => {
                   <div className="flex items-center gap-3 px-4 py-3 border-b border-dashed border-primary">
                     <span className="font-serif italic text-primary font-medium">From:</span>
                     <input
-                      type="text"
-                      placeholder="Leave empty to be anonymous ;)"
+                      type="email"
+                      placeholder="your.email@example.com"
                       value={formData.from}
                       onChange={(e) => setFormData({ ...formData, from: e.target.value })}
                       className="flex-1 bg-transparent text-sm font-sans text-[#666] placeholder:text-[#999] focus:outline-none"
@@ -89,9 +126,13 @@ const ContactCard = () => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={handleSubmit}
-                  className="w-[calc(100%-1.5rem)] mx-3 mb-3 py-3 bg-primary text-primary-foreground font-serif text-lg rounded-sm"
+                  disabled={status === 'sending'}
+                  className="w-[calc(100%-1.5rem)] mx-3 mb-3 py-3 bg-primary text-primary-foreground font-serif text-lg rounded-sm disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
                 >
-                  Send
+                  {status === 'sending' ? 'Sending...' : 
+                   status === 'success' ? '✓ Sent!' : 
+                   status === 'error' ? 'Failed - Try again' : 
+                   'Send'}
                 </motion.button>
               </div>
 
