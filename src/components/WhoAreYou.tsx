@@ -49,17 +49,6 @@ const WhoAreYou = () => {
               <BionicText text={bioText} />
             </div>
 
-            <div className="bg-muted rounded-lg p-4 mb-8">
-              <p className="text-sm text-muted-foreground font-sans">
-                What you just experienced is called{" "}
-                <span className="font-semibold text-foreground">BIONIC READING</span>. Learn more about it{" "}
-                <a href="https://bionic-reading.com" className="text-secondary underline">
-                  here
-                </a>
-                .
-              </p>
-            </div>
-
             <div className="space-y-2 text-sm font-sans text-muted-foreground">
               <p>🏠 Kolkata, India</p>
               <p>🏛 IIT Bombay, Mumbai</p>
