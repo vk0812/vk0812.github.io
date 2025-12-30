@@ -41,9 +41,6 @@ const WhoAreYou = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            {/* <p className="text-xs font-sans text-muted-foreground uppercase tracking-wider mb-4">
-              Wait a minute
-            </p> */}
             <h2 className="font-serif text-4xl md:text-5xl font-medium text-foreground mb-8">
               <span className="italic text-5xl md:text-6xl">W</span>ho Are You?
             </h2>
