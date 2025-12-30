@@ -21,7 +21,7 @@ const Footer = () => {
             viewport={{ once: true }}
             className="text-sm font-sans text-white/60"
           >
-            © 2025 Adith Narein. All rights reserved.
+            © 2025 Vidit Khazanchi. All rights reserved.
           </motion.p>
 
           <motion.p

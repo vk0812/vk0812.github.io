@@ -11,67 +11,62 @@ interface Company {
 
 const companies: Company[] = [
   {
-    name: "Intel",
+    name: "Adobe",
     logo: (
-      <span className="text-secondary font-bold text-2xl tracking-tight">
-        intel<span className="text-secondary">.</span>
+      <span className="text-red-600 font-bold text-2xl tracking-tight">
+        Adobe<span className="text-red-500">.</span>
       </span>
     ),
-    role: "Software Graduate Intern",
+    role: "Member of Technical Staff",
     details: [
-      "Contributed to enterprise-grade software solutions",
-      "Collaborated with cross-functional teams on UX improvements",
+      "Improving search and relevance for content search products across Adobe ecosystem",
+      "Architecting techniques for foundational vision models — boosted video search accuracy by 8%+",
+      "Integrating semantic search into Adobe Firefly and Stock for millions of users",
     ],
   },
   {
-    name: "Kuberns",
+    name: "Loria France",
     logo: (
       <div className="flex flex-col items-center gap-1">
-        <div className="w-8 h-8 border-2 border-blue-500 rotate-45 flex items-center justify-center">
-          <div className="w-4 h-4 border border-blue-400 rotate-0" />
-        </div>
-        <span className="text-blue-600 font-bold text-lg tracking-wider -rotate-0">KUBERNS</span>
+        <span className="text-blue-600 font-bold text-xl tracking-wide">LORIA</span>
+        <span className="text-xs text-muted-foreground">Charpak Scholar</span>
       </div>
     ),
-    role: "Product Designer",
+    role: "Research Intern",
     details: [
-      "Led end-to-end design of a cloud hosting platform, creating a scalable UX and design system",
-      "Improved onboarding and resource management through iterative testing and developer collaboration.",
+      "Investigated stereotypical biases in Large Language Models under Prof. Karen Fort",
+      "Published findings at ICLR 2024 workshop on LLM evaluation and bias",
+      "Developed evaluation frameworks for bias detection in generative models",
     ],
   },
   {
-    name: "Astrik",
+    name: "Bosch AIShield",
     logo: (
       <div className="flex items-center gap-2">
-        <span className="text-teal-600 text-3xl">✳</span>
-        <span className="text-foreground font-semibold text-xl">Astrik</span>
+        <span className="text-red-700 font-bold text-xl">BOSCH</span>
       </div>
     ),
-    role: "UI/UX Designer",
+    role: "Student Trainee",
     details: [
-      "Designed intuitive interfaces for complex workflows",
-      "Created comprehensive design documentation",
+      "Studied existing Evasion Attacks on Tabular Data using ML Models",
+      "Devised a novel evasion technique surpassing current methods with superior scores",
+      "Filed a patent application at Bosch for the innovative attack methodology",
     ],
   },
   {
-    name: "InsideFPV",
+    name: "DevCom IIT Bombay",
     logo: (
-      <div className="flex items-center gap-1">
-        <div className="flex flex-col">
-          <div className="w-5 h-1 bg-red-600 rounded-sm" />
-          <div className="w-4 h-1 bg-red-600 rounded-sm mt-0.5" />
-          <div className="w-3 h-1 bg-red-600 rounded-sm mt-0.5" />
-        </div>
-        <div className="flex flex-col text-red-600 font-bold text-sm leading-tight">
-          <span>INSIDE</span>
-          <span>FPV</span>
-        </div>
+      <div className="flex flex-col items-center gap-1">
+        <span className="text-foreground font-bold text-lg">DevCom</span>
+        <span className="text-xs text-muted-foreground">IIT Bombay</span>
       </div>
     ),
-    role: "Frontend Developer",
+    role: "Institute System Administrator",
     details: [
-      "Built drone configurator interfaces",
-      "Implemented responsive e-commerce solutions",
+      "Maintained critical infrastructure for 20,000+ users across campus",
+      "Built ResoBin — a platform used by 10,000+ IIT Bombay students for course planning",
+      "Added AI features including RAG pipelines and natural language interfaces to ResoBin",
+      "Led server upgrades and coordinated campus-wide tech committee",
     ],
   },
 ];

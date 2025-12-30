@@ -12,7 +12,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="text-muted-foreground font-sans mb-4"
         >
-          <ScrambleText text="I'm Adith Narein" delay={300} speed={100} scrambleSpeed={60} />*
+          <ScrambleText text="I'm Vidit Khazanchi" delay={300} speed={100} scrambleSpeed={60} />*
         </motion.p>
 
         <motion.h1
@@ -21,9 +21,9 @@ const HeroSection = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="font-serif text-5xl md:text-7xl lg:text-8xl font-medium text-foreground leading-tight mb-6"
         >
-          <span className="italic">P</span>roduct Designer
+          <span className="italic">M</span>L Engineer
           <br />
-          <span className="text-4xl md:text-5xl lg:text-6xl">&</span> Web Developer
+          <span className="text-4xl md:text-5xl lg:text-6xl">&</span> Backend Developer
         </motion.h1>
 
         <motion.p
@@ -32,7 +32,7 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-lg md:text-xl font-sans font-medium text-foreground mb-4"
         >
-          who builds stunning, purposeful & scalable products.
+          who builds AI-powered products at scale.
         </motion.p>
 
         <motion.p
@@ -41,8 +41,8 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-muted-foreground font-sans max-w-2xl mx-auto mb-8 leading-relaxed"
         >
-          Over the past few years, I've helped launch cloud platforms, airport systems, restaurant brands, and even
-          drone configurators — blending user insight, technical thinking, and a stubborn love of craft.
+          Currently at Adobe, improving search and relevance across the ecosystem. Previously built ResoBin for 10K+ IIT Bombay students, 
+          published at ICLR 2024, and filed a patent at Bosch for ML security research.
         </motion.p>
 
         <motion.div
