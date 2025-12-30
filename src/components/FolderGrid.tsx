@@ -157,10 +157,15 @@ const FolderGrid = () => {
                 Hover over a company to see details
               </p>
 
-              <button className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors">
+              <a
+                href="/Vidit_Khazanchi_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+              >
                 <FileText className="w-4 h-4 text-red-600" />
                 Grab my Resume
-              </button>
+              </a>
             </motion.div>
           ) : (
             <motion.div
@@ -171,14 +176,11 @@ const FolderGrid = () => {
               transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
               className="mt-8 bg-muted rounded-2xl p-8 shadow-sm"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-sans font-semibold text-lg text-foreground">
-                    {selectedCompany.name}
-                  </h3>
-                  <p className="text-muted-foreground">{selectedCompany.role}</p>
-                </div>
-                <ExternalLink className="w-5 h-5 text-muted-foreground" />
+              <div className="mb-4">
+                <h3 className="font-sans font-semibold text-lg text-foreground">
+                  {selectedCompany.name}
+                </h3>
+                <p className="text-muted-foreground">{selectedCompany.role}</p>
               </div>
               <ul className="space-y-3">
                 {selectedCompany.details.map((detail, i) => (
