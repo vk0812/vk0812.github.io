@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
 import travelPhoto from "@/assets/travel-photo.jpg";
 
 const BionicText = ({ text }: { text: string }) => {
@@ -65,15 +64,8 @@ const WhoAreYou = () => {
             className="lg:col-span-1 flex flex-col items-center justify-center"
           >
             <div className="relative">
-              <div className="w-64 h-80 rounded-3xl shadow-card overflow-hidden relative">
+              <div className="w-64 h-80 rounded-3xl shadow-card overflow-hidden">
                 <img src={travelPhoto} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="absolute top-4 right-4 w-10 h-10 bg-card/90 rounded-full flex items-center justify-center shadow-soft"
-                >
-                  <Heart className="w-5 h-5 text-muted-foreground" />
-                </motion.button>
               </div>
               <p className="text-center text-sm text-muted-foreground font-sans mt-4">Fav shot from my last trip</p>
               <p className="text-center text-sm text-secondary font-sans">Mumbai</p>
