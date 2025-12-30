@@ -23,7 +23,8 @@ const HeroSection = () => {
         >
           <span className="italic">M</span>L Engineer
           <br />
-          <span className="text-4xl md:text-5xl lg:text-6xl">&</span> Backend Developer
+          <span className="text-4xl md:text-5xl lg:text-6xl">&</span>{" "}
+          <span className="whitespace-nowrap">Backend Developer</span>
         </motion.h1>
 
         <motion.p
@@ -62,7 +63,9 @@ const HeroSection = () => {
           </motion.a>
 
           <motion.a
-            href="#resume"
+            href="/Vidit_Khazanchi_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-card text-foreground font-sans font-medium rounded-xl shadow-soft border border-border hover:shadow-card transition-all duration-300"
