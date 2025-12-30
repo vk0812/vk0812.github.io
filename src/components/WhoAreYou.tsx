@@ -1,27 +1,5 @@
 import { motion } from "framer-motion";
-import travelPhoto from "@/assets/travel-photo.jpg";
-
-const BionicText = ({ text }: { text: string }) => {
-  const words = text.split(" ");
-
-  return (
-    <span className="bionic-text">
-      {words.map((word, index) => {
-        const boldLength = Math.ceil(word.length * 0.4);
-        const boldPart = word.slice(0, boldLength);
-        const normalPart = word.slice(boldLength);
-
-        return (
-          <span key={index}>
-            <b>{boldPart}</b>
-            {normalPart}
-            {index < words.length - 1 ? " " : ""}
-          </span>
-        );
-      })}
-    </span>
-  );
-};
+import personalPhoto from "@/assets/vidit.jpg";
 
 const WhoAreYou = () => {
   const bioText = `I'm Vidit — freshly graduated from IIT Bombay, where I majored in Metallurgical Engineering but spent most of my time wrangling AI models, scaling backend systems, and debugging things at 3AM that no one admitted to breaking. Currently I am a MTS at Adobe, where I focus on improving search and relevance for various content search products across the Adobe ecosystem. I've been architecting techniques for foundational vision models — boosting video search accuracy by over 8% — and integrating semantic search into Adobe Firefly and Stock to help millions of users discover content more intuitively.`;
@@ -45,7 +23,7 @@ const WhoAreYou = () => {
             </h2>
 
             <div className="text-foreground font-sans leading-relaxed text-justify mb-8">
-              <BionicText text={bioText} />
+              {bioText}
             </div>
 
             <div className="space-y-2 text-sm font-sans text-muted-foreground">
@@ -65,10 +43,9 @@ const WhoAreYou = () => {
           >
             <div className="relative">
               <div className="w-64 h-80 rounded-3xl shadow-card overflow-hidden">
-                <img src={travelPhoto} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
+                <img src={personalPhoto} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
               </div>
-              <p className="text-center text-sm text-muted-foreground font-sans mt-4">Fav shot from my last trip</p>
-              <p className="text-center text-sm text-secondary font-sans">Mumbai</p>
+              <p className="text-center text-sm font-bold text-orange-500 font-sans mt-5">Yep, that's me</p>
             </div>
           </motion.div>
 
