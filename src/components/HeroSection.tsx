@@ -23,8 +23,9 @@ const HeroSection = () => {
         >
           <span className="italic">M</span>L Engineer
           <br />
-          <span className="text-4xl md:text-5xl lg:text-6xl">&</span>{" "}
-          <span className="whitespace-nowrap">Backend Developer</span>
+          <span className="whitespace-nowrap">
+            <span className="text-4xl md:text-5xl lg:text-6xl italic">&</span> Backend Developer
+          </span>
         </motion.h1>
 
         <motion.p
