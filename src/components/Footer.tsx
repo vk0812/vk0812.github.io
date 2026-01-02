@@ -30,10 +30,9 @@ const Footer = () => {
             viewport={{ once: true }}
             className="text-sm font-sans text-white/60 text-right"
           >
-            When it comes to art, It's important not to hide the Madness.
+            You can achieve anything in life it just depends on how desperate you are to achieve it.
           </motion.p>
         </div>
-
       </div>
     </footer>
   );
