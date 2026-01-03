@@ -30,7 +30,7 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item) =>
+        {navItems.map((item) =>
             item === "Writings" ? (
               <Link
                 key={item}
@@ -39,6 +39,16 @@ const Header = () => {
               >
                 {item}
               </Link>
+            ) : item === "Resume" ? (
+              <a
+                key={item}
+                href="/Vidit_Khazanchi_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200 relative after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[1.5px] after:bottom-[-2px] after:left-0 after:bg-foreground after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+              >
+                {item}
+              </a>
             ) : (
               <a
                 key={item}
