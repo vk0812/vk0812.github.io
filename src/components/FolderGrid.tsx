@@ -32,15 +32,16 @@ const ThemeAwareLogo = ({
 
   return (
     <div className="relative">
-      <motion.img
-        key={isDark ? "dark" : "light"}
-        src={isDark ? darkSrc : lightSrc}
+      {/* Render both images, toggle visibility instantly */}
+      <img
+        src={darkSrc}
         alt={alt}
-        className={className}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={`${className} transition-opacity duration-150 ${isDark ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+      />
+      <img
+        src={lightSrc}
+        alt={alt}
+        className={`${className} transition-opacity duration-150 ${!isDark ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
       />
     </div>
   );
