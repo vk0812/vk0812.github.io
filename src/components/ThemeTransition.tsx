@@ -27,14 +27,13 @@ const ThemeTransition = ({ isAnimating, origin, targetTheme }: ThemeTransitionPr
           }}
           exit={{ opacity: 0 }}
           transition={{ 
-            duration: 0.6, 
-            ease: [0.22, 1, 0.36, 1] // Custom easing for smooth feel
+            duration: 0.5, 
+            ease: [0.22, 1, 0.36, 1]
           }}
-          className={`fixed inset-0 z-[100] pointer-events-none ${
-            targetTheme === "dark" 
-              ? "bg-[hsl(220,20%,8%)]" 
-              : "bg-[hsl(48,50%,96%)]"
-          }`}
+          style={{ 
+            mixBlendMode: "difference",
+          }}
+          className="fixed inset-0 z-[100] pointer-events-none bg-white"
         />
       )}
     </AnimatePresence>
