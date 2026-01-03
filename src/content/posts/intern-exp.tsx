@@ -6,7 +6,7 @@ import {
 
 export const internExp: BlogPostData = {
   title: "Going into the Adobe Life",
-  date: "January 3, 2026",
+  date: "July 19, 2024",
   slug: "intern-exp",
   content: (
     <>
