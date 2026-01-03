@@ -4,7 +4,7 @@ import { FileText } from "lucide-react";
 import { useTheme } from "next-themes";
 import adobeLogo from "@/assets/adobe_logo.png";
 import boschDarkLogo from "@/assets/bosch_dark_logo.png";
-import boschLightLogo from "@/assets/bosch_light_logo.png";
+import boschLightLogo from "@/assets/bosch_light_logo.svg";
 import devcomDarkLogo from "@/assets/devcom_dark_logo.png";
 import devcomLightLogo from "@/assets/devcom_light_logo.png";
 import loriaLogo from "@/assets/loria_logo.png";
