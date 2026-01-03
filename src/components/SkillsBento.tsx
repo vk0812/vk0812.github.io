@@ -16,11 +16,21 @@ const skillsData = {
   },
 };
 
-const favoritesList = [
-  { icon: "🎬", text: "The Inglorious B*stards" },
-  { icon: "📚", text: "Crime & Punishment" },
-  { icon: "🥊", text: "Dimitri Bivol" },
-  { icon: "✏️", text: "Abel Tesfaye" },
+const publicationsData = [
+  {
+    type: "Publication",
+    title: "Evaluating Stereotypical Biases in Large Language Models",
+    venue: "ICLR 2024",
+    authors: "Vidit Khazanchi, et al.",
+    link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
+  },
+  {
+    type: "Patent",
+    title: "Evasion Attack Techniques for AI Security Systems",
+    venue: "Bosch AIShield",
+    authors: "Vidit Khazanchi, et al.",
+    link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
+  },
 ];
 
 const toolIcons = [
@@ -143,67 +153,65 @@ const SkillsBento = () => {
 
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-border/30">
-            {/* Left - Personal Statement */}
+            {/* Left - Publications & Patents */}
             <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
-              <p className="font-sans text-muted-foreground leading-relaxed mb-8">
-                'Every aspect of my work is carefully considered, from the tiniest details to
-                the overall architecture. It's not just about building things; it's about
-                building things that scale, perform, and make users' lives easier.'
-              </p>
-              <div className="flex items-center justify-between">
-                <p className="font-sans text-sm text-muted-foreground">
-                  Let's geek out over{" "}
-                  <span className="text-secondary font-medium">good API design</span>
-                </p>
-                <a
-                  href="https://github.com/vk0812"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-secondary hover:text-secondary/80 transition-colors"
-                  aria-label="GitHub"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                  </svg>
-                </a>
+              <div className="flex items-center gap-2 mb-6">
+                <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                  <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                  <path d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>
+                </svg>
+                <h3 className="text-sm font-sans font-medium text-foreground">Publications & Patents</h3>
+              </div>
+              <div className="space-y-5">
+                {publicationsData.map((item, i) => (
+                  <div key={i} className="group">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1">
+                        <span className="text-xs font-sans text-primary/80 uppercase tracking-wider">
+                          {item.type} • {item.venue}
+                        </span>
+                        <h4 className="text-sm font-sans text-foreground mt-1 leading-snug">
+                          {item.title}
+                        </h4>
+                        <p className="text-xs font-sans text-muted-foreground mt-1">
+                          {item.authors}
+                        </p>
+                      </div>
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-[#4285F4] transition-colors mt-1"
+                        aria-label="View on Google Scholar"
+                      >
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Right - Favorites & Tools */}
-            <div className="grid grid-cols-2">
-              {/* My Greatest List */}
-              <div className="p-8 border-r border-border/30">
-                <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-6">
-                  My Greatest List
-                </h3>
-                <ul className="space-y-3">
-                  {favoritesList.map((item, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-sans text-muted-foreground">
-                      <span>{item.icon}</span>
-                      <span>{item.text}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* Right - Tools I Love */}
+            <div className="p-8 lg:p-12">
+              <div className="flex items-center gap-2 mb-6">
+                <Wrench className="w-4 h-4 text-muted-foreground" />
+                <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
               </div>
-
-              {/* Tools I Love */}
-              <div className="p-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <Wrench className="w-4 h-4 text-muted-foreground" />
-                  <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  {toolIcons.map((tool, i) => (
-                    <motion.div
-                      key={tool.name}
-                      whileHover={{ scale: 1.1 }}
-                      className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer"
-                      title={tool.name}
-                    >
-                      {tool.icon}
-                    </motion.div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-3 gap-4">
+                {toolIcons.map((tool, i) => (
+                  <motion.div
+                    key={tool.name}
+                    whileHover={{ scale: 1.1 }}
+                    className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer"
+                    title={tool.name}
+                  >
+                    {tool.icon}
+                  </motion.div>
+                ))}
               </div>
             </div>
           </div>
