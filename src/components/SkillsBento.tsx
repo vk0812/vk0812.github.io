@@ -141,8 +141,7 @@ const SkillsBento = () => {
                 Something that I came across & stuck with me
               </p>
               <blockquote className="font-serif text-2xl md:text-3xl lg:text-4xl italic text-secondary leading-relaxed">
-                Design is not just what it looks like
-                <br />& feels like. Design is how it works
+                Work until you no longer have to introduce yourself
               </blockquote>
             </div>
 
