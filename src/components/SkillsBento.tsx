@@ -25,13 +25,29 @@ const publicationsData = [
     link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
   },
   {
+    type: "Publication",
+    title: "Attacks on Third-Party APIs of Large Language Models",
+    venue: "ICLR 2024 Workshop",
+    authors: "W. Zhao, V. Khazanchi, et al.",
+    link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
+  },
+  {
+    type: "Publication",
+    title: "MISLEAD: Manipulating Importance of Selected Features for Learning Epsilon in Evasion Attack Deception",
+    venue: "arXiv 2024",
+    authors: "Vidit Khazanchi, et al.",
+    link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
+  },
+  {
     type: "Patent",
-    title: "Evasion Attack Techniques for AI Security Systems",
-    venue: "Bosch AIShield",
+    title: "A Method Of Assessing Vulnerability Of An AI Model And A Framework Thereof",
+    venue: "WO Patent 2025",
     authors: "Vidit Khazanchi, et al.",
     link: "https://scholar.google.com/citations?user=kaMgJ24AAAAJ&hl=en",
   },
 ];
+
+const languagesData = ["English", "Hindi", "French", "German"];
 
 const toolIcons = [
   { 
@@ -152,7 +168,7 @@ const SkillsBento = () => {
           </div>
 
           {/* Bottom Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-border/30">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] border-t border-border/30">
             {/* Left - Publications & Patents */}
             <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
               <div className="flex items-center gap-2 mb-6">
@@ -163,7 +179,7 @@ const SkillsBento = () => {
                 </svg>
                 <h3 className="text-sm font-sans font-medium text-foreground">Publications & Patents</h3>
               </div>
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {publicationsData.map((item, i) => (
                   <div key={i} className="group">
                     <div className="flex items-start justify-between gap-3">
@@ -182,10 +198,10 @@ const SkillsBento = () => {
                         href={item.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-[#4285F4] transition-colors mt-1"
+                        className="text-muted-foreground hover:text-[#4285F4] transition-colors mt-1 flex-shrink-0"
                         aria-label="View on Google Scholar"
                       >
-                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z"/>
                         </svg>
                       </a>
@@ -195,23 +211,42 @@ const SkillsBento = () => {
               </div>
             </div>
 
-            {/* Right - Tools I Love */}
+            {/* Right - Tools & Languages */}
             <div className="p-8 lg:p-12">
-              <div className="flex items-center gap-2 mb-6">
-                <Wrench className="w-4 h-4 text-muted-foreground" />
-                <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
+              {/* Tools I Love */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Wrench className="w-4 h-4 text-muted-foreground" />
+                  <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
+                </div>
+                <div className="grid grid-cols-6 gap-2">
+                  {toolIcons.map((tool, i) => (
+                    <motion.div
+                      key={tool.name}
+                      whileHover={{ scale: 1.1 }}
+                      className="aspect-square bg-muted rounded-lg flex items-center justify-center hover:shadow-soft transition-all cursor-pointer p-2"
+                      title={tool.name}
+                    >
+                      <div className="w-5 h-5 [&>svg]:w-full [&>svg]:h-full">
+                        {tool.icon}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                {toolIcons.map((tool, i) => (
-                  <motion.div
-                    key={tool.name}
-                    whileHover={{ scale: 1.1 }}
-                    className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer"
-                    title={tool.name}
-                  >
-                    {tool.icon}
-                  </motion.div>
-                ))}
+
+              {/* Languages */}
+              <div>
+                <h3 className="text-xs font-sans font-semibold text-secondary mb-4 tracking-wider">
+                  LANGUAGES
+                </h3>
+                <ul className="space-y-2">
+                  {languagesData.map((lang) => (
+                    <li key={lang} className="text-sm font-sans text-foreground">
+                      {lang}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
