@@ -28,14 +28,14 @@ const HeroSection = () => {
           </span>
         </motion.h1>
 
-        <motion.p
+        {/* <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-lg md:text-xl font-sans font-medium text-foreground mb-4"
         >
           who builds AI-powered products at scale.
-        </motion.p>
+        </motion.p> */}
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -43,8 +43,9 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-muted-foreground font-sans max-w-2xl mx-auto mb-8 leading-relaxed"
         >
-          Currently at Adobe, improving search and relevance across the ecosystem. Previously built ResoBin for 10K+ IIT Bombay students, 
-          published at ICLR 2024, and filed a patent at Bosch for ML security research.
+          Currently at Adobe, improving search and relevance across the ecosystem.
+          {/* Previously built ResoBin for 10K+ IIT Bombay students, 
+          published at ICLR 2024, and filed a patent at Bosch for ML security research. */}
         </motion.p>
 
         <motion.div
