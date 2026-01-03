@@ -13,13 +13,13 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
-  { id: "intern-exp", title: "Going into the Adobe Life", date: "03/01", tag: "Dev", year: 2026 },
+  { id: "intern-exp", title: "Going into the Adobe Life", date: "03/01", tag: "Intern", year: 2026 },
 ];
 
 const tagColors: Record<string, string> = {
   LLMs: "bg-green-100 text-green-700",
   Book: "bg-yellow-100 text-yellow-700",
-  Dev: "bg-blue-100 text-blue-700",
+  Intern: "bg-blue-100 text-blue-700",
 };
 
 const Writings = () => {
