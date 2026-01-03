@@ -43,8 +43,8 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.25 }}
           className="text-muted-foreground font-sans max-w-2xl mx-auto mb-8 leading-relaxed"
         >
-          Currently at Adobe, improving search and relevance across the ecosystem. Previously built ResoBin for 10K+ IIT Bombay students, 
-          published at ICLR 2024, and filed a patent at Bosch for ML security research.
+          Currently at <span className="text-red-500 font-medium">Adobe</span>, improving search and relevance across the ecosystem. Previously built <span className="text-purple-400 font-medium">ResoBin</span> for 10K+ IIT Bombay students, 
+          published at <span className="text-amber-500 font-medium">ICLR 2024</span>, and filed a patent at <span className="text-red-500 font-medium">Bosch</span> for ML security research.
         </motion.p>
 
         <motion.div
