@@ -19,12 +19,10 @@ const WhoAreYou = () => {
             className="lg:col-span-1"
           >
             <h2 className="font-serif text-4xl md:text-5xl font-medium text-foreground mb-8">
-              <span className="italic text-5xl md:text-6xl">W</span>ho Are You?
+              <span className="italic text-5xl md:text-6xl">W</span>ho Am I?
             </h2>
 
-            <div className="text-foreground font-sans leading-relaxed text-justify mb-8">
-              {bioText}
-            </div>
+            <div className="text-foreground font-sans leading-relaxed text-justify mb-8">{bioText}</div>
 
             <div className="space-y-2 text-sm font-sans text-muted-foreground">
               <p>🏠 Kolkata, India</p>
