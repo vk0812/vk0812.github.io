@@ -13,6 +13,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "example-showcase", title: "A Complete Guide to Modern Web Development", date: "03/01", tag: "Dev", year: 2026 },
   { id: "llms-creation", title: "LLMs and creation outside of time", date: "18/11", tag: "LLMs", year: 2025 },
   { id: "on-bullshit", title: "On Bullshit", author: "Harry G. Frankfurt", date: "23/04", tag: "Book", year: 2025 },
   { id: "erc721-factory", title: "ERC721 Factory", date: "03/02", tag: "Dev", year: 2024 },
