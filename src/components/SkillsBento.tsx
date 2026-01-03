@@ -166,7 +166,7 @@ const SkillsBento = () => {
           </div>
 
           {/* Bottom Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 border-t border-border/30">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] border-t border-border/30">
             {/* Left - Publications & Patents */}
             <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
               <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-5">
