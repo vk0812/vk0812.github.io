@@ -12,9 +12,9 @@ export const Quote = ({ children, author, delay = 0 }: QuoteProps) => (
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay }}
-    className="border-l-4 border-primary/30 pl-6 my-8 italic"
+    className="border-l-4 border-primary/30 pl-4 sm:pl-6 my-6 sm:my-8 italic"
   >
-    <p className="font-serif text-lg text-foreground/90 leading-relaxed">
+    <p className="font-serif text-base sm:text-lg text-foreground/90 leading-relaxed">
       {children}
     </p>
     {author && (

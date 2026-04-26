@@ -63,8 +63,8 @@ const BlogPost = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Header />
-        <main className="pt-32 pb-20 flex-1">
-          <div className="container mx-auto px-6 max-w-4xl">
+        <main className="pt-28 sm:pt-32 pb-16 sm:pb-20 flex-1 px-5 sm:px-6">
+          <div className="container mx-auto max-w-4xl">
             <p className="text-foreground">Post not found.</p>
             <Link to="/writings" className="text-muted-foreground hover:text-foreground mt-4 inline-block">
               ← Back to Writings
@@ -78,11 +78,7 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <ReadingProgressHeader 
-        title={post.title} 
-        progress={progress} 
-        isVisible={showProgressHeader} 
-      />
+      <ReadingProgressHeader title={post.title} progress={progress} isVisible={showProgressHeader} />
       <AnimatePresence>
         {!showProgressHeader && (
           <motion.div
@@ -95,24 +91,28 @@ const BlogPost = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <main className="pt-32 pb-20 flex-1">
-        <div className="container mx-auto px-6 max-w-4xl">
+      <main className="pt-28 sm:pt-32 pb-16 sm:pb-20 flex-1 px-5 sm:px-6">
+        <div className="container mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <Link
               to="/writings"
-              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
+              className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 sm:mb-8"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="font-sans text-sm">Back to Writings</span>
             </Link>
 
-            <header className="mb-12">
-              <h1 ref={titleRef} className="font-serif text-4xl md:text-5xl text-foreground mb-4">{post.title}</h1>
-              {post.author && <p className="font-serif text-xl text-muted-foreground italic mb-2">{post.author}</p>}
-              <p className="font-sans text-sm text-muted-foreground">{post.date}</p>
+            <header className="mb-8 sm:mb-12">
+              <h1 ref={titleRef} className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground mb-3 sm:mb-4 leading-tight">
+                {post.title}
+              </h1>
+              {post.author && (
+                <p className="font-serif text-lg sm:text-xl text-muted-foreground italic mb-2">{post.author}</p>
+              )}
+              <p className="font-sans text-xs sm:text-sm text-muted-foreground">{post.date}</p>
             </header>
 
-            <article ref={articleRef} className="prose prose-lg max-w-none">
+            <article ref={articleRef} className="prose prose-base sm:prose-lg max-w-none">
               {post.content}
             </article>
           </motion.div>

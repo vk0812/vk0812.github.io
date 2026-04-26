@@ -41,7 +41,8 @@ const publications = [
     type: "publication",
   },
   {
-    title: "MISLEAD: Manipulating Importance of Selected Features for Learning Epsilon in Evasion Attack Deception",
+    title:
+      "MISLEAD: Manipulating Importance of Selected Features for Learning Epsilon in Evasion Attack Deception",
     authors: "Vidit Khazanchi, et al.",
     venue: "arXiv 2024",
     type: "publication",
@@ -54,15 +55,15 @@ const publications = [
   },
 ];
 
-const ThemeAwareLogo = ({ 
-  darkSrc, 
-  lightSrc, 
-  alt, 
-  className 
-}: { 
-  darkSrc: string; 
-  lightSrc: string; 
-  alt: string; 
+const ThemeAwareLogo = ({
+  darkSrc,
+  lightSrc,
+  alt,
+  className,
+}: {
+  darkSrc: string;
+  lightSrc: string;
+  alt: string;
   className?: string;
 }) => {
   const { theme } = useTheme();
@@ -73,12 +74,12 @@ const ThemeAwareLogo = ({
       <img
         src={darkSrc}
         alt={alt}
-        className={`${className} transition-opacity duration-150 ${isDark ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+        className={`${className} transition-opacity duration-150 ${isDark ? "opacity-100" : "opacity-0 absolute inset-0"}`}
       />
       <img
         src={lightSrc}
         alt={alt}
-        className={`${className} transition-opacity duration-150 ${!isDark ? 'opacity-100' : 'opacity-0 absolute inset-0'}`}
+        className={`${className} transition-opacity duration-150 ${!isDark ? "opacity-100" : "opacity-0 absolute inset-0"}`}
       />
     </div>
   );
@@ -87,41 +88,41 @@ const ThemeAwareLogo = ({
 const toolIcons = [
   {
     name: "Cursor",
-    icon: <ThemeAwareLogo darkSrc={CursorDarkLogo} lightSrc={CursorLightLogo} alt="Cursor" className="w-8 h-8" />,
+    icon: <ThemeAwareLogo darkSrc={CursorDarkLogo} lightSrc={CursorLightLogo} alt="Cursor" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
   {
     name: "PyTorch",
-    icon: <img src={PyTorchLogo} alt="PyTorch" className="w-8 h-8" />,
+    icon: <img src={PyTorchLogo} alt="PyTorch" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
   {
     name: "AWS",
-    icon: <ThemeAwareLogo darkSrc={AWSDarkLogo} lightSrc={AWSLightLogo} alt="AWS" className="w-8 h-8" />,
+    icon: <ThemeAwareLogo darkSrc={AWSDarkLogo} lightSrc={AWSLightLogo} alt="AWS" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
   {
     name: "Weights & Biases",
-    icon: <img src={WandbLogo} alt="Weights & Biases" className="w-8 h-8" />,
+    icon: <img src={WandbLogo} alt="Weights & Biases" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
   {
     name: "Docker",
-    icon: <img src={DockerLogo} alt="Docker" className="w-8 h-8" />,
+    icon: <img src={DockerLogo} alt="Docker" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
   {
     name: "Kubernetes",
-    icon: <img src={KubernetesLogo} alt="Kubernetes" className="w-8 h-8" />,
+    icon: <img src={KubernetesLogo} alt="Kubernetes" className="w-7 h-7 sm:w-8 sm:h-8" />,
   },
 ];
 
 const SkillsBento = () => {
   return (
-    <section className="py-24 px-6 bg-muted">
+    <section className="py-16 sm:py-20 lg:py-24 px-5 sm:px-6 bg-muted">
       <div className="container mx-auto max-w-7xl">
         {/* Header row */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6 sm:mb-8">
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-muted-foreground font-sans text-sm"
+            className="text-muted-foreground font-sans text-xs sm:text-sm"
           >
             And a bit more about me
           </motion.p>
@@ -129,7 +130,7 @@ const SkillsBento = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-muted-foreground font-sans text-sm"
+            className="text-muted-foreground font-sans text-xs sm:text-sm"
           >
             The best way to learn is by doing it
           </motion.p>
@@ -144,25 +145,27 @@ const SkillsBento = () => {
         >
           {/* Top Section */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr]">
-            {/* Left - Quote Section */}
-            <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
-              <p className="text-xs font-sans text-muted-foreground mb-6">
+            {/* Quote */}
+            <div className="p-6 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
+              <p className="text-xs font-sans text-muted-foreground mb-4 sm:mb-6">
                 Something that I came across & stuck with me
               </p>
-              <blockquote className="font-serif text-2xl md:text-3xl lg:text-4xl italic text-secondary leading-relaxed">
+              <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl italic text-secondary leading-snug sm:leading-relaxed">
                 Work until you no longer have to introduce yourself
               </blockquote>
             </div>
 
-            {/* Right - Skills Columns */}
-            <div className="p-8 lg:p-12">
-              <div className="grid grid-cols-3 gap-8">
+            {/* Skills */}
+            <div className="p-6 sm:p-8 lg:p-12">
+              <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {Object.entries(skillsData).map(([key, data]) => (
-                  <div key={key}>
-                    <h3 className="text-xs font-sans font-semibold text-secondary mb-4 tracking-wider">{data.title}</h3>
-                    <ul className="space-y-2">
+                  <div key={key} className="min-w-0">
+                    <h3 className="text-[10px] sm:text-xs font-sans font-semibold text-secondary mb-3 sm:mb-4 tracking-wider whitespace-nowrap">
+                      {data.title}
+                    </h3>
+                    <ul className="space-y-1.5 sm:space-y-2">
                       {data.items.map((item) => (
-                        <li key={item} className="text-sm font-sans text-foreground">
+                        <li key={item} className="text-xs sm:text-sm font-sans text-foreground break-words">
                           {item}
                         </li>
                       ))}
@@ -175,19 +178,21 @@ const SkillsBento = () => {
 
           {/* Bottom Section */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] border-t border-border/30">
-            {/* Left - Publications & Patents */}
-            <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
-              <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-5">
+            {/* Publications & Patents */}
+            <div className="p-6 sm:p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-border/30">
+              <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-4 sm:mb-5">
                 Publications & Patents
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {publications.map((pub, i) => (
                   <div key={i} className="group">
                     <div className="flex items-start gap-2">
-                      <span className="text-xs text-muted-foreground mt-1">{pub.type === "patent" ? "📜" : "📄"}</span>
+                      <span className="text-xs text-muted-foreground mt-1 shrink-0">
+                        {pub.type === "patent" ? "📜" : "📄"}
+                      </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-sans text-foreground leading-tight line-clamp-2">{pub.title}</p>
-                        <p className="text-xs font-sans text-muted-foreground mt-1">
+                        <p className="text-xs sm:text-sm font-sans text-foreground leading-snug">{pub.title}</p>
+                        <p className="text-[11px] sm:text-xs font-sans text-muted-foreground mt-1">
                           {pub.authors} · {pub.venue}
                         </p>
                       </div>
@@ -197,14 +202,14 @@ const SkillsBento = () => {
               </div>
             </div>
 
-            {/* Right - Favorites & Tools */}
-            <div className="grid grid-cols-2">
-              {/* Languages I Know */}
-              <div className="p-8 border-r border-border/30">
-                <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-6">
+            {/* Languages + Tools */}
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              {/* Languages */}
+              <div className="p-6 sm:p-7 lg:p-8 border-b sm:border-b-0 sm:border-r border-border/30">
+                <h3 className="text-sm font-sans font-medium text-foreground underline underline-offset-4 mb-4 sm:mb-6">
                   Languages I Know
                 </h3>
-                <ul className="space-y-3">
+                <ul className="space-y-2.5 sm:space-y-3">
                   {languagesList.map((item, i) => (
                     <li key={i} className="flex items-center gap-3 text-sm font-sans text-muted-foreground">
                       <span>{item.icon}</span>
@@ -214,18 +219,18 @@ const SkillsBento = () => {
                 </ul>
               </div>
 
-              {/* Tools I Love */}
-              <div className="p-8">
-                <div className="flex items-center gap-2 mb-6">
+              {/* Tools */}
+              <div className="p-6 sm:p-7 lg:p-8">
+                <div className="flex items-center gap-2 mb-4 sm:mb-6">
                   <Wrench className="w-4 h-4 text-muted-foreground" />
                   <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
-                  {toolIcons.map((tool, i) => (
+                <div className="grid grid-cols-3 gap-3 sm:gap-4">
+                  {toolIcons.map((tool) => (
                     <motion.div
                       key={tool.name}
                       whileHover={{ scale: 1.1 }}
-                      className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer"
+                      className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer p-2"
                       title={tool.name}
                     >
                       {tool.icon}
@@ -243,7 +248,7 @@ const SkillsBento = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="text-center text-muted-foreground font-sans mt-12"
+          className="text-center text-muted-foreground font-sans mt-8 sm:mt-12 text-sm sm:text-base"
         >
           Not to be flawless but to exceed Expectations
         </motion.p>

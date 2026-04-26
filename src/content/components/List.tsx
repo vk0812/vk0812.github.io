@@ -20,7 +20,7 @@ export const List = ({ ordered = false, children, delay = 0 }: ListProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
     >
-      <Tag className={`mb-6 pl-6 ${ordered ? "list-decimal" : "list-disc"} font-serif text-lg text-foreground leading-relaxed space-y-2`}>
+      <Tag className={`mb-5 sm:mb-6 pl-5 sm:pl-6 ${ordered ? "list-decimal" : "list-disc"} font-serif text-base sm:text-lg text-foreground leading-relaxed space-y-2`}>
         {children}
       </Tag>
     </motion.div>

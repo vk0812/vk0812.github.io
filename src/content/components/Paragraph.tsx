@@ -11,7 +11,7 @@ export const Paragraph = ({ children, delay = 0 }: ParagraphProps) => (
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay }}
-    className="font-serif text-lg text-foreground leading-relaxed mb-6"
+    className="font-serif text-base sm:text-lg text-foreground leading-relaxed mb-5 sm:mb-6"
   >
     {children}
   </motion.p>
