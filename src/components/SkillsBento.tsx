@@ -226,11 +226,18 @@ const SkillsBento = () => {
                   <h3 className="text-sm font-sans font-medium text-foreground">Tools I Love</h3>
                 </div>
                 <div className="grid grid-cols-3 gap-3 sm:gap-4">
-                  {toolIcons.map((tool) => (
+                  {toolIcons.map((tool, idx) => (
                     <motion.div
                       key={tool.name}
-                      whileHover={{ scale: 1.1 }}
-                      className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-soft transition-all cursor-pointer p-2"
+                      animate={{ y: [0, -4, 0, 4, 0] }}
+                      transition={{
+                        duration: 4 + (idx % 3) * 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: idx * 0.25,
+                      }}
+                      whileHover={{ scale: 1.18, rotate: [0, -4, 4, 0] }}
+                      className="aspect-square bg-muted rounded-xl flex items-center justify-center hover:shadow-md transition-shadow cursor-pointer p-2 will-change-transform"
                       title={tool.name}
                     >
                       {tool.icon}

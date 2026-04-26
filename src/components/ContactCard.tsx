@@ -1,10 +1,31 @@
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
 
 const ContactCard = () => {
   const [isLifted, setIsLifted] = useState(false);
   const [formData, setFormData] = useState({ from: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  // Cursor-driven 3D tilt
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { damping: 22, stiffness: 200 });
+  const sy = useSpring(my, { damping: 22, stiffness: 200 });
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-12, 12]);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [9, -9]);
+
+  const handleTiltMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const r = cardRef.current.getBoundingClientRect();
+    mx.set((e.clientX - (r.left + r.width / 2)) / r.width);
+    my.set((e.clientY - (r.top + r.height / 2)) / r.height);
+  };
+
+  const handleTiltLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,13 +93,19 @@ const ContactCard = () => {
           </motion.p>
 
           <motion.div
+            ref={cardRef}
             initial={{ opacity: 0, y: 30, rotate: 0 }}
             whileInView={{ opacity: 1, y: 0, rotate: 2 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
             onMouseEnter={() => setIsLifted(true)}
-            onMouseLeave={() => setIsLifted(false)}
+            onMouseLeave={() => {
+              setIsLifted(false);
+              handleTiltLeave();
+            }}
+            onMouseMove={handleTiltMove}
             className="relative flex-shrink-0 order-2 lg:order-2 w-full max-w-[420px]"
+            style={{ perspective: "1000px" }}
           >
             <motion.div
               animate={{
@@ -87,11 +114,12 @@ const ContactCard = () => {
                 scale: isLifted ? 1.03 : 1,
               }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="relative"
               style={{
-                perspective: "1000px",
+                rotateX,
+                rotateY,
                 transformStyle: "preserve-3d",
               }}
+              className="relative will-change-transform"
             >
               <div className="bg-[#f5f5f3] rounded-sm shadow-[0_20px_50px_-15px_rgba(0,0,0,0.25)] overflow-hidden w-full">
                 <div className="relative border-2 border-dashed border-primary m-3 rounded-sm">

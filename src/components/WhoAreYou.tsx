@@ -1,5 +1,44 @@
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef } from "react";
 import personalPhoto from "@/assets/vidit.jpg";
+
+const TiltPhoto = ({ src }: { src: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { damping: 20, stiffness: 180 });
+  const sy = useSpring(my, { damping: 20, stiffness: 180 });
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-8, 8]);
+  const rotateX = useTransform(sy, [-0.5, 0.5], [6, -6]);
+  const lift = useMotionValue(0);
+  const liftSpring = useSpring(lift, { damping: 20, stiffness: 200 });
+
+  const onMove = (e: React.MouseEvent) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    mx.set((e.clientX - (rect.left + rect.width / 2)) / rect.width);
+    my.set((e.clientY - (rect.top + rect.height / 2)) / rect.height);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseEnter={() => lift.set(-8)}
+      onMouseLeave={() => {
+        mx.set(0);
+        my.set(0);
+        lift.set(0);
+      }}
+      style={{ rotateX, rotateY, y: liftSpring, transformPerspective: 800 }}
+      className="relative will-change-transform"
+    >
+      <div className="w-48 h-60 sm:w-56 sm:h-72 lg:w-64 lg:h-80 rounded-3xl shadow-card overflow-hidden">
+        <img src={src} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
+      </div>
+    </motion.div>
+  );
+};
 
 const WhoAreYou = () => {
   const bioText = `I'm Vidit — graduated from IIT Bombay, where I majored in Metallurgical Engineering but spent most of my time wrangling AI models, scaling backend systems, and debugging things at 3AM that no one admitted to breaking. Currently I am a MTS at Adobe, where I focus on improving search and relevance for various content search products across the Adobe ecosystem. I've been architecting techniques for foundational vision models — boosting video search accuracy by over 8% — and integrating semantic search into Adobe Firefly and Stock to help millions of users discover content more intuitively.`;
@@ -33,7 +72,7 @@ const WhoAreYou = () => {
             </div>
           </motion.div>
 
-          {/* Photo */}
+          {/* Photo with float + tilt */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -41,11 +80,7 @@ const WhoAreYou = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-1 flex flex-col items-center justify-center order-2"
           >
-            <div className="relative">
-              <div className="w-48 h-60 sm:w-56 sm:h-72 lg:w-64 lg:h-80 rounded-3xl shadow-card overflow-hidden">
-                <img src={personalPhoto} alt="Vidit Khazanchi" className="w-full h-full object-cover" />
-              </div>
-            </div>
+            <TiltPhoto src={personalPhoto} />
           </motion.div>
 
           {/* Creation Cycle + Social */}
