@@ -118,7 +118,13 @@ const companies: Company[] = [
 ];
 
 const useHoverCapable = () => {
-  const [hoverable, setHoverable] = useState(false);
+  // Initialize synchronously from matchMedia so we don't briefly report
+  // "touch" on first render — that race caused the auto-select to pin
+  // Adobe on hover-capable devices.
+  const [hoverable, setHoverable] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  });
   useEffect(() => {
     const mql = window.matchMedia("(hover: hover) and (pointer: fine)");
     const update = () => setHoverable(mql.matches);
