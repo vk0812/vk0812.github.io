@@ -6,9 +6,10 @@ const HeroSection = () => {
   return (
     <section
       id="home"
-      className="min-h-[88vh] sm:min-h-[90vh] flex flex-col items-center justify-center pt-24 sm:pt-28 pb-10 sm:pb-12 px-5 sm:px-6"
+      className="hero-fullscreen relative overflow-hidden flex flex-col items-center justify-center pt-24 sm:pt-28 pb-10 sm:pb-12 px-5 sm:px-6"
     >
-      <div className="container mx-auto text-center max-w-4xl">
+      <div className="ml-hero-watermark absolute inset-0 pointer-events-none" aria-hidden />
+      <div className="container mx-auto text-center max-w-4xl relative">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

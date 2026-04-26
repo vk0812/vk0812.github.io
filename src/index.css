@@ -101,6 +101,31 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
+
+  /* Hero must always fill the visible viewport on first load so the
+     section below it never peeks in. Fallback for older browsers,
+     dvh adapts on mobile when the address bar shows/hides. */
+  .hero-fullscreen {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  /* ML cheat-sheet watermark — scoped to the hero section only.
+     Light theme inverts the dark source so it reads as faint
+     dark diagrams on cream. Dark theme uses it as-is. */
+  .ml-hero-watermark {
+    background-image: url("/ml-watermark.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: invert(1);
+    opacity: 0.14;
+  }
+
+  .dark .ml-hero-watermark {
+    filter: none;
+    opacity: 0.12;
+  }
 }
 
 @layer components {
