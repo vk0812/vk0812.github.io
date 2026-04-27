@@ -42,9 +42,9 @@ const publications = [
   },
   {
     title:
-      "MISLEAD: Manipulating Importance of Selected Features for Learning Epsilon in Evasion Attack Deception",
+      "Code-switching as a Bias Indicator in LLMs: \"The consequences are not the same para nosotros\"",
     authors: "Vidit Khazanchi, et al.",
-    venue: "arXiv 2024",
+    venue: "LREC 2026",
     type: "publication",
   },
   {
