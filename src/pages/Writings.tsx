@@ -13,6 +13,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "grpo", title: "Group Relative Policy Optimization (GRPO)", date: "30/04", tag: "ML", year: 2026 },
   { id: "contrastive-learning", title: "Contrastive Learning", date: "30/04", tag: "ML", year: 2026 },
   { id: "intern-exp", title: "Going into the Adobe Life", date: "19/07", tag: "Intern", year: 2024 },
 ];
