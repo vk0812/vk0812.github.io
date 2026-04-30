@@ -13,11 +13,13 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "contrastive-learning", title: "Contrastive Learning", date: "30/04", tag: "ML", year: 2026 },
   { id: "intern-exp", title: "Going into the Adobe Life", date: "19/07", tag: "Intern", year: 2024 },
 ];
 
 const tagColors: Record<string, string> = {
   LLMs: "bg-green-100 text-green-700",
+  ML: "bg-purple-100 text-purple-700",
   Book: "bg-yellow-100 text-yellow-700",
   Intern: "bg-blue-100 text-blue-700",
 };

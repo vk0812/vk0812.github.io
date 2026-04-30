@@ -5,14 +5,22 @@ interface BlogImageProps {
   alt: string;
   caption?: string;
   delay?: number;
+  size?: "sm" | "md" | "lg" | "full";
 }
 
-export const BlogImage = ({ src, alt, caption, delay = 0 }: BlogImageProps) => (
+const sizeClasses: Record<NonNullable<BlogImageProps["size"]>, string> = {
+  sm: "max-w-sm",
+  md: "max-w-xl",
+  lg: "max-w-2xl",
+  full: "max-w-none",
+};
+
+export const BlogImage = ({ src, alt, caption, delay = 0, size = "md" }: BlogImageProps) => (
   <motion.figure
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, delay }}
-    className="mb-8"
+    className={`mb-8 mx-auto ${sizeClasses[size]}`}
   >
     <img
       src={src}
