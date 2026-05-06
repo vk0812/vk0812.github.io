@@ -1,0 +1,16 @@
+export const R = {
+  bg:        '#f3f1ec',
+  bgAlt:     '#ebe8e1',
+  ink:       '#0b0b0c',
+  inkSoft:   '#3a3a3d',
+  muted:     '#86837c',
+  hairline:  '#0000000f',
+  accent:    '#1f5fff',
+  accentInk: '#0b2670',
+  dark:      '#0e0e10',
+  darkPanel: '#17171a',
+  darkInk:   '#f3f1ec',
+  darkMuted: '#8a8a90',
+  fontUI:    '"Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif',
+  fontMono:  '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+} as const;

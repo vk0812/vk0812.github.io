@@ -10,6 +10,7 @@ import Writings from "./pages/Writings";
 import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import PageWrapper from "./components/PageWrapper";
+import RecallSitePage from "./pages/recall";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,8 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
         <Route path="/writings" element={<PageWrapper><Writings /></PageWrapper>} />
         <Route path="/writings/:slug" element={<PageWrapper><BlogPost /></PageWrapper>} />
+        {/* Recall product site — isolated, owns its own nav/footer */}
+        <Route path="/recall" element={<RecallSitePage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
       </Routes>
