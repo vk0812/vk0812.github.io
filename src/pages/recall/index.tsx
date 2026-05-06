@@ -5,8 +5,6 @@ import { Hero } from './components/Hero';
 import { PrivacyStrip } from './components/PrivacyStrip';
 import { HowItWorks } from './components/HowItWorks';
 import { Features } from './components/Features';
-import { Screenshots } from './components/Screenshots';
-import { Testimonials } from './components/Testimonials';
 import { DownloadCTA } from './components/DownloadCTA';
 import { Footer } from './components/Footer';
 
@@ -14,6 +12,7 @@ export default function RecallSitePage() {
   useEffect(() => {
     const prev = document.title;
     document.title = 'Recall — the clipboard you can ask questions to';
+    // Need bg on body so the sticky HowItWorks section doesn't show white behind it
     const prevBg = document.body.style.background;
     document.body.style.background = R.bg;
     return () => {
@@ -23,19 +22,19 @@ export default function RecallSitePage() {
   }, []);
 
   return (
+    // overflow: clip (not hidden) — clip doesn't create a new scroll container,
+    // so window.scroll events still fire correctly for useScrollProgress.
+    // overflow: hidden would silently promote overflowY to 'auto', making the
+    // div the scroll container and breaking the sticky HowItWorks section.
     <div style={{
       background: R.bg,
       color: R.ink,
       fontFamily: R.fontUI,
-      overflowX: 'hidden',
       minHeight: '100vh',
     }}>
-      {/* Global keyframes needed by multiple components */}
       <style>{`
         @keyframes recall-blink { to { opacity: 0; } }
         @keyframes recall-marquee { from { transform: translateX(0); } to { transform: translateX(calc(-100% / 3)); } }
-        .recall-page ::selection { background: #1f5fff; color: #fff; }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
       `}</style>
 
       <Nav />
@@ -44,8 +43,6 @@ export default function RecallSitePage() {
         <PrivacyStrip />
         <HowItWorks />
         <Features />
-        <Screenshots />
-        <Testimonials />
         <PrivacyStrip />
         <DownloadCTA />
       </main>
