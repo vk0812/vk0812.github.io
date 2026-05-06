@@ -46,7 +46,7 @@ export default function RecallSitePage() {
         <PrivacyStrip />
         <DownloadCTA />
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

@@ -93,7 +93,7 @@ export function Hero() {
       <div style={{ position: 'relative', textAlign: 'center', maxWidth: 900, padding: '0 clamp(20px, 5vw, 24px)', width: '100%', boxSizing: 'border-box' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 12px', borderRadius: 999, border: `1px solid ${R.hairline}`, background: '#ffffff80', backdropFilter: 'blur(8px)', marginBottom: 28, maxWidth: '100%', boxSizing: 'border-box' }}>
           <span style={{ width: 6, height: 6, borderRadius: 99, background: R.accent, boxShadow: `0 0 0 4px ${R.accent}22`, display: 'block', flexShrink: 0 }} />
-          <span style={{ fontFamily: R.fontMono, fontSize: 11, letterSpacing: '0.04em', color: R.inkSoft, textTransform: 'uppercase', whiteSpace: isMobile ? 'normal' : 'nowrap', lineHeight: 1.4 }}>v1.0 · now available · macOS · MIT</span>
+          <span style={{ fontFamily: R.fontMono, fontSize: 11, letterSpacing: '0.04em', color: R.inkSoft, textTransform: 'uppercase', whiteSpace: isMobile ? 'normal' : 'nowrap', lineHeight: 1.4 }}>v0.1.0 · now available · macOS · MIT</span>
         </div>
         <h1 style={{
           fontSize: isMobile ? '24px' : 'clamp(48px, 8vw, 104px)',

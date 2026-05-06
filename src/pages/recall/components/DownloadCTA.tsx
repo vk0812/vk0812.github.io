@@ -41,15 +41,6 @@ export function DownloadCTA() {
             </a>
           </div>
         </Reveal>
-        <Reveal delay={320}>
-          <div style={{ marginTop: 56, fontFamily: R.fontMono, fontSize: 12, color: R.darkMuted, letterSpacing: '0.04em', display: 'inline-flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <span>$ brew install --cask recall</span>
-            <span style={{ opacity: 0.4 }}>·</span>
-            <span>v0.1.0</span>
-            <span style={{ opacity: 0.4 }}>·</span>
-            <span>MIT</span>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
