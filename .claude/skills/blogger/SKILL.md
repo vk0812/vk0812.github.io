@@ -39,14 +39,17 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 - Use those exact values everywhere in the post: prose, inline formulas, code blocks, figure captions. Do not invent a "cleaner" or "simpler" version of the example even if it seems mathematically equivalent — readers compare the post against the image and inconsistencies are confusing.
 
 **Punctuation rule, important**
-- Do NOT use em dashes (`—`) or en dashes (`–`) between words or phrases. They look off in this site's typography.
-- Use commas, semicolons, colons, parentheses, or two short sentences instead.
+- Do NOT use em dashes (`—`) or en dashes (`–`) anywhere. They look off in this site's typography and read as AI-generated.
+- Do NOT use semicolons (`;`) in prose. The author dislikes them. This applies to body text, captions, alt text, and list items, anywhere user-visible.
+- Use commas, colons, parentheses, or two short sentences instead.
 - Hyphens inside compound words are fine ("image-text", "L2-normalize", "self-supervised"). The rule is about dashes used as a substitute for a comma or sentence break.
+- JS/TS code semicolons (statement terminators, import lines) are fine, the rule only applies to prose.
 
 **What to avoid**
 - Generic openers like "In today's fast-paced world of AI..." or "In this blog post, we will explore...". Just start.
 - Bulleted summaries of obvious things. Bullets earn their place by listing genuinely parallel items.
 - Filler transitions ("Now, let's move on to...", "As we discussed before..."). Trust the reader.
+- Abbreviations and shortforms in prose: always spell out the full term ("load balancer" not "LB", "Weighted Round Robin" not "WRR"). Acronyms that are themselves the canonical name (WAF, CDN, CPU, DNS, HTTP, HTTPS, SSL, TLS) are fine.
 - Marketing-speak ("revolutionary", "game-changing", "unleash the power of"). Never.
 
 ## Structure
@@ -178,7 +181,7 @@ The code string is auto-trimmed. Theme switches with the site, GitHub light or V
 
 Number figures sequentially (`Figure 1`, `Figure 2`, ...) in caption text. Do NOT add a "full reference image" or "appendix" at the end of the post unless the user asks.
 
-**Caption format.** One sentence, concise. Pattern: `"Figure N: Short noun phrase; key insight or numbers."` The semicolon separates what it shows from why it matters. Aim for the length of Figure 1/2 in the GRPO post — descriptive but not a paragraph. Wrong: `"Figure 3: This figure illustrates the step-by-step process by which..."`. Right: `"Figure 3: Numerical walkthrough for G=4; mean reward 0.25 becomes the baseline, giving advantages +0.75 (correct) and -0.25 (wrong)."`.
+**Caption format.** One sentence, concise. Pattern: `"Figure N: Short noun phrase. Key insight or numbers."` A period (or comma) separates what it shows from why it matters, do NOT use a semicolon or em-dash. Aim for the length of Figure 1/2 in the GRPO post, descriptive but not a paragraph. Wrong: `"Figure 3: This figure illustrates the step-by-step process by which..."`. Right: `"Figure 3: Numerical walkthrough for G=4. Mean reward 0.25 becomes the baseline, giving advantages +0.75 (correct) and -0.25 (wrong)."`.
 
 **Size prop matters.** Default (`md`, max-w-xl ~576px) suits most screenshot crops. Use `lg` for wide horizontal pipeline diagrams. Use `full` only for true full-bleed images (rare). Use `sm` for small square or portrait crops that look blurred or upscaled at `md`.
 

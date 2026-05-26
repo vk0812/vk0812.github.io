@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
-import { FileText } from "lucide-react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { useState } from "react";
+import { FileText, Folder, FolderOpen, X, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 import adobeLogo from "@/assets/adobe_logo.png";
 import boschDarkLogo from "@/assets/bosch_dark_logo.png";
@@ -15,6 +15,8 @@ interface Company {
   role: string;
   details: string[];
 }
+
+const NEUTRAL_CHIP = "bg-foreground/10 text-foreground";
 
 const ThemeAwareLogo = ({
   darkSrc,
@@ -117,38 +119,16 @@ const companies: Company[] = [
   },
 ];
 
-const useHoverCapable = () => {
-  // Initialize synchronously from matchMedia so we don't briefly report
-  // "touch" on first render — that race caused the auto-select to pin
-  // Adobe on hover-capable devices.
-  const [hoverable, setHoverable] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  });
-  useEffect(() => {
-    const mql = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const update = () => setHoverable(mql.matches);
-    update();
-    mql.addEventListener("change", update);
-    return () => mql.removeEventListener("change", update);
-  }, []);
-  return hoverable;
-};
-
 const FolderCard = ({
   company,
   index,
   isSelected,
   onSelect,
-  onHover,
-  hoverable,
 }: {
   company: Company;
   index: number;
   isSelected: boolean;
   onSelect: () => void;
-  onHover: (i: number | null) => void;
-  hoverable: boolean;
 }) => {
   const { theme } = useTheme();
 
@@ -160,12 +140,9 @@ const FolderCard = ({
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       onClick={onSelect}
-      onMouseEnter={hoverable ? () => onHover(index) : undefined}
-      onMouseLeave={hoverable ? () => onHover(null) : undefined}
       aria-pressed={isSelected}
-      aria-label={`Show details for ${company.name}`}
+      aria-label={`${isSelected ? "Hide" : "Show"} details for ${company.name}`}
       className="relative cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/40 rounded-2xl"
-      style={{ zIndex: isSelected ? 10 : 1 }}
     >
       <motion.div
         animate={{
@@ -173,13 +150,33 @@ const FolderCard = ({
           rotateZ: isSelected ? -2 : 0,
           scale: isSelected ? 1.02 : 1,
         }}
+        whileHover={{ y: isSelected ? -10 : -4 }}
         transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
         className="relative origin-center"
       >
-        <div className="absolute -top-3 right-6 sm:right-8 w-10 sm:w-12 h-5 bg-muted rounded-t-lg z-10" />
+        {/* Folder tab — same color as folder body */}
+        <div className="absolute -top-3 right-6 sm:right-8 w-10 sm:w-12 h-5 rounded-t-lg z-10 bg-muted" />
 
-        <div className="relative bg-muted rounded-2xl min-h-[120px] sm:min-h-[140px] lg:min-h-[160px] flex items-center justify-center shadow-sm hover:shadow-md transition-shadow duration-300">
-          <div className="p-6 sm:p-7 lg:p-8">{company.logo(theme)}</div>
+        <div
+          className={`relative bg-muted rounded-2xl min-h-[140px] sm:min-h-[160px] lg:min-h-[180px] flex flex-col shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${
+            isSelected ? "ring-2 ring-foreground/20" : ""
+          }`}
+        >
+          {/* Top meta row */}
+          <div className="flex items-center px-3 sm:px-4 pt-3 sm:pt-4">
+            <div className={`p-1.5 rounded-md ${NEUTRAL_CHIP}`}>
+              {isSelected ? (
+                <FolderOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              ) : (
+                <Folder className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              )}
+            </div>
+          </div>
+
+          {/* Logo */}
+          <div className="flex-1 flex items-center justify-center px-4 sm:px-6 pb-3 sm:pb-4 pt-1">
+            {company.logo(theme)}
+          </div>
         </div>
       </motion.div>
     </motion.button>
@@ -187,20 +184,11 @@ const FolderCard = ({
 };
 
 const FolderGrid = () => {
-  const hoverable = useHoverCapable();
-  // On touch, default to first company so the detail panel isn't empty.
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!hoverable && selectedIndex === null) {
-      setSelectedIndex(0);
-    }
-  }, [hoverable, selectedIndex]);
-
   const selectedCompany = selectedIndex !== null ? companies[selectedIndex] : null;
 
   const handleSelect = (i: number) => {
-    setSelectedIndex((curr) => (curr === i ? (hoverable ? null : 0) : i));
+    setSelectedIndex((curr) => (curr === i ? null : i));
   };
 
   return (
@@ -215,74 +203,99 @@ const FolderGrid = () => {
           Previously at
         </motion.p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
-          {companies.map((company, index) => (
-            <FolderCard
-              key={company.name}
-              company={company}
-              index={index}
-              isSelected={selectedIndex === index}
-              onSelect={() => handleSelect(index)}
-              onHover={setSelectedIndex}
-              hoverable={hoverable}
-            />
-          ))}
-        </div>
+        <LayoutGroup>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
+            {companies.map((company, index) => (
+              <FolderCard
+                key={company.name}
+                company={company}
+                index={index}
+                isSelected={selectedIndex === index}
+                onSelect={() => handleSelect(index)}
+              />
+            ))}
+          </div>
 
-        <AnimatePresence mode="wait">
-          {selectedIndex === null ? (
-            <motion.div
-              key="hint"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-              className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-7 sm:mt-8"
-            >
-              <p className="text-xs sm:text-sm text-muted-foreground font-sans">
-                {hoverable ? "Hover over a company to see details" : "Tap a company to see details"}
-              </p>
-
-              <a
-                href="/Vidit_Khazanchi_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+          <AnimatePresence mode="wait">
+            {selectedCompany === null ? (
+              <motion.div
+                key="hint"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8 sm:mt-10 p-5 sm:p-6 border border-dashed border-border/60 rounded-2xl"
               >
-                <FileText className="w-4 h-4 text-red-600" />
-                Grab my Resume
-              </a>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="details"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 15 }}
-              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-              className="mt-7 sm:mt-8 bg-muted rounded-2xl p-6 sm:p-7 lg:p-8 shadow-sm"
-            >
-              <div className="mb-4">
-                <h3 className="font-sans font-semibold text-base sm:text-lg text-foreground">{selectedCompany.name}</h3>
-                <p className="text-sm sm:text-base text-muted-foreground">{selectedCompany.role}</p>
-              </div>
-              <ul className="space-y-2 sm:space-y-3">
-                {selectedCompany.details.map((detail, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.08 }}
-                    className="flex items-start gap-3 text-sm sm:text-base text-foreground"
-                  >
-                    <span className="w-1.5 h-1.5 bg-foreground rounded-full mt-2 shrink-0" />
-                    <span>{detail}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <div className="flex items-center gap-3">
+                  <Sparkles className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <p className="text-xs sm:text-sm text-muted-foreground font-sans">
+                    Tap a folder to open it and see what I worked on.
+                  </p>
+                </div>
+
+                <a
+                  href="/Vidit_Khazanchi_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors whitespace-nowrap"
+                >
+                  <FileText className="w-4 h-4 text-red-600" />
+                  Grab my Resume
+                </a>
+              </motion.div>
+            ) : (
+              <motion.div
+                key={`details-${selectedCompany.name}`}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="relative mt-8 sm:mt-10 bg-muted rounded-2xl shadow-sm overflow-hidden"
+              >
+                <div className="p-5 sm:p-7 lg:p-8">
+                  <div className="flex items-start justify-between gap-4 mb-4 sm:mb-5">
+                    <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                      <div className={`p-2 sm:p-2.5 rounded-lg ${NEUTRAL_CHIP} shrink-0`}>
+                        <FolderOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-sans font-semibold text-base sm:text-lg text-foreground mb-1">
+                          {selectedCompany.name}
+                        </h3>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-snug">
+                          {selectedCompany.role}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedIndex(null)}
+                      className="p-1.5 sm:p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-background/60 transition shrink-0"
+                      aria-label="Close folder"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <ul className="space-y-2.5 sm:space-y-3">
+                    {selectedCompany.details.map((detail, i) => (
+                      <motion.li
+                        key={`${selectedCompany.name}-${i}`}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: i * 0.06 }}
+                        className="flex items-start gap-3 text-sm sm:text-base text-foreground"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 bg-foreground/60" />
+                        <span className="leading-relaxed">{detail}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </LayoutGroup>
       </div>
     </section>
   );

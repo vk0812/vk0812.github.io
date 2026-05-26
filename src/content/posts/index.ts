@@ -3,12 +3,34 @@ import { exampleShowcase } from "./example-showcase";
 import { internExp } from "./intern-exp";
 import { contrastiveLearning } from "./contrastive-learning";
 import { grpoPost } from "./grpo";
+import { loadBalancing } from "./load-balancing";
+import { cachingPost } from "./caching";
+import { systemDesignBasics } from "./system-design-basics";
+import { dataPartitioning } from "./data-partitioning";
+import { proxies } from "./proxies";
+import { redundancyAndReplication } from "./redundancy-and-replication";
+import { cdn } from "./cdn";
+import { capTheorem } from "./cap-theorem";
+import { webProtocols } from "./web-protocols";
+import { heartbeatAndChecksum } from "./heartbeat-and-checksum";
+import { quorum } from "./quorum";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
   "intern-exp": internExp,
   "contrastive-learning": contrastiveLearning,
   "grpo": grpoPost,
+  "load-balancing": loadBalancing,
+  "caching": cachingPost,
+  "system-design-basics": systemDesignBasics,
+  "data-partitioning": dataPartitioning,
+  "proxies": proxies,
+  "redundancy-and-replication": redundancyAndReplication,
+  "cdn": cdn,
+  "cap-theorem": capTheorem,
+  "web-protocols": webProtocols,
+  "heartbeat-and-checksum": heartbeatAndChecksum,
+  "quorum": quorum,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";
