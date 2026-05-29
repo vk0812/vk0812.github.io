@@ -14,6 +14,8 @@ import { capTheorem } from "./cap-theorem";
 import { webProtocols } from "./web-protocols";
 import { heartbeatAndChecksum } from "./heartbeat-and-checksum";
 import { quorum } from "./quorum";
+import { bloomFilters } from "./bloom-filters";
+import { consistentHashing } from "./consistent-hashing";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -31,6 +33,8 @@ export const blogPosts: Record<string, BlogPostData> = {
   "web-protocols": webProtocols,
   "heartbeat-and-checksum": heartbeatAndChecksum,
   "quorum": quorum,
+  "bloom-filters": bloomFilters,
+  "consistent-hashing": consistentHashing,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";

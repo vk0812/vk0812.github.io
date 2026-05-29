@@ -58,7 +58,7 @@ export const redundancyAndReplication: BlogPostData = {
 
       <BlogImage
         delay={0.6}
-        size="lg"
+        size="md"
         src="/blog/redundancy_and_replication/redundancyvsreplication.png"
         alt="Redundancy vs Replication: redundancy duplicates critical components (Primary + Standby Server) for failover, replication actively synchronizes data across multiple replicas to ensure availability and integrity"
         caption="Figure 1: Redundancy keeps components available, replication keeps data safe. Both are needed."
@@ -74,7 +74,7 @@ export const redundancyAndReplication: BlogPostData = {
 
       <BlogImage
         delay={0.72}
-        size="lg"
+        size="md"
         src="/blog/redundancy_and_replication/replicationstrategies.png"
         alt="Three replication strategies: Synchronous (strong consistency, all replicas must ack, used in financial systems), Asynchronous (high performance, primary acks immediately, eventual consistency, used in social feeds/logging), Semi-Synchronous (balanced, majority ack, used in e-commerce)"
         caption="Figure 2: Three replication strategies, consistency vs performance, with real-world examples for each."
@@ -92,7 +92,7 @@ export const redundancyAndReplication: BlogPostData = {
 
       <BlogImage
         delay={0.82}
-        size="lg"
+        size="md"
         src="/blog/redundancy_and_replication/replicationmethods.png"
         alt="Four replication topologies: Single-Leader (Primary-Replica), simple, strong consistency, but leader is a bottleneck, Multi-Leader, high write availability, conflicts complex to resolve, Leaderless (Quorum-Based), no single leader, high availability, higher write latency, Chain Replication, strong consistency and easy failover, lower write throughput"
         caption="Figure 3: Four major topologies. Each one trades complexity, consistency, and throughput differently."

@@ -15,6 +15,8 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "consistent-hashing", title: "Consistent Hashing", date: "29/05", tag: "System Design", year: 2026 },
+  { id: "bloom-filters", title: "Bloom Filters", date: "29/05", tag: "System Design", year: 2026 },
   { id: "quorum", title: "Quorum", date: "26/05", tag: "System Design", year: 2026 },
   { id: "heartbeat-and-checksum", title: "Heartbeat and Checksum", date: "26/05", tag: "System Design", year: 2026 },
   { id: "web-protocols", title: "Long-Polling, WebSockets, and Server-Sent Events", date: "26/05", tag: "System Design", year: 2026 },

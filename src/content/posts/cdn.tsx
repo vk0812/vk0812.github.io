@@ -32,7 +32,7 @@ export const cdn: BlogPostData = {
 
       <BlogImage
         delay={0.3}
-        size="lg"
+        size="md"
         src="/blog/cdn/cdnworks.png"
         alt="How a CDN works: user request goes through DNS/Anycast routing to the nearest edge server, which checks cache, cache hit serves content immediately, cache miss fetches from origin server, example shows India user routed to Mumbai PoP and served in 10ms"
         caption="Figure 1: End-to-end CDN flow, DNS/Anycast picks the closest edge, then cache hit or fetch-and-cache on miss."

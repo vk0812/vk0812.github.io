@@ -48,7 +48,7 @@ export const heartbeatAndChecksum: BlogPostData = {
 
       <BlogImage
         delay={0.5}
-        size="lg"
+        size="md"
         src="/blog/heartbeat_checksum/heartbeat.png"
         alt="Heartbeat mechanism: each node periodically sends a small 'I'm alive' message to a central monitor, three-state lifecycle, Healthy (heartbeats every 2s, status: UP), Missed Heartbeats (monitor doesn't receive expected heartbeat, status: UNKNOWN), Node Marked Failed (monitor confirms node down, reroutes traffic, status: FAILED)"
         caption="Figure 1: Heartbeat, periodic 'I'm alive' signal with a three-state failure detection lifecycle."
@@ -83,7 +83,7 @@ export const heartbeatAndChecksum: BlogPostData = {
 
       <BlogImage
         delay={0.82}
-        size="lg"
+        size="md"
         src="/blog/heartbeat_checksum/checksum.png"
         alt="Checksum verification process: data passed through SHA-256 hash function produces a fixed-length fingerprint stored or transmitted alongside the data, on retrieval the receiver recomputes the SHA-256 and compares, match means data intact, mismatch means corruption detected"
         caption="Figure 2: Checksum flow, hash on write, recompute on read, compare for corruption."

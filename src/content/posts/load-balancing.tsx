@@ -32,7 +32,7 @@ export const loadBalancing: BlogPostData = {
 
       <BlogImage
         delay={0.3}
-        size="lg"
+        size="md"
         src="/blog/load_balancing/how_load_balancer_works.png"
         alt="Load balancer architecture: clients send requests through the load balancer, which routes traffic across healthy backend servers (Server 01–04) while health monitoring marks Server 04 as unhealthy and excludes it from rotation"
         caption="Figure 1: The load balancer sits between clients and servers. Server 04 fails its health check and is dropped from rotation until it recovers."
