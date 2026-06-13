@@ -96,7 +96,7 @@ export const bloomFilters: BlogPostData = {
 
       <BlogImage
         delay={0.9}
-        size="md"
+        size="sm"
         src="/blog/bloom_filters/key_characteristics.png"
         alt="Key characteristics: Time complexity O(k) for insert and query (constant time); Space efficient compact bit array ideal for large datasets; Probabilistic, allows false positives but never false negatives; No deletions, standard Bloom filter doesn't support deletions."
         caption="Figure 4: The four defining traits. Constant time, compact, probabilistic, and append-only."
@@ -133,54 +133,34 @@ export const bloomFilters: BlogPostData = {
 
       <BlogImage
         delay={1.3}
-        size="lg"
+        size="md"
         src="/blog/bloom_filters/pros_cons.png"
         alt="Pros: very space efficient, fast insert and lookup O(k), scales well for billions of items, perfect for read-heavy workloads, zero false negatives. Cons: false positives possible, no support for deletions (standard version), performance degrades as filter gets full, not suitable when 100% accuracy is required."
         caption="Figure 5: Bloom filters trade a small, tunable false-positive rate for big gains in space and speed."
       />
 
       <Heading level={2} delay={1.35}>
-        A System Use Case
-      </Heading>
-
-      <Paragraph delay={1.4}>
-        The canonical use is as a pre-filter that sits in memory in front of expensive storage. A client request hits the Bloom filter first. If the filter says "definitely not" (it found a 0), the system skips the disk read or network hop entirely and returns "not found." Only when the filter says "might exist" (all 1s) does the system pay for the real lookup, accepting that a small fraction of those will be false alarms.
-      </Paragraph>
-
-      <Paragraph delay={1.45}>
-        Apache Cassandra is the textbook example. It keeps a Bloom filter per SSTable so it can decide whether a key might live in that file before reading it from disk. Most of the time a key isn't in a given SSTable, and the filter lets Cassandra skip the read instead of paying for it. The same pattern shows up in databases avoiding lookups for non-existent keys, web caches screening requests, and distributed systems cutting network round-trips for missing data.
-      </Paragraph>
-
-      <BlogImage
-        delay={1.5}
-        size="lg"
-        src="/blog/bloom_filters/system_use_case.png"
-        alt="System use case: client request hits an in-memory Bloom filter before the storage layer. 'Might exist' (all 1s) goes to disk/DB; 'definitely not' (any 0) skips the lookup and returns not found. Example: Cassandra uses Bloom filters in SSTables to decide if a key might exist before reading from disk."
-        caption="Figure 6: A Bloom filter as a pre-filter. Definite misses skip the disk read entirely; Cassandra does this per SSTable."
-      />
-
-      <Heading level={2} delay={1.55}>
         Tuning: Size and Hash Count
       </Heading>
 
-      <Paragraph delay={1.6}>
+      <Paragraph delay={1.4}>
         Two knobs control the false positive rate. The bit array size <InlineCode>m</InlineCode>: a larger array means bits are filled more sparsely for the same number of items, so accidental overlaps are rarer, fewer false positives but more memory. And the number of hash functions <InlineCode>k</InlineCode>: too few and each item doesn't stake out enough territory, too many and you fill the array too fast. There's a sweet spot. For an expected <InlineCode>n</InlineCode> items in an <InlineCode>m</InlineCode>-bit array, the <InlineCode>k</InlineCode> that minimizes the false positive rate is:
       </Paragraph>
 
-      <Formula block delay={1.65}>
+      <Formula block delay={1.45}>
         {`k = \\frac{m}{n} \\ln 2`}
       </Formula>
 
-      <Paragraph delay={1.7}>
+      <Paragraph delay={1.5}>
         The practical goal is to choose <InlineCode>m</InlineCode> and <InlineCode>k</InlineCode> together to balance memory against an acceptable false positive rate. The relationship between <InlineCode>k</InlineCode> and the false positive rate is U-shaped: it drops as you add hash functions, bottoms out at the optimal <InlineCode>k</InlineCode>, then climbs again as extra hashes just crowd the array. Most systems let you set a target rate, 1% or 0.1% or lower, and size the filter to hit it. Cassandra, for instance, lets you tune the per-table false positive target, spending more memory to push it down.
       </Paragraph>
 
       <BlogImage
-        delay={1.75}
+        delay={1.55}
         size="lg"
         src="/blog/bloom_filters/tuning_tips.png"
         alt="Tuning tips: Size m, a larger bit array means fewer false positives but more memory. Hash functions k, optimal k is (m/n) ln 2 where n is the expected number of items. Goal: choose m and k to balance memory usage and acceptable false positive rate. A U-shaped curve shows false positive rate against number of hash functions k."
-        caption="Figure 7: Bigger array means fewer false positives. The false-positive curve against k is U-shaped, with a clear optimum."
+        caption="Figure 6: Bigger array means fewer false positives. The false-positive curve against k is U-shaped, with a clear optimum."
       />
 
       <Heading level={2} delay={1.8}>
