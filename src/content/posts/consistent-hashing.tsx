@@ -3,7 +3,6 @@ import {
   Paragraph,
   Heading,
   BlogImage,
-  Formula,
   InlineCode,
   List,
   ListItem,
@@ -17,10 +16,6 @@ export const consistentHashing: BlogPostData = {
     <>
       <Paragraph delay={0.1}>
         When you design a system that spreads data across many servers, two questions sit at the center of everything. Given a key, which server holds its data? And when you add or remove a server, how much data has to move? Get the first wrong and lookups become a guessing game. Get the second wrong and every scaling event becomes a painful, system-wide reshuffle. Consistent hashing is the answer to both, and it's the partitioning scheme underneath systems like Amazon DynamoDB and Apache Cassandra.
-      </Paragraph>
-
-      <Paragraph delay={0.15}>
-        Two terms first. <strong>Data partitioning</strong> is distributing data across a set of nodes to improve scalability and performance. <strong>Data replication</strong> is keeping multiple copies of each piece of data on different nodes to improve availability and durability.
       </Paragraph>
 
       <Heading level={2} delay={0.2}>
@@ -112,7 +107,7 @@ export const consistentHashing: BlogPostData = {
       </Heading>
 
       <Paragraph delay={1.1}>
-        Partitioning decides where data lives; replication decides how many copies survive a failure. The <strong>replication factor</strong> <InlineCode>N</InlineCode> is the number of nodes that hold a copy of each item. With <InlineCode>N = 3</InlineCode>, every item exists on three different nodes.
+        Partitioning decides where data lives. Replication decides how many copies survive a failure. The <strong>replication factor</strong> <InlineCode>N</InlineCode> is the number of nodes that hold a copy of each item. With <InlineCode>N = 3</InlineCode>, every item exists on three different nodes.
       </Paragraph>
 
       <Paragraph delay={1.15}>
@@ -127,35 +122,11 @@ export const consistentHashing: BlogPostData = {
         caption="Figure 5: With N=3, the coordinator copies each item to its next two clockwise successors. A node failure costs no data."
       />
 
-      <Formula block delay={1.25}>
-        {`\\text{copies of each item} = N \\;\\text{(replication factor)}`}
-      </Formula>
-
       <Heading level={2} delay={1.3}>
-        Real-World Systems
-      </Heading>
-
-      <Paragraph delay={1.35}>
-        This isn't theory sitting in a paper. Amazon DynamoDB and Apache Cassandra both use consistent hashing to partition and replicate data across their nodes, which is what lets them scale out elastically and stay available through failures. The same idea shows up wherever a system has to spread data over a changing set of machines: key-value stores, distributed caches, session stores, leaderboards, and IoT data pipelines.
-      </Paragraph>
-
-      <Paragraph delay={1.4}>
-        The common thread is any system that needs to scale up or down with demand, or replicate shards for availability, without paying a full reshuffle every time the cluster changes. Need more storage during a holiday traffic spike? Add nodes and only a fraction of keys move. Need to grow or shrink a cache tier with load? Same story. That elasticity, plus fault tolerance and balanced load, is what makes consistent hashing a default building block of modern distributed systems.
-      </Paragraph>
-
-      <BlogImage
-        delay={1.45}
-        size="lg"
-        src="/blog/consistent_hashing/real_world_systems.png"
-        alt="Real-world systems: Amazon DynamoDB and Apache Cassandra. Use cases include key-value stores, caches, session stores, leaderboards, and IoT data. Why it matters: consistent hashing enables massive scale with elasticity, fault tolerance, and balanced load, making it ideal for modern distributed systems."
-        caption="Figure 6: DynamoDB and Cassandra are the marquee users. The pattern fits any store that scales and replicates over a changing node set."
-      />
-
-      <Heading level={2} delay={1.5}>
         Takeaways
       </Heading>
 
-      <List delay={1.55}>
+      <List delay={1.35}>
         <ListItem>Plain <InlineCode>hash(key) % N</InlineCode> works until <InlineCode>N</InlineCode> changes, then it remaps almost every key. Consistent hashing removes <InlineCode>N</InlineCode> from the lookup entirely.</ListItem>
         <ListItem>Servers and keys share one circular hash space. A key is owned by the first node found walking clockwise, equivalently the node whose token ends its arc.</ListItem>
         <ListItem>A node joining or leaving touches only a neighbor, so only about <InlineCode>1/N</InlineCode> of keys move instead of nearly all of them.</ListItem>
