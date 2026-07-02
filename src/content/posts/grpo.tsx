@@ -8,6 +8,7 @@ import {
   Formula,
   List,
   ListItem,
+  GrpoAdvantageDiagram,
 } from "../components";
 
 export const grpoPost: BlogPostData = {
@@ -130,6 +131,11 @@ advantages = rewards - rewards.mean()          # GRPO: mean-centering only
         src="/blog/grpo/numerical-walkthrough.png"
         alt="Numerical walkthrough: for 7×6, answers 42/43/40/41 produce rewards [1,0,0,0], mean-centering gives advantages [+0.75,-0.25,-0.25,-0.25]"
         caption="Figure 3: Numerical walkthrough for G=4; mean reward 0.25 becomes the baseline, giving advantages +0.75 (correct) and -0.25 (wrong)."
+      />
+
+      <GrpoAdvantageDiagram
+        delay={1.2}
+        caption="The same walkthrough, animated: sample the group, score each answer, draw the group mean as the baseline, then read off advantage = reward − mean — pushing the winner up and the losers down."
       />
 
       <Heading level={2} delay={1.25}>

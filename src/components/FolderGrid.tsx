@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useState } from "react";
-import { FileText, Folder, FolderOpen, X, Sparkles } from "lucide-react";
+import { FileText, FolderOpen, X, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 import adobeLogo from "@/assets/adobe_logo.png";
 import boschDarkLogo from "@/assets/bosch_dark_logo.png";
@@ -162,17 +162,6 @@ const FolderCard = ({
             isSelected ? "ring-2 ring-foreground/20" : ""
           }`}
         >
-          {/* Top meta row */}
-          <div className="flex items-center px-3 sm:px-4 pt-3 sm:pt-4">
-            <div className={`p-1.5 rounded-md ${NEUTRAL_CHIP}`}>
-              {isSelected ? (
-                <FolderOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              ) : (
-                <Folder className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              )}
-            </div>
-          </div>
-
           {/* Logo */}
           <div className="flex-1 flex items-center justify-center px-4 sm:px-6 pb-3 sm:pb-4 pt-1">
             {company.logo(theme)}

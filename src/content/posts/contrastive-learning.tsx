@@ -8,6 +8,8 @@ import {
   Formula,
   List,
   ListItem,
+  PullPushDiagram,
+  ContrastiveTrainingDiagram,
 } from "../components";
 
 export const contrastiveLearning: BlogPostData = {
@@ -32,11 +34,9 @@ export const contrastiveLearning: BlogPostData = {
         Contrastive learning has exactly two moves: <strong>pull matching pairs together</strong> in a shared embedding space, and <strong>push non-matching pairs apart</strong>. That's it. If you remember nothing else from this post, remember those two arrows.
       </Paragraph>
 
-      <BlogImage
+      <PullPushDiagram
         delay={0.3}
-        src="/blog/contrastive/core-idea.png"
-        alt="Core idea of contrastive learning: pull matching pairs together, push non-matching pairs apart"
-        caption="Figure 1: Two operations — pull and push — applied in a shared embedding space."
+        caption="Figure 1: Two operations — pull matching pairs together, push non-matching pairs apart — in a shared embedding space."
       />
 
       <Paragraph delay={0.35}>
@@ -178,11 +178,9 @@ def contrastive_loss(image_embs, text_embs, temperature=0.07):
         After enough iterations of "pull, push, pull, push," something nice emerges: the embedding space organizes itself by <em>meaning</em>. Photos of dogs cluster near captions about dogs. Photos of mountains cluster near captions about mountains. And, this is the part that gets people excited, concepts that are semantically close end up close in space, even if you never explicitly told the model so.
       </Paragraph>
 
-      <BlogImage
+      <ContrastiveTrainingDiagram
         delay={1.7}
-        src="/blog/contrastive/embedding-space.png"
-        alt="After training, related image-text pairs cluster together in embedding space"
-        caption="Figure 6: The embedding space after training. Each cluster is a concept; nearness encodes meaning."
+        caption="Figure 6: Training in action. The similarity matrix is derived live from the embedding space — as matching pairs pull together, the diagonal brightens, off-diagonals fade, and the loss drops. Clusters emerge by meaning."
       />
 
       <Paragraph delay={1.75}>

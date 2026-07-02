@@ -6,6 +6,7 @@ import {
   InlineCode,
   List,
   ListItem,
+  HashRingDiagram,
 } from "../components";
 
 export const consistentHashing: BlogPostData = {
@@ -76,6 +77,11 @@ export const consistentHashing: BlogPostData = {
         src="/blog/consistent_hashing/node_changes.png"
         alt="Node changes, minimal remapping. When a node leaves, the keys it held are reassigned to its clockwise successor, only about 1/5 of keys remap. When a node joins, it takes a portion of the key space from its clockwise predecessor, only about 1/6 of keys remap."
         caption="Figure 3: A node leaving hands its keys to its clockwise successor; a node joining takes a slice from its predecessor. Only a fraction moves."
+      />
+
+      <HashRingDiagram
+        delay={0.78}
+        caption="Watch each key walk clockwise to the first server it meets — its coordinator. Then S4 leaves: only the key it owned re-homes to S5, every other key stays exactly where it was."
       />
 
       <Heading level={2} delay={0.8}>

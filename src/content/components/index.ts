@@ -7,3 +7,4 @@ export { Diagram } from "./Diagram";
 export { Heading } from "./Heading";
 export { Quote } from "./Quote";
 export { List, ListItem } from "./List";
+export { PullPushDiagram, ContrastiveTrainingDiagram, GrpoAdvantageDiagram, LoadBalancerDiagram, LbAlgorithmsDiagram, HashRingDiagram } from "./ConceptViz";

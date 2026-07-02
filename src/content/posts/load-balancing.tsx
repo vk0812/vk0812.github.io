@@ -6,6 +6,8 @@ import {
   InlineCode,
   List,
   ListItem,
+  LoadBalancerDiagram,
+  LbAlgorithmsDiagram,
 } from "../components";
 
 export const loadBalancing: BlogPostData = {
@@ -36,6 +38,11 @@ export const loadBalancing: BlogPostData = {
         src="/blog/load_balancing/how_load_balancer_works.png"
         alt="Load balancer architecture: clients send requests through the load balancer, which routes traffic across healthy backend servers (Server 01–04) while health monitoring marks Server 04 as unhealthy and excludes it from rotation"
         caption="Figure 1: The load balancer sits between clients and servers. Server 04 fails its health check and is dropped from rotation until it recovers."
+      />
+
+      <LoadBalancerDiagram
+        delay={0.32}
+        caption="Round-robin spreads requests evenly across the fleet, then Server 04 fails its health check, drops out of rotation, and traffic reroutes to the healthy three."
       />
 
       <Paragraph delay={0.35}>
@@ -83,6 +90,11 @@ export const loadBalancing: BlogPostData = {
         src="/blog/load_balancing/common_algos.png"
         alt="Common load balancing algorithms: Round Robin (sequential), Least Connections (fewest active), IP Hash (route by client IP), Weighted Round Robin (by capacity weight), Least Response Time (lowest latency)"
         caption="Figure 3: The five algorithms you'll see in every load balancer config. Each one optimizes for a different signal."
+      />
+
+      <LbAlgorithmsDiagram
+        delay={0.77}
+        caption="Same fleet, five strategies. Switch the method up top — watch how each one routes the same eight requests differently. Note Least Connections and Least Response Time starve the overloaded Server 03, and IP Hash pins each client to one server."
       />
 
       <Heading level={3} delay={0.8}>
