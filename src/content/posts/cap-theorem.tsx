@@ -19,7 +19,7 @@ export const capTheorem: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        Introduced by Eric Brewer in 2000 and formalized as a theorem by Gilbert and Lynch in 2002, CAP states that a distributed system can guarantee at most two of three properties: Consistency, Availability, and Partition Tolerance. This post covers what those properties mean, why the tradeoff is unavoidable, how real systems (ZooKeeper, MongoDB, Cassandra, DynamoDB) navigate it, and the PACELC extension that fills in what CAP leaves out. Basic distributed systems familiarity assumed.
+        Introduced by Eric Brewer in 2000 and formalized as a theorem by Gilbert and Lynch in 2002, CAP states that a distributed system can guarantee at most two of three properties: Consistency, Availability, and Partition Tolerance.
       </Paragraph>
 
       <Heading level={2} delay={0.2}>

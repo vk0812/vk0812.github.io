@@ -20,7 +20,7 @@ export const quorum: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        A quorum is the minimum number of nodes that must participate in an operation for that operation to be considered successful. Getting quorum right is what separates a distributed system that reliably serves consistent data from one that silently returns stale reads or splits into a "split-brain" where two halves believe different things are true. This post covers the quorum rule, how to configure read and write quorums, the tradeoffs involved, and where quorum shows up in real systems.
+        A quorum is the minimum number of nodes that must participate in an operation for that operation to be considered successful. Getting quorum right is what separates a distributed system that reliably serves consistent data from one that silently returns stale reads or splits into a "split-brain" where two halves believe different things are true.
       </Paragraph>
 
       <Heading level={2} delay={0.2}>

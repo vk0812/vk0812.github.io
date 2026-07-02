@@ -18,10 +18,6 @@ export const cdn: BlogPostData = {
         A user in Mumbai opens your website. Your origin server is in Virginia. Without a CDN, that request travels roughly 13,000 kilometers across the Atlantic, hits your server, and the response makes the same trip back. With a CDN, the request hits a PoP in Mumbai, finds the content already cached, and delivers it in about 10ms. No transatlantic trip required. That's the core value of a Content Delivery Network: get content physically closer to the people requesting it.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers how CDNs work, the key concepts behind them, routing mechanisms, cache management strategies, network topologies, and the pull vs. push CDN distinction.
-      </Paragraph>
-
       <Heading level={2} delay={0.2}>
         How CDNs Work
       </Heading>

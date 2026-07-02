@@ -18,10 +18,6 @@ export const webProtocols: BlogPostData = {
         The standard HTTP request-response cycle was designed for a world where clients ask and servers answer: fetch a page, get a page. That model falls apart the moment you need real-time updates. A chat app that polls for new messages every 5 seconds makes hundreds of empty requests per hour per user. A live stock ticker that refreshes on a fixed interval shows prices that are already 4 seconds stale. The protocols covered in this post, long-polling, WebSockets, and Server-Sent Events, are the evolution from that inefficient polling model toward persistent, low-overhead connections that actually match how real-time applications behave.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers all four approaches (including regular Ajax polling for contrast), how each works mechanically, and when to reach for which one.
-      </Paragraph>
-
       <Heading level={2} delay={0.2}>
         Standard HTTP and Ajax Polling
       </Heading>

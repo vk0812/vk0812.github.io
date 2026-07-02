@@ -18,10 +18,6 @@ export const heartbeatAndChecksum: BlogPostData = {
         Two quiet mechanisms keep distributed systems trustworthy: one watches whether nodes are alive, the other watches whether data is intact. Heartbeating is how a system detects that a server has failed before a user request hits it. Checksums are how a system detects that data was corrupted in transit or storage before a client receives it. Neither is glamorous. Both are load-bearing.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers how each mechanism works, the failure scenarios they protect against, and how they combine in a complete reliability story. Assumes basic distributed systems familiarity.
-      </Paragraph>
-
       <Heading level={2} delay={0.2}>
         Heartbeat
       </Heading>

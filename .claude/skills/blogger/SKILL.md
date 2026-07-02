@@ -47,6 +47,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 
 **What to avoid**
 - Generic openers like "In today's fast-paced world of AI..." or "In this blog post, we will explore...". Just start.
+- Scope-and-prerequisites sentences like "This post covers X, Y, and Z" or "Basic distributed systems familiarity assumed." Cut straight from the hook into content, don't preview the table of contents in prose.
 - Bulleted summaries of obvious things. Bullets earn their place by listing genuinely parallel items.
 - Filler transitions ("Now, let's move on to...", "As we discussed before..."). Trust the reader.
 - Abbreviations and shortforms in prose: always spell out the full term ("load balancer" not "LB", "Weighted Round Robin" not "WRR"). Acronyms that are themselves the canonical name (WAF, CDN, CPU, DNS, HTTP, HTTPS, SSL, TLS) are fine.
@@ -56,7 +57,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 
 Standard arc for a technical post (6 to 9 sections, ~1500 to 2500 words):
 
-1. **Cold open**, 1 to 2 paragraphs grounding the topic in something the reader has already seen ("If you've used image search..."). End the intro by saying what the post will cover and what knowledge it assumes.
+1. **Cold open**, 1 to 2 paragraphs grounding the topic in something the reader has already seen ("If you've used image search..."). Do NOT add a "this post covers X, Y, Z" scope sentence or a "basic X familiarity assumed" prerequisite sentence, just launch straight into the core idea after the hook.
 2. **The core idea**, the one-sentence version of the concept, before any math or detail.
 3. **Setup, data, prerequisites**, what the inputs look like, with a concrete example.
 4. **The mechanism**, the actual technical content, broken into 2 to 4 sub-sections.
@@ -80,7 +81,7 @@ import { BlogPostData } from "./types";
 import { Paragraph, Heading, BlogImage, Formula, CodeBlock, InlineCode, List, ListItem, Quote } from "../components";
 
 export const <camelCaseName>: BlogPostData = {
-  title: "Post Title",                  // sentence case, no trailing punctuation
+  title: "Post Title",                  // sentence case, no trailing punctuation. If topic is an acronym, use the expanded full name here, no "(ACRONYM)" suffix
   date: "Month Day, Year",              // e.g. "April 30, 2026", long-form
   slug: "<kebab-case-slug>",            // matches the filename
   content: (
@@ -104,6 +105,10 @@ Prepend (most recent first) an entry to the local `blogPosts` array:
 ```
 
 The date format here is `DD/MM` (different from the post file's long-form date). If the tag is new, add a color to `tagColors` at the top of the file. Tailwind classes like `bg-purple-100 text-purple-700` work well.
+
+**Acronym titles, important.** When the topic itself is an acronym (CORS, CAP, CDN, etc.), the two title fields differ on purpose:
+- `Writings.tsx` listing `title` (folder/list view): expanded full name with the acronym in parens, e.g. `"Cross-Origin Resource Sharing (CORS)"`. This is what readers scan and search, so spell it out.
+- Post file `title` (top of the actual post page): just the expanded full name, no parens, e.g. `"Cross-Origin Resource Sharing"`. The acronym gets introduced naturally in the first paragraph instead.
 
 ## Component cheat sheet
 

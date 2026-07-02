@@ -18,10 +18,6 @@ export const dataPartitioning: BlogPostData = {
         At some point, your database table gets too big for one machine. Queries slow down. Backups take hours. A single disk failure takes down everything. The answer isn't a bigger machine, it's splitting the data across many smaller ones. That's data partitioning: dividing a large dataset into independent, more manageable pieces called partitions, each living on its own storage node and processing its own slice of the workload.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers how partitioning works, the three main methods (horizontal, vertical, hybrid), the six sharding techniques used in practice, and the benefits that make partitioning worth the added complexity.
-      </Paragraph>
-
       <Heading level={2} delay={0.2}>
         Key Concepts
       </Heading>

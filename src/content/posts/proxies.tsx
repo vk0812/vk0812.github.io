@@ -18,10 +18,6 @@ export const proxies: BlogPostData = {
         Every time your company laptop blocks a website, or a web server distributes your request across a backend fleet without you knowing, a proxy is involved. Proxies sit between two parties in a network conversation and act as intermediaries: they receive requests, forward them, and relay responses. Simple concept, surprisingly wide range of jobs.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers what forward and reverse proxies are, how they differ, what they're actually used for, and how they compare to VPNs. Basic networking and client-server architecture assumed.
-      </Paragraph>
-
       <BlogImage
         delay={0.2}
         size="lg"

@@ -18,10 +18,6 @@ export const redundancyAndReplication: BlogPostData = {
         Two API servers behind a load balancer. One fails. Traffic routes to the other. Nobody notices. That's redundancy at work. Meanwhile, every write to the primary database is streaming to three replicas. A region goes down. Reads fail over to a replica in another region. Again, nobody notices. That's replication. Together, they're the foundation of every system that promises high availability.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers what redundancy and replication are, how they differ, the three replication consistency strategies, the major replication topologies, and how data backup relates to (but isn't the same as) disaster recovery.
-      </Paragraph>
-
       <Heading level={2} delay={0.2}>
         Redundancy
       </Heading>

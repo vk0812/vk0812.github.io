@@ -19,7 +19,7 @@ export const loadBalancing: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        That's the core promise of load balancing: make your backend's internal state invisible to users. This post covers what load balancers are, how they work, the algorithms that drive them, and when to reach for which one.
+        That's the core promise of load balancing: make your backend's internal state invisible to users.
       </Paragraph>
 
       <Heading level={2} delay={0.2}>

@@ -18,10 +18,6 @@ export const systemDesignBasics: BlogPostData = {
         Every large-scale system you've interacted with, search engines, social feeds, payment processors, is built on the same small set of foundational properties. Not because engineers are uncreative, but because these properties are load-bearing. Get them right and the system survives growth, failure, and change. Get them wrong and no amount of clever architecture saves you.
       </Paragraph>
 
-      <Paragraph delay={0.15}>
-        This post covers the core distributed systems concepts: scalability, availability, latency and performance, concurrency, monitoring, and resilience. It also compares fault tolerance and high availability, two terms that are often conflated but mean different things in practice.
-      </Paragraph>
-
       <Heading level={2} delay={0.25}>
         Scalability
       </Heading>

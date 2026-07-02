@@ -15,6 +15,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "cors", title: "Cross-Origin Resource Sharing (CORS)", date: "02/07", tag: "System Design", year: 2026 },
   { id: "consistent-hashing", title: "Consistent Hashing", date: "29/05", tag: "System Design", year: 2026 },
   { id: "bloom-filters", title: "Bloom Filters", date: "29/05", tag: "System Design", year: 2026 },
   { id: "quorum", title: "Quorum", date: "26/05", tag: "System Design", year: 2026 },

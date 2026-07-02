@@ -16,6 +16,7 @@ import { heartbeatAndChecksum } from "./heartbeat-and-checksum";
 import { quorum } from "./quorum";
 import { bloomFilters } from "./bloom-filters";
 import { consistentHashing } from "./consistent-hashing";
+import { cors } from "./cors";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -35,6 +36,7 @@ export const blogPosts: Record<string, BlogPostData> = {
   "quorum": quorum,
   "bloom-filters": bloomFilters,
   "consistent-hashing": consistentHashing,
+  "cors": cors,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";
