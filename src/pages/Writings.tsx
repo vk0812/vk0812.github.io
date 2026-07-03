@@ -15,6 +15,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "designing-url-shortener", title: "Designing a URL Shortener", date: "03/07", tag: "Case Studies", year: 2026 },
   { id: "message-queues", title: "Message Queues", date: "02/07", tag: "System Design", year: 2026 },
   { id: "rate-limiting", title: "Rate Limiting", date: "02/07", tag: "System Design", year: 2026 },
   { id: "cors", title: "Cross-Origin Resource Sharing (CORS)", date: "02/07", tag: "System Design", year: 2026 },
@@ -42,6 +43,7 @@ const tagColors: Record<string, string> = {
   Book: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
   Intern: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
   "System Design": "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+  "Case Studies": "bg-teal-100 text-teal-700 dark:bg-teal-900/40 dark:text-teal-300",
 };
 
 const tagAccent: Record<string, string> = {
@@ -50,6 +52,7 @@ const tagAccent: Record<string, string> = {
   Book: "bg-yellow-400/80 dark:bg-yellow-500/70",
   Intern: "bg-blue-400/80 dark:bg-blue-500/70",
   "System Design": "bg-orange-400/80 dark:bg-orange-500/70",
+  "Case Studies": "bg-teal-400/80 dark:bg-teal-500/70",
 };
 
 interface FolderMeta {

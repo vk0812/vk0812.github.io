@@ -19,6 +19,7 @@ import { consistentHashing } from "./consistent-hashing";
 import { cors } from "./cors";
 import { rateLimiting } from "./rate-limiting";
 import { messageQueues } from "./message-queues";
+import { designingUrlShortener } from "./designing-url-shortener";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -41,6 +42,7 @@ export const blogPosts: Record<string, BlogPostData> = {
   "cors": cors,
   "rate-limiting": rateLimiting,
   "message-queues": messageQueues,
+  "designing-url-shortener": designingUrlShortener,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";

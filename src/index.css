@@ -231,3 +231,56 @@
     box-shadow: var(--shadow-skeuomorphic);
   }
 }
+
+/* ===== Blueprint concept animations (light: black+blue, dark: white+blue) ===== */
+.viz {
+  --v-ink: #1b1b1b;
+  --v-blue: #2c3aa6;
+  --v-blue-soft: rgba(44, 58, 166, 0.15);
+  --v-warn: #c2622e;
+  --v-panel: rgba(44, 58, 166, 0.045);
+  --v-muted: #8d8e8b;
+  --v-font: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+.dark .viz {
+  --v-ink: #ededed;
+  --v-blue: #8095e8;
+  --v-blue-soft: rgba(128, 149, 232, 0.18);
+  --v-warn: #d98c52;
+  --v-panel: rgba(128, 149, 232, 0.06);
+  --v-muted: #9a9a98;
+}
+.viz svg { width: 100%; height: auto; display: block; }
+.viz text { font-family: var(--v-font); }
+
+.viz-stroke { fill: none; stroke: var(--v-ink); stroke-width: 1.6; }
+.viz-thin   { fill: none; stroke: var(--v-ink); stroke-width: 1; opacity: 0.5; }
+.viz-panel  { fill: var(--v-panel); stroke: var(--v-ink); stroke-width: 1.5; }
+.viz-label    { fill: var(--v-ink); font-size: 13px; letter-spacing: 0.06em; }
+.viz-label-sm { fill: var(--v-ink); font-size: 11px; letter-spacing: 0.04em; opacity: 0.6; }
+.viz-blue   { fill: none; stroke: var(--v-blue); stroke-width: 2; }
+.viz-cell   { fill: var(--v-blue); stroke: var(--v-ink); stroke-width: 1; stroke-opacity: 0.22; }
+.viz-cell.diag { stroke: var(--v-warn); stroke-width: 2; stroke-opacity: 1; }
+.viz-arrow-warn { fill: var(--v-warn); }
+.viz-img    { fill: var(--v-blue-soft); stroke: var(--v-ink); stroke-width: 1.8; }
+.viz-txt    { fill: var(--v-blue-soft); stroke: var(--v-ink); stroke-width: 1.8; }
+.viz-node-lbl { fill: var(--v-ink); font-size: 12px; font-weight: 700; }
+.viz-pull   { stroke: var(--v-blue); stroke-width: 1.6; stroke-dasharray: 3 3; }
+.viz-push   { fill: none; stroke: var(--v-warn); stroke-width: 1.8; }
+.viz-warn   { fill: none; stroke: var(--v-warn); stroke-width: 2.2; }
+.viz-warn-lbl { fill: var(--v-warn); font-size: 12px; font-weight: 700; }
+.viz-phase  { fill: var(--v-ink); font-size: 14px; font-weight: 700; letter-spacing: 0.04em; }
+
+/* GRPO extras */
+.viz-box      { fill: var(--v-blue-soft); stroke: var(--v-ink); stroke-width: 1.8; }
+.viz-bar-pos  { fill: var(--v-blue); }
+.viz-bar-neg  { fill: var(--v-warn); }
+.viz-baseline { fill: none; stroke: var(--v-ink); stroke-width: 1.6; stroke-dasharray: 6 4; }
+.viz-up       { fill: none; stroke: var(--v-blue); stroke-width: 2.6; }
+.viz-down     { fill: none; stroke: var(--v-warn); stroke-width: 2.6; }
+.viz-arrow-blue { fill: var(--v-blue); }
+.viz-arrow-ink  { fill: var(--v-ink); }
+.viz-num      { fill: var(--v-ink); font-size: 15px; font-weight: 700; }
+.viz-num-pos  { fill: var(--v-blue); font-size: 14px; font-weight: 700; }
+.viz-num-neg  { fill: var(--v-warn); font-size: 14px; font-weight: 700; }
+.viz-ghost    { fill: var(--v-muted); }
