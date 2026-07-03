@@ -41,9 +41,12 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 **Punctuation rule, important**
 - Do NOT use em dashes (`—`) or en dashes (`–`) anywhere. They look off in this site's typography and read as AI-generated.
 - Do NOT use semicolons (`;`) in prose. The author dislikes them. This applies to body text, captions, alt text, and list items, anywhere user-visible.
-- Use commas, colons, parentheses, or two short sentences instead.
+- Do NOT use colons (`:`) in prose either, same reason, reads as AI-generated. This includes list item lead-ins like `<strong>Label:</strong>`, use a period instead (`<strong>Label.</strong>`). URLs like `https://` are fine, that's not a prose colon.
+- Use commas, parentheses, or two short sentences instead of a colon or semicolon.
 - Hyphens inside compound words are fine ("image-text", "L2-normalize", "self-supervised"). The rule is about dashes used as a substitute for a comma or sentence break.
-- JS/TS code semicolons (statement terminators, import lines) are fine, the rule only applies to prose.
+- JS/TS code semicolons and colons (object literals, type annotations, import lines) are fine, the rule only applies to prose the reader sees.
+- Before handing back a post, grep the file for stray `:` outside of code/URLs and for `—`/`–` to catch anything missed.
+- One standing exception, the `"Figure N: ..."` prefix on `BlogImage` captions (see Figures and placeholders below) is a numbering label, not a prose colon, keep using it there. Newer figure types (`StatTiles`, `IconArchitectureDiagram`, `ApiEndpointsTable`, `SchemaCards`, `animations/<slug>/` pieces) don't get `Figure N` numbering at all, just a plain descriptive caption, so this exception doesn't come up for them.
 
 **What to avoid**
 - Generic openers like "In today's fast-paced world of AI..." or "In this blog post, we will explore...". Just start.
@@ -69,6 +72,10 @@ Standard arc for a technical post (6 to 9 sections, ~1500 to 2500 words):
 10. **Closing**, short. One paragraph zooming out, a pointer to further reading, a one-line sign-off ("Thanks for reading...").
 
 Personal posts (like `intern-exp.tsx`) follow a looser narrative arc but the same voice rules.
+
+**Ending, every post, no exceptions.** End with a `Heading level={2}` "Takeaways" followed by a `List` of 3 to 5 items, then a final `Paragraph` that zooms out and closes with a one-line sign-off ("Thanks for reading."). Don't stop at the Takeaways list, the closing paragraph is required. See `rate-limiting.tsx` and `data-partitioning.tsx` for the exact shape. If a post gets edited later and something before the ending is removed (a paragraph, a Quote, a figure), the ending stays, just renumber the delays after the removal so the cascade has no gaps (see Animation delays below).
+
+**System design case studies can run long.** The 1500 to 2500 word guideline is a default for topic explainers, not a ceiling. When the user explicitly asks for thorough or comprehensive coverage of a system design topic (see `designing-url-shortener.tsx`), it's fine to cover every sub-topic in the source material plus adjacent things worth knowing (rate limiting, HTTP redirect codes, event-driven analytics, and so on), with more than 9 sections if the topic warrants it. Depth over the default length guideline when asked.
 
 ## Authoring workflow
 
@@ -110,6 +117,16 @@ The date format here is `DD/MM` (different from the post file's long-form date).
 - `Writings.tsx` listing `title` (folder/list view): expanded full name with the acronym in parens, e.g. `"Cross-Origin Resource Sharing (CORS)"`. This is what readers scan and search, so spell it out.
 - Post file `title` (top of the actual post page): just the expanded full name, no parens, e.g. `"Cross-Origin Resource Sharing"`. The acronym gets introduced naturally in the first paragraph instead.
 
+## Component folder structure
+
+`src/content/components/` is organized by how reusable a component is, not by which post first needed it. When adding something new, place it by this test, and it's always re-exported from the top-level `src/content/components/index.ts` barrel, which is the only path every post file imports from (`from "../components"`). Never make a post import a specific file path directly.
+
+- **`primitives/`**, the prose building blocks every post uses: `Paragraph`, `Heading`, `InlineCode`, `CodeBlock`, `BlogImage`, `Formula`, `Quote`, `List`, `Diagram`. New primitives are rare, propose one to the user first.
+- **`figures/`**, generic, config-driven, reusable across any future topic: `StatTiles` (counter tiles from a data array), `IconArchitectureDiagram` (node/edge/phase system diagram from a data array), `StaticCards` (`ApiEndpointsTable`, `SchemaCards`, static reference panels). If a new figure is driven entirely by props/data and isn't tied to one post's narrative, it belongs here.
+- **`animations/<slug>/`**, bespoke, hand-built GSAP/SVG animations that narrate one specific post's concept (hash collisions, cache hit/miss, key handoff, and so on). One folder per post slug. These are usually one-off and not reused, so don't force them into `figures/`. See `GSAP_ANIMATIONS.md` at the repo root for how to build a new one.
+
+When a post needs a new visual, first check if `figures/` already has something that fits (most tabular or stat-shaped needs do). Only reach for a new `animations/<slug>/` piece when the point is to narrate a process step by step, not just display data.
+
 ## Component cheat sheet
 
 All animation-aware components take a `delay` prop. Convention: start at `0.1`, increment by `~0.05` between sibling elements. This produces a gentle staggered entry.
@@ -125,6 +142,12 @@ All animation-aware components take a `delay` prop. Convention: start at `0.1`, 
 | `Quote` | Pull quote | `author`, `delay` |
 | `List` + `ListItem` | Bulleted, numbered list | `ordered` on `List`, `delay` on `List` |
 | `Diagram` | Custom JSX diagram | `caption`, `delay` |
+| `StatTiles` | Counting-up KPI tiles (capacity estimates, benchmark numbers) | `items: StatItem[]` (`label`, `value`, `suffix?`, `icon`, `color`), `delay` |
+| `IconArchitectureDiagram` | Animated system diagram that builds up node by node | `nodes`, `edges`, `phases?` (cumulative build-up steps with a narrating `note`), `height`, `delay`, `caption` |
+| `ApiEndpointsTable` | REST endpoint reference instead of a bullet list | `items: ApiEndpoint[]` (`method`, `path`, `description`), `delay` |
+| `SchemaCards` | Database table schema instead of a bullet list | `tables: SchemaTableSpec[]` (`name`, `fields: {name, note?}[]`), `delay` |
+
+**Prefer a data-driven figure over a bulleted list for structured, parallel data.** A REST API's endpoints, a database schema's fields, a set of named config options, anything that's really rows of the same shape reads better as `ApiEndpointsTable` or `SchemaCards` than as `<List><ListItem><strong>Label.</strong> ...</ListItem></List>`. Keep `List` for prose-shaped bullets (takeaways, pros/cons, loosely parallel sentences).
 
 ## Math (KaTeX)
 
@@ -196,22 +219,29 @@ Start at `0.1`, step `0.05` per element. After a heading, the body paragraph tha
 
 For a long post, delays will reach `2.0`+, that's fine. They run on initial mount, not on scroll.
 
+**Exception, viewport-triggered figures.** `StatTiles`, `IconArchitectureDiagram`, `ApiEndpointsTable`, `SchemaCards`, and any `animations/<slug>/` GSAP piece use `whileInView`/an `IntersectionObserver`, they play when scrolled into view, not on initial mount. Give these a small independent delay, `0.05` to `0.1`, not the next number in the main cascade. Don't try to make them monotonic with the surrounding text delays, they're on a different clock.
+
+**If content gets edited out later**, a paragraph, a `Quote`, a whole section, don't leave the gap. Renumber every delay after the removed element so the sequence is still a clean `+0.05` staircase with no jumps. A `0.1` jump where there should be `0.05` is the tell that something was deleted and the sequence never got fixed, grep the file's delay values in order and check the diffs are all `0.05` before handing it back.
+
 ## Tags
 
 Existing tags and colors live in `Writings.tsx`'s `tagColors` map. Reuse where possible. Conventions so far:
-- `ML`, purple (`bg-purple-100 text-purple-700`), general ML topics
+- `Machine Learning`, purple (`bg-purple-100 text-purple-700`), general ML topics
 - `LLMs`, green (`bg-green-100 text-green-700`), language-model-specific
 - `Intern`, blue (`bg-blue-100 text-blue-700`), internship or career narratives
 - `Book`, yellow (`bg-yellow-100 text-yellow-700`), book reviews or reading notes
+- `System Design`, orange (`bg-orange-100 text-orange-700`), individual system design concepts (caching, load balancing, partitioning, and so on)
+- `System Design Case Studies`, teal (`bg-teal-100 text-teal-700`), a full "design X" walkthrough that pulls several System Design concepts together (see `designing-url-shortener.tsx`)
 
-If a new tag is needed, pick a Tailwind color family that doesn't clash and add to `tagColors`.
+If a new tag is needed, pick a Tailwind color family that doesn't clash and add both to `tagColors` and `tagAccent` in `Writings.tsx` (the folder tab accent color, easy to miss).
 
 ## After drafting
 
 1. Verify the dev server compiles (run `npm run dev` in background if not already running; default port `8080`).
 2. Curl the new route to confirm 200: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/writings/<slug>`.
-3. Send the user the local URL.
-4. **Don't commit.** Leave commits to the user unless they explicitly ask.
+3. If the post added or touched any component (a new figure, a new animation, a reorganized import), also run `npx tsc --noEmit` and `npx vite build` once. A 200 from curl only proves the route mounts, it won't catch a type error in a prop the dev server's HMR papers over.
+4. Send the user the local URL.
+5. **Don't commit.** Leave commits to the user unless they explicitly ask.
 
 ## Constraints
 
@@ -219,4 +249,4 @@ If a new tag is needed, pick a Tailwind color family that doesn't clash and add 
 - Don't add features the post doesn't need (analytics, share buttons, related-posts widgets) unless asked.
 - Don't break the existing `example-showcase.tsx` post; it doubles as a component reference.
 - Don't crop reference images. The user handles cropping themselves; just leave placeholders with accurate captions.
-- Stay within the existing component set. If a post truly needs something new (a callout box, a table), propose it to the user before adding a new component.
+- A new **static, data-driven figure** in `figures/` (a table, a card grid, a stat row) is fine to add directly when the post's content genuinely needs it, follow the existing `StaticCards.tsx` pattern (props in, plain Tailwind out, no gsap). A new **bespoke animation** in `animations/<slug>/`, or any component that introduces a new interaction pattern, gets proposed to the user first.
