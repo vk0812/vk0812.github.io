@@ -15,6 +15,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "designing-pastebin", title: "Designing a Pastebin", date: "04/07", tag: "Case Studies", year: 2026 },
   { id: "designing-url-shortener", title: "Designing a URL Shortener", date: "03/07", tag: "Case Studies", year: 2026 },
   { id: "message-queues", title: "Message Queues", date: "02/07", tag: "System Design", year: 2026 },
   { id: "rate-limiting", title: "Rate Limiting", date: "02/07", tag: "System Design", year: 2026 },

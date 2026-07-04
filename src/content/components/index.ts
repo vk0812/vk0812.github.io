@@ -11,6 +11,8 @@ export { IconArchitectureDiagram } from "./figures/IconArchitectureDiagram";
 export type { DiagramNode, DiagramEdge, DiagramPhase } from "./figures/IconArchitectureDiagram";
 export { StatTiles } from "./figures/StatTiles";
 export type { StatItem } from "./figures/StatTiles";
+export { CapacityMathDiagram } from "./figures/CapacityMathDiagram";
+export type { CapacityGroup, CapacityLine } from "./figures/CapacityMathDiagram";
 export { ApiEndpointsTable, SchemaCards } from "./figures/StaticCards";
 export type { ApiEndpoint, SchemaField, SchemaTableSpec } from "./figures/StaticCards";
 export { HashCollisionDiagram, KeyHandoffDiagram, CacheFlowDiagram } from "./animations/url-shortener/ConceptViz";

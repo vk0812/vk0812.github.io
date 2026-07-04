@@ -56,6 +56,8 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 - Abbreviations and shortforms in prose: always spell out the full term ("load balancer" not "LB", "Weighted Round Robin" not "WRR"). Acronyms that are themselves the canonical name (WAF, CDN, CPU, DNS, HTTP, HTTPS, SSL, TLS) are fine.
 - Marketing-speak ("revolutionary", "game-changing", "unleash the power of"). Never.
 
+**Bold text, sparing.** `<strong>` is available in `Paragraph` prose (`Bloom Filters`, `CDN` already use it inside `ListItem`s). For technical posts, also use it inline in regular paragraphs, but sparingly, 5 to 7 uses across a whole long case study, never more than one per paragraph. Reserve it for the few things that actually carry the argument, a load-bearing number stated once ("Assume **500 million new short links a month**"), or the first real mention of a named mechanism the rest of the post leans on (**Key Generation Service**, **Consistent hashing**, **Least Recently Used**, **object storage**). Don't bold for emphasis or decoration, and don't bold the same term twice.
+
 ## Structure
 
 Standard arc for a technical post (6 to 9 sections, ~1500 to 2500 words):
@@ -122,10 +124,12 @@ The date format here is `DD/MM` (different from the post file's long-form date).
 `src/content/components/` is organized by how reusable a component is, not by which post first needed it. When adding something new, place it by this test, and it's always re-exported from the top-level `src/content/components/index.ts` barrel, which is the only path every post file imports from (`from "../components"`). Never make a post import a specific file path directly.
 
 - **`primitives/`**, the prose building blocks every post uses: `Paragraph`, `Heading`, `InlineCode`, `CodeBlock`, `BlogImage`, `Formula`, `Quote`, `List`, `Diagram`. New primitives are rare, propose one to the user first.
-- **`figures/`**, generic, config-driven, reusable across any future topic: `StatTiles` (counter tiles from a data array), `IconArchitectureDiagram` (node/edge/phase system diagram from a data array), `StaticCards` (`ApiEndpointsTable`, `SchemaCards`, static reference panels). If a new figure is driven entirely by props/data and isn't tied to one post's narrative, it belongs here.
+- **`figures/`**, generic, config-driven, reusable across any future topic: `StatTiles` (counter tiles from a data array), `IconArchitectureDiagram` (node/edge/phase system diagram from a data array), `CapacityMathDiagram` (grouped back-of-envelope math that reveals line by line), `StaticCards` (`ApiEndpointsTable`, `SchemaCards`, static reference panels). If a new figure is driven entirely by props/data and isn't tied to one post's narrative, it belongs here, even if it plays a GSAP timeline internally (`CapacityMathDiagram` does), the test is reusability, not "does it animate."
 - **`animations/<slug>/`**, bespoke, hand-built GSAP/SVG animations that narrate one specific post's concept (hash collisions, cache hit/miss, key handoff, and so on). One folder per post slug. These are usually one-off and not reused, so don't force them into `figures/`. See `GSAP_ANIMATIONS.md` at the repo root for how to build a new one.
 
 When a post needs a new visual, first check if `figures/` already has something that fits (most tabular or stat-shaped needs do). Only reach for a new `animations/<slug>/` piece when the point is to narrate a process step by step, not just display data.
+
+**Reuse an existing bespoke animation across posts when the mechanism is literally the same.** `designing-pastebin.tsx` shares the Key Generation Service and cache-then-database read path with `designing-url-shortener.tsx`, so it imports `HashCollisionDiagram`, `KeyHandoffDiagram`, and `CacheFlowDiagram` straight from `animations/url-shortener/ConceptViz.tsx` and just writes a new caption, instead of duplicating the same GSAP timeline into a `animations/designing-pastebin/` folder. Only build a new bespoke animation when the post introduces a mechanism the site hasn't animated before (the object storage split, a CDN edge cache, and so on stayed prose in the pastebin post for this reason, no existing animation fit and a new one wasn't asked for).
 
 ## Component cheat sheet
 
@@ -143,6 +147,7 @@ All animation-aware components take a `delay` prop. Convention: start at `0.1`, 
 | `List` + `ListItem` | Bulleted, numbered list | `ordered` on `List`, `delay` on `List` |
 | `Diagram` | Custom JSX diagram | `caption`, `delay` |
 | `StatTiles` | Counting-up KPI tiles (capacity estimates, benchmark numbers) | `items: StatItem[]` (`label`, `value`, `suffix?`, `icon`, `color`), `delay` |
+| `CapacityMathDiagram` | Back-of-envelope math (traffic, storage, bandwidth, cache) as a grouped, line-by-line reveal instead of prose paragraphs | `groups: CapacityGroup[]` (`title`, `lines: {expression, result}[]`, `note`), `delay`, `caption` |
 | `IconArchitectureDiagram` | Animated system diagram that builds up node by node | `nodes`, `edges`, `phases?` (cumulative build-up steps with a narrating `note`), `height`, `delay`, `caption` |
 | `ApiEndpointsTable` | REST endpoint reference instead of a bullet list | `items: ApiEndpoint[]` (`method`, `path`, `description`), `delay` |
 | `SchemaCards` | Database table schema instead of a bullet list | `tables: SchemaTableSpec[]` (`name`, `fields: {name, note?}[]`), `delay` |
@@ -174,6 +179,12 @@ Quick LaTeX reference:
 - Calligraphy (loss): `\\mathcal{L}`
 
 KaTeX is in lenient mode (`throwOnError: false`), so a malformed expression renders as red text rather than crashing the page.
+
+## Capacity math, and verifying it
+
+System design case studies always have a "sizing the problem" section (traffic, storage, bandwidth, cache). Don't write this as a wall of paragraphs doing arithmetic in prose, readers can't hold five chained numbers in their head reading English. Use `CapacityMathDiagram` instead, group the derivation (`Traffic`, `Storage`, `Bandwidth`, `Cache (hot 20%)` is the usual set), one or two sentences of framing prose before it to state the starting assumption (the one input number, e.g. "500 million new links a month"), then the diagram carries every subsequent derivation. Keep `StatTiles` right after it for the headline numbers, don't remove those.
+
+**Verify every line before publishing, this is not optional.** A `CapacityMathDiagram` line is `{ expression, result }`, and it's easy to write an `expression` that *looks* like it produces the `result` next to it without actually checking the arithmetic, especially when chaining an already-rounded number into the next step. This shipped as a real bug once, a pastebin post line read `"12/s × 5 (read:write ratio)" -> "≈ 58 reads/s"`, which looks plausible but `12 × 5 = 60`, not `58`. The 58 was real (5,000,000 reads/day ÷ 86,400s ≈ 58), it just didn't come from 12, it came independently from the unrounded daily total. Before handing back any post with a `CapacityMathDiagram` or a capacity-related `Formula` block, run every line's arithmetic through `node -e` (or equivalent) and confirm expression actually produces result within a couple percent, not just that the final number matches the prose you already wrote. Prefer an extra explicit line over a compressed one that hides a chained rounding error, e.g. split "derive reads/day, then divide by seconds" into two lines rather than one line that multiplies two already-rounded per-second rates together.
 
 ## Code blocks
 
@@ -231,7 +242,7 @@ Existing tags and colors live in `Writings.tsx`'s `tagColors` map. Reuse where p
 - `Intern`, blue (`bg-blue-100 text-blue-700`), internship or career narratives
 - `Book`, yellow (`bg-yellow-100 text-yellow-700`), book reviews or reading notes
 - `System Design`, orange (`bg-orange-100 text-orange-700`), individual system design concepts (caching, load balancing, partitioning, and so on)
-- `System Design Case Studies`, teal (`bg-teal-100 text-teal-700`), a full "design X" walkthrough that pulls several System Design concepts together (see `designing-url-shortener.tsx`)
+- `Case Studies`, teal (`bg-teal-100 text-teal-700`), a full "design X" walkthrough that pulls several System Design concepts together (see `designing-url-shortener.tsx`, `designing-pastebin.tsx`). Note the actual tag string in `Writings.tsx` is `"Case Studies"`, not "System Design Case Studies", match that exact string or the folder view splits into two tags.
 
 If a new tag is needed, pick a Tailwind color family that doesn't clash and add both to `tagColors` and `tagAccent` in `Writings.tsx` (the folder tab accent color, easy to miss).
 
@@ -240,8 +251,10 @@ If a new tag is needed, pick a Tailwind color family that doesn't clash and add 
 1. Verify the dev server compiles (run `npm run dev` in background if not already running; default port `8080`).
 2. Curl the new route to confirm 200: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/writings/<slug>`.
 3. If the post added or touched any component (a new figure, a new animation, a reorganized import), also run `npx tsc --noEmit` and `npx vite build` once. A 200 from curl only proves the route mounts, it won't catch a type error in a prop the dev server's HMR papers over.
-4. Send the user the local URL.
-5. **Don't commit.** Leave commits to the user unless they explicitly ask.
+4. If the post has a `CapacityMathDiagram`, a capacity-related `Formula` block, or any other numeric derivation, verify every step's arithmetic independently (see Capacity math above) before calling it done, not just that it type-checks.
+5. Grep the file for stray `:`, `;`, `—`, `–` in prose one more time (see Punctuation rule above), it's cheap and catches anything a mid-edit slipped in.
+6. Send the user the local URL.
+7. **Don't commit.** Leave commits to the user unless they explicitly ask.
 
 ## Constraints
 

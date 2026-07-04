@@ -20,9 +20,26 @@ which exports `HashCollisionDiagram`, `KeyHandoffDiagram`, and
 
 If a visual is really just data plus layout (a stat row, a node graph driven
 by a `nodes`/`edges` array, a table), it's not this kind of animation, it
-belongs in `figures/` instead as a reusable, prop-driven component. This guide
-is specifically for the hand-built, one-off SVG timelines that narrate a
-process step by step.
+belongs in `figures/` instead as a reusable, prop-driven component, even if it
+still plays a GSAP timeline internally. `figures/CapacityMathDiagram.tsx` is
+exactly this, a grouped back-of-envelope math walkthrough (`groups: {title,
+lines: {expression, result}[], note}[]`) that reveals line by line on scroll
+into view, same IntersectionObserver-and-controls shell as everything else on
+this page, but it's parametrized and reusable across any post that needs
+capacity math, so it lives in `figures/`, not a per-post `animations/<slug>/`
+folder. The test is reusability, not "does it use GSAP."
+
+This guide is specifically for the hand-built, one-off SVG timelines that
+narrate a process step by step, and one more rule for those, **reuse before
+rebuilding**. If a new post's mechanism is the identical thing an existing
+animation already narrates, a Key Generation Service handing out unique keys,
+a cache-then-database read path, don't create a new `animations/<slug>/`
+folder for it. `designing-pastebin.tsx` imports `HashCollisionDiagram`,
+`KeyHandoffDiagram`, and `CacheFlowDiagram` straight from
+`animations/url-shortener/ConceptViz.tsx` and just supplies a new caption,
+because the underlying mechanism (and the demo data honesty rules in section 7
+below) hadn't changed at all. Only reach for a brand new bespoke animation
+when the post introduces a mechanism nothing on the site has animated yet.
 
 ---
 
@@ -255,6 +272,21 @@ example values (`aB3xQ9`, `P0qR7z`) since the point there is the handoff
 mechanism, not the hash function, constants are fine when the animation
 isn't making a claim about the data itself.
 
+**Same rule applies doubly hard to `CapacityMathDiagram`'s `expression` ->
+`result` lines, because there the whole point is the arithmetic.** It's easy
+to write a line that *looks* right (an expression that visually resembles the
+result next to it) without the multiplication actually producing that number,
+especially once one line's result gets fed into the next line's expression
+after already being rounded. A real example that shipped, `"12/s × 5
+(read:write ratio)" -> "≈ 58 reads/s"` reads fine but `12 × 5 = 60`, not `58`,
+the real 58 comes from `5,000,000 reads/day ÷ 86,400s`, an independent
+calculation, not from multiplying the already-rounded 12. Before shipping any
+`CapacityMathDiagram`, run every line through `node -e` and check `expression`
+actually evaluates to within a couple percent of `result`, don't just eyeball
+that the final numbers match the surrounding prose. When a derivation needs
+an intermediate step (rate to daily total to rate again), write it as two
+lines instead of collapsing it into one that quietly chains a rounding error.
+
 ---
 
 ## 8. Integration rules (learned the hard way)
@@ -332,3 +364,12 @@ collision), `setupKeyHandoff` (two mirrored lanes, a positive outcome
 highlighted in `.viz-blue`), `setupCacheFlow` (single chain that forks into a
 hit path and a miss path). Theme vars and classes live at the bottom of
 `src/index.css` under the `.viz` section.
+
+`designing-pastebin.tsx` imports all three of those directly rather than
+rebuilding them, since it reuses the exact same Key Generation Service and
+cache-then-database mechanisms, that's the reuse-before-rebuilding rule from
+section 0 in practice. For the reusable, data-driven side of things (not this
+guide's bespoke SVG timelines, but relevant to the same posts), see
+`src/content/components/figures/CapacityMathDiagram.tsx` for the
+back-of-envelope math figure and its arithmetic-verification rule in section
+7 above.

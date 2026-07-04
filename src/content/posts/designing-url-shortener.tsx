@@ -12,6 +12,8 @@ import {
   DiagramPhase,
   StatTiles,
   StatItem,
+  CapacityMathDiagram,
+  CapacityGroup,
   UrlSqueeze,
   HashCollisionDiagram,
   KeyHandoffDiagram,
@@ -38,6 +40,41 @@ import {
   Layers,
   BarChart3,
 } from "lucide-react";
+
+const capacityGroups: CapacityGroup[] = [
+  {
+    title: "Traffic",
+    lines: [
+      { expression: "500M links/month ÷ (30 × 86,400s)", result: "≈ 200 writes/s" },
+      { expression: "200/s × 100 (read:write ratio)", result: "≈ 20,000 reads/s" },
+    ],
+    note: "500 million new links a month, with reads outnumbering writes 100 to 1.",
+  },
+  {
+    title: "Storage (5 years)",
+    lines: [
+      { expression: "500M/mo × 12 × 5yr", result: "30B records" },
+      { expression: "30B records × 500 bytes", result: "≈ 15 TB" },
+    ],
+    note: "Five years of links at roughly 500 bytes a row.",
+  },
+  {
+    title: "Bandwidth",
+    lines: [
+      { expression: "200 writes/s × 500 bytes", result: "≈ 100 KB/s in" },
+      { expression: "20,000 reads/s × 500 bytes", result: "≈ 10 MB/s out" },
+    ],
+    note: "Writes push a trickle in, reads pull steadily more out.",
+  },
+  {
+    title: "Cache (hot 20%)",
+    lines: [
+      { expression: "20,000 reads/s × 86,400s", result: "≈ 1.7B reads/day" },
+      { expression: "20% × 1.7B × 500 bytes", result: "≈ 170 GB" },
+    ],
+    note: "Caching the hottest fifth of daily redirects covers most of the traffic.",
+  },
+];
 
 const stats: StatItem[] = [
   { label: "New URLs created per second", value: 200, suffix: "/s", icon: Link2, color: "text-blue-500" },
@@ -219,7 +256,7 @@ export const designingUrlShortener: BlogPostData = {
 
       <Paragraph delay={0.35}>
         The non-functional requirements are where the design decisions actually come from. The system has
-        to be highly available, since if it's down, every redirect fails, not just new link creation.
+        to be <strong>highly available</strong>, since if it's down, every redirect fails, not just new link creation.
         Redirects have to happen with minimal latency, and generated links should not be guessable in
         sequence. A service that hands out keys like <InlineCode>000001</InlineCode>,{" "}
         <InlineCode>000002</InlineCode> would let anyone enumerate every link ever created just by
@@ -231,44 +268,32 @@ export const designingUrlShortener: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.45}>
-        Say we expect 500 million new short links a month, with a 100 to 1 read to write ratio, since people
-        click links far more often than they create them. That gives roughly 50 billion redirects over the
-        same period. Broken into requests per second, 500 million divided by the seconds in a month works
-        out to about 200 new URLs a second, and multiplying that by the 100 to 1 ratio puts redirects at
-        roughly 20,000 a second.
+        Assume <strong>500 million new short links a month</strong>, with reads outnumbering writes 100 to 1,
+        since people click links far more often than they create them. The rest is arithmetic, and it reads
+        a lot faster laid out than spelled out.
       </Paragraph>
 
-      <Paragraph delay={0.5}>
-        Store every mapping for five years and you're at around 30 billion records, 500 million a month
-        times 12 months times 5 years. At roughly 500 bytes per record, that's about 15 TB of storage, a
-        number small enough that the interesting problems here are read latency and availability, not raw
-        disk space. Bandwidth follows the same split. Writes push about 100 KB/s into the system, reads pull
-        roughly 10 MB/s back out.
-      </Paragraph>
-
-      <Paragraph delay={0.55}>
-        Memory for caching comes from the 80-20 rule, a small slice of links accounts for most of the
-        traffic, so caching the hottest 20% covers the bulk of redirects. At 20,000 requests a second,
-        that's about 1.7 billion requests a day, and caching a fifth of those at 500 bytes each lands at
-        roughly 170 GB, comfortably inside a single modern server's memory, and less in practice once you
-        account for the same hot links being requested over and over.
-      </Paragraph>
+      <CapacityMathDiagram
+        groups={capacityGroups}
+        delay={0.05}
+        caption="Traffic, storage, bandwidth, and cache, each derived from the same starting assumption of 500 million links a month."
+      />
 
       <StatTiles items={stats} delay={0.05} />
 
-      <Heading level={2} delay={0.6}>
+      <Heading level={2} delay={0.5}>
         Designing the API
       </Heading>
 
-      <Paragraph delay={0.65}>
+      <Paragraph delay={0.55}>
         With the scale roughly pinned down, the next step is nailing down exactly what the service exposes,
         since that shapes everything underneath it. A handful of REST endpoints cover the functional
         requirements plus the analytics extension.
       </Paragraph>
 
-      <ApiEndpointsTable items={apiEndpoints} delay={0.7} />
+      <ApiEndpointsTable items={apiEndpoints} delay={0.6} />
 
-      <Paragraph delay={0.75}>
+      <Paragraph delay={0.65}>
         The redirect endpoint deserves a closer look, because the HTTP status code it returns has a real
         side effect. An HTTP 302, a temporary redirect, tells the browser not to cache the mapping, so every
         visit round trips through the service, which is exactly what you want if you're counting clicks. An
@@ -277,55 +302,55 @@ export const designingUrlShortener: BlogPostData = {
         302 for this reason, trading a bit of redirect latency for a click count that's actually accurate.
       </Paragraph>
 
-      <Paragraph delay={0.8}>
+      <Paragraph delay={0.7}>
         Left unchecked, a handful of malicious or just poorly written clients could burn through the
         service's entire key space by hammering the create endpoint, or scrape every redirect by brute
         forcing short codes. The usual fix is to rate limit both operations per user or per IP, with
         different thresholds for authenticated users, anonymous callers, and API consumers.
       </Paragraph>
 
-      <Heading level={2} delay={0.85}>
+      <Heading level={2} delay={0.75}>
         Storing the data
       </Heading>
 
-      <Paragraph delay={0.9}>
+      <Paragraph delay={0.8}>
         The data itself is simple. Billions of records, each one small, well under a kilobyte, with
         essentially no relationships between rows other than which user created which link. Two tables cover
         it.
       </Paragraph>
 
-      <SchemaCards tables={schemaTables} delay={0.95} />
+      <SchemaCards tables={schemaTables} delay={0.85} />
 
-      <Paragraph delay={1.0}>
+      <Paragraph delay={0.9}>
         Given that shape, a NoSQL store like DynamoDB, Cassandra, or Riak is a better fit than a relational
         database. There's no need for joins or multi-row transactions, the access pattern is almost entirely
         "look up one row by its key," and a wide-column or key-value store scales out horizontally far more
         easily than a single relational instance does once you're past a few billion rows.
       </Paragraph>
 
-      <Heading level={2} delay={1.05}>
+      <Heading level={2} delay={0.95}>
         Generating the short key
       </Heading>
 
-      <Paragraph delay={1.1}>
+      <Paragraph delay={1.0}>
         This is the actual design problem hiding inside "shorten a URL." Two approaches show up constantly.
       </Paragraph>
 
-      <Heading level={3} delay={1.15}>
+      <Heading level={3} delay={1.05}>
         Hash the URL
       </Heading>
 
-      <Paragraph delay={1.2}>
+      <Paragraph delay={1.1}>
         Run the URL through MD5 or SHA-256, base62-encode the result ([A-Z, a-z, 0-9], or base64 if you
         throw in <InlineCode>+</InlineCode> and <InlineCode>/</InlineCode>), and take the first six or eight
         characters. The key length is a real trade-off.
       </Paragraph>
 
-      <Formula block delay={1.25}>
+      <Formula block delay={1.15}>
         {`64^{6} \\approx 68.7 \\times 10^{9}, \\qquad 64^{8} \\approx 2.81 \\times 10^{14}`}
       </Formula>
 
-      <Paragraph delay={1.3}>
+      <Paragraph delay={1.2}>
         Six base64 characters already give you about 68.7 billion combinations, comfortably more than the 30
         billion links this system is sized for, so there's no real need to reach for eight. The catch is
         that MD5 produces a 128-bit hash, which base64-encodes to a string over 21 characters long. Slicing
@@ -338,7 +363,7 @@ export const designingUrlShortener: BlogPostData = {
         caption="A real collision, computed live. Two different paths hash to the same first two characters. The system truncates to six, not two, but the math is identical."
       />
 
-      <Paragraph delay={1.35}>
+      <Paragraph delay={1.25}>
         There's a second, quieter problem underneath the collision one. Hashing the URL directly means two
         users shortening the exact same link get the exact same short code, which usually isn't what you
         want if links are meant to be owned or tracked per user. And two URLs that are semantically identical
@@ -347,7 +372,7 @@ export const designingUrlShortener: BlogPostData = {
         content.
       </Paragraph>
 
-      <Paragraph delay={1.4}>
+      <Paragraph delay={1.3}>
         The usual workaround is appending something unique to the URL before hashing it, like an
         ever-incrementing sequence number or the requesting user's ID, then re-hashing until you land on a
         key nobody's used yet. It works, but it's a patch. A global counter has to live somewhere and can in
@@ -355,19 +380,19 @@ export const designingUrlShortener: BlogPostData = {
         have a stable ID to lean on, so you're back to a retry loop on collision either way.
       </Paragraph>
 
-      <Heading level={3} delay={1.45}>
+      <Heading level={3} delay={1.35}>
         Generate keys ahead of time
       </Heading>
 
-      <Paragraph delay={1.5}>
-        The cleaner approach, a standalone Key Generation Service pre-generates random, unique six-character
+      <Paragraph delay={1.4}>
+        The cleaner approach, a standalone <strong>Key Generation Service</strong> pre-generates random, unique six-character
         keys and stores them in a key-DB, split into an unused table and a used table. When an app server
         needs a key, it asks the service, which hands one out and marks it used. No hashing, no collisions,
         no encoding step on the request path, and the service guarantees every key it ever hands out is
         unique by construction.
       </Paragraph>
 
-      <Paragraph delay={1.55}>
+      <Paragraph delay={1.45}>
         Concurrency is the part that needs care. If several app servers ask for keys at the same moment, two
         of them can't be allowed to walk away with the same one. The service handles this by keeping keys in
         two tables, unused and used, and moving a batch of keys into the used table the instant it loads them
@@ -381,57 +406,57 @@ export const designingUrlShortener: BlogPostData = {
         caption="Two servers ask for a key at once. The Key Generation Service marks a key used the instant it hands it out, so no two servers can ever walk away with the same one."
       />
 
-      <Paragraph delay={1.6}>
+      <Paragraph delay={1.5}>
         App servers can go a step further and cache a batch of keys locally, so most create requests never
         make a network call to the Key Generation Service at all. If an app server dies with unused keys
         still cached locally, those are simply lost, an acceptable trade given how large the key space is.
       </Paragraph>
 
-      <Formula block delay={1.65}>
+      <Formula block delay={1.55}>
         {`6 \\text{ bytes/key} \\times 68.7 \\times 10^{9} \\text{ keys} \\approx 412 \\text{ GB}`}
       </Formula>
 
-      <Paragraph delay={1.7}>
+      <Paragraph delay={1.6}>
         That's the entire key-DB, unused and used keys combined, at one byte per character. It's a single
         point of failure by design, so it runs with a standby replica that takes over if the primary goes
         down, and the app server layer talks to it the same way it talks to any other backend dependency,
         through a load balancer, with retries.
       </Paragraph>
 
-      <Paragraph delay={1.75}>
+      <Paragraph delay={1.65}>
         On the read side, resolving a link is a single lookup. Find the key in the database, and if it's
-        there, issue an HTTP 302 with the original URL in the <InlineCode>Location</InlineCode> header. If
+        there, issue an <strong>HTTP 302</strong> with the original URL in the <InlineCode>Location</InlineCode> header. If
         it isn't there, either because it never existed or because it expired and was already cleaned up,
         return a 404 or redirect to the homepage instead. Custom aliases go through the same table, just
         supplied by the user instead of the Key Generation Service, capped at a reasonable length, 16
         characters is a common choice, so the schema stays consistent regardless of who picked the key.
       </Paragraph>
 
-      <Heading level={2} delay={1.8}>
+      <Heading level={2} delay={1.7}>
         Data partitioning
       </Heading>
 
-      <Paragraph delay={1.85}>
+      <Paragraph delay={1.75}>
         At 30 billion rows, one database isn't an option. Range-based partitioning, all keys starting with
         "A" on one shard, "B" on another, rare letters grouped together, is simple and predictable, but
         uneven. Some letters are just more common than others, and shards end up lopsided in a way that's
         hard to predict ahead of time.
       </Paragraph>
 
-      <Paragraph delay={1.9}>
+      <Paragraph delay={1.8}>
         Hash-based partitioning distributes keys more evenly by hashing the key itself and using the result
         to pick a shard, say mapping every key to a bucket between 1 and 256. It spreads load far more
         uniformly than range partitioning, though a naive modulo scheme still concentrates load on a few
-        partitions and forces a near total reshuffle whenever a shard gets added or removed. Consistent
-        hashing solves both problems at once. It maps both keys and shards onto the same ring, so adding or
+        partitions and forces a near total reshuffle whenever a shard gets added or removed. <strong>Consistent
+        hashing</strong> solves both problems at once. It maps both keys and shards onto the same ring, so adding or
         removing a shard only moves the keys that land in its immediate neighborhood, not the entire dataset.
       </Paragraph>
 
-      <Heading level={2} delay={1.95}>
+      <Heading level={2} delay={1.85}>
         Caching hot links
       </Heading>
 
-      <Paragraph delay={2.0}>
+      <Paragraph delay={1.9}>
         Traffic to short links follows the usual 80-20 pattern, a small slice of links account for most
         redirects. An off-the-shelf cache like Memcached, keyed by the short hash and storing the full
         original URL, keeps the vast majority of redirects out of the database entirely. App servers check
@@ -443,8 +468,8 @@ export const designingUrlShortener: BlogPostData = {
         caption="The Redirection Service always checks the cache first. A hit returns immediately, a miss falls through to the URL database and populates the cache before returning."
       />
 
-      <Paragraph delay={2.05}>
-        When the cache fills up and something has to go, Least Recently Used is a reasonable default
+      <Paragraph delay={1.95}>
+        When the cache fills up and something has to go, <strong>Least Recently Used</strong> is a reasonable default
         eviction policy, implementable with a linked hash map that tracks access order alongside the
         key-value pairs. Running multiple cache replicas spreads read load further, and keeping them
         consistent is cheap. On a miss, the app server pulls from the database, writes the result into the
@@ -452,11 +477,11 @@ export const designingUrlShortener: BlogPostData = {
         ignores the update.
       </Paragraph>
 
-      <Heading level={2} delay={2.1}>
+      <Heading level={2} delay={2.0}>
         Load balancing
       </Heading>
 
-      <Paragraph delay={2.15}>
+      <Paragraph delay={2.05}>
         A load balancer fits in three places here, between clients and the app servers, between app servers
         and the database, and between app servers and the cache. Round robin is a reasonable starting point
         at all three, cheap to run and simple enough that it automatically stops sending traffic to a server
@@ -467,11 +492,11 @@ export const designingUrlShortener: BlogPostData = {
         independently of each other.
       </Paragraph>
 
-      <Heading level={2} delay={2.2}>
+      <Heading level={2} delay={2.1}>
         Expiration and cleanup
       </Heading>
 
-      <Paragraph delay={2.25}>
+      <Paragraph delay={2.15}>
         Links expire, but scanning the whole table for expired rows on a schedule would hammer the database
         for no good reason. A lighter approach, check expiration lazily, only when a link is actually
         requested, and delete it on the spot if it's past its date, returning an error to whoever tried to
@@ -479,7 +504,7 @@ export const designingUrlShortener: BlogPostData = {
         of them are ever served to a real visitor, which is the property that actually matters.
       </Paragraph>
 
-      <Paragraph delay={2.3}>
+      <Paragraph delay={2.2}>
         A separate, low-priority Cleanup Service runs on a schedule to catch what lazy deletion misses,
         sweeping expired links out of both storage and cache during low-traffic windows so it doesn't compete
         with real user requests. Every link gets a default expiration if the user doesn't set one, two years
@@ -487,18 +512,18 @@ export const designingUrlShortener: BlogPostData = {
         to be handed out again.
       </Paragraph>
 
-      <Paragraph delay={2.35}>
+      <Paragraph delay={2.25}>
         Whether to also expire links that are technically still valid but haven't been visited in months is
         a genuinely open question, and reasonable systems land on either side of it. Since storage is cheap
         relative to the cost of accidentally breaking a link someone still has bookmarked, keeping unvisited
         links around indefinitely is usually the safer default.
       </Paragraph>
 
-      <Heading level={2} delay={2.4}>
+      <Heading level={2} delay={2.3}>
         Tracking usage
       </Heading>
 
-      <Paragraph delay={2.45}>
+      <Paragraph delay={2.35}>
         Once analytics is a requirement, every redirect needs to leave a trace, which country the click came
         from, the timestamp, the referring page, and the browser or platform. The naive implementation,
         incrementing a click counter on the link's own row every time it's visited, falls over exactly where
@@ -506,7 +531,7 @@ export const designingUrlShortener: BlogPostData = {
         trying to update the same row at once.
       </Paragraph>
 
-      <Paragraph delay={2.5}>
+      <Paragraph delay={2.4}>
         The fix is to stop treating each click as a synchronous write to the hot row. Log each click event
         to a separate, append-only stream instead, and aggregate counts out of band on a delay, whether
         that's a batched write every few seconds or a background job that rolls the event log up into
@@ -514,11 +539,11 @@ export const designingUrlShortener: BlogPostData = {
         its own popular links, a trade that's almost always worth making.
       </Paragraph>
 
-      <Heading level={2} delay={2.55}>
+      <Heading level={2} delay={2.45}>
         Private links and permissions
       </Heading>
 
-      <Paragraph delay={2.6}>
+      <Paragraph delay={2.5}>
         Not every link needs to be public. Supporting private links just means storing a permission level,
         public or private, alongside each URL, plus a separate table mapping each link's hash to the set of
         user IDs allowed to resolve it. In a wide-column store like Cassandra, that table's row key is the
@@ -527,11 +552,11 @@ export const designingUrlShortener: BlogPostData = {
         lookup on the hot path, cheap enough not to affect the latency budget in any meaningful way.
       </Paragraph>
 
-      <Heading level={2} delay={2.65}>
+      <Heading level={2} delay={2.55}>
         Putting it all together
       </Heading>
 
-      <Paragraph delay={2.7}>
+      <Paragraph delay={2.6}>
         Every piece so far, the load balancer, the key generation service, the cache, the cleanup sweep,
         slots into one architecture. Client traffic lands on a load balancer, fans out through an API
         gateway to dedicated shortening, redirection, and analytics services, and each of those services
@@ -547,11 +572,11 @@ export const designingUrlShortener: BlogPostData = {
         caption="The complete design. Client traffic passes through a load balancer and gateway into dedicated shortening, redirection, and analytics services, each backed by its own datastore, with a cleanup service tying the URL and key databases together."
       />
 
-      <Heading level={2} delay={2.75}>
+      <Heading level={2} delay={2.65}>
         Takeaways
       </Heading>
 
-      <List delay={2.8}>
+      <List delay={2.7}>
         <ListItem>
           Pre-generate keys with a Key Generation Service instead of hashing URLs on the fly. It sidesteps
           collisions entirely and keeps the write path off the request's critical section.
@@ -574,7 +599,7 @@ export const designingUrlShortener: BlogPostData = {
         </ListItem>
       </List>
 
-      <Paragraph delay={2.85}>
+      <Paragraph delay={2.75}>
         A URL shortener is small enough to hold in your head completely, which is exactly why it's useful.
         Every decision here generalizes directly to systems with far more moving parts, and learning to
         justify these trade-offs on something this small makes them much easier to spot everywhere else.
