@@ -17,3 +17,4 @@ export { ApiEndpointsTable, SchemaCards } from "./figures/StaticCards";
 export type { ApiEndpoint, SchemaField, SchemaTableSpec } from "./figures/StaticCards";
 export { HashCollisionDiagram, KeyHandoffDiagram, CacheFlowDiagram } from "./animations/url-shortener/ConceptViz";
 export { UrlSqueeze } from "./animations/url-shortener/UrlSqueeze";
+export { FeedFanoutDiagram, PhotoUploadDiagram } from "./animations/designing-instagram/ConceptViz";

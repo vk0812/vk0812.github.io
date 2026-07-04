@@ -21,6 +21,7 @@ import { rateLimiting } from "./rate-limiting";
 import { messageQueues } from "./message-queues";
 import { designingUrlShortener } from "./designing-url-shortener";
 import { designingPastebin } from "./designing-pastebin";
+import { designingInstagram } from "./designing-instagram";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -45,6 +46,7 @@ export const blogPosts: Record<string, BlogPostData> = {
   "message-queues": messageQueues,
   "designing-url-shortener": designingUrlShortener,
   "designing-pastebin": designingPastebin,
+  "designing-instagram": designingInstagram,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";

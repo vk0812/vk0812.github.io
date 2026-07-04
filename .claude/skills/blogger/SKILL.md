@@ -55,6 +55,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 - Filler transitions ("Now, let's move on to...", "As we discussed before..."). Trust the reader.
 - Abbreviations and shortforms in prose: always spell out the full term ("load balancer" not "LB", "Weighted Round Robin" not "WRR"). Acronyms that are themselves the canonical name (WAF, CDN, CPU, DNS, HTTP, HTTPS, SSL, TLS) are fine.
 - Marketing-speak ("revolutionary", "game-changing", "unleash the power of"). Never.
+- Naming this blog's own other posts or calling out "this series" ("every other case study in this series", "the same pattern this series has already used"). Keep comparisons general instead, describe the mechanism or the class of system it shows up in ("the same pattern any system needing unique IDs without a single point of failure reaches for"), not a pointer back to specific posts on this site.
 
 **Bold text, sparing.** `<strong>` is available in `Paragraph` prose (`Bloom Filters`, `CDN` already use it inside `ListItem`s). For technical posts, also use it inline in regular paragraphs, but sparingly, 5 to 7 uses across a whole long case study, never more than one per paragraph. Reserve it for the few things that actually carry the argument, a load-bearing number stated once ("Assume **500 million new short links a month**"), or the first real mention of a named mechanism the rest of the post leans on (**Key Generation Service**, **Consistent hashing**, **Least Recently Used**, **object storage**). Don't bold for emphasis or decoration, and don't bold the same term twice.
 
@@ -63,7 +64,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 Standard arc for a technical post (6 to 9 sections, ~1500 to 2500 words):
 
 1. **Cold open**, 1 to 2 paragraphs grounding the topic in something the reader has already seen ("If you've used image search..."). Do NOT add a "this post covers X, Y, Z" scope sentence or a "basic X familiarity assumed" prerequisite sentence, just launch straight into the core idea after the hook.
-2. **The core idea**, the one-sentence version of the concept, before any math or detail.
+2. **The core idea** (optional), the one-sentence version of the concept, before any math or detail. Don't add this as its own standalone heading by default, a lot of posts don't need it, the cold open often already lands the concept. Only give it a dedicated `Heading` when the topic genuinely needs a beat to state the one-sentence version before the mechanism starts (a novel or unintuitive concept that isn't obvious from the cold open). Default to folding straight from the cold open into requirements or setup.
 3. **Setup, data, prerequisites**, what the inputs look like, with a concrete example.
 4. **The mechanism**, the actual technical content, broken into 2 to 4 sub-sections.
 5. **Loss, objective, key equation** (if applicable), a single block formula plus a plain-language walkthrough of every symbol. Follow with the actual code.
@@ -263,3 +264,4 @@ If a new tag is needed, pick a Tailwind color family that doesn't clash and add 
 - Don't break the existing `example-showcase.tsx` post; it doubles as a component reference.
 - Don't crop reference images. The user handles cropping themselves; just leave placeholders with accurate captions.
 - A new **static, data-driven figure** in `figures/` (a table, a card grid, a stat row) is fine to add directly when the post's content genuinely needs it, follow the existing `StaticCards.tsx` pattern (props in, plain Tailwind out, no gsap). A new **bespoke animation** in `animations/<slug>/`, or any component that introduces a new interaction pattern, gets proposed to the user first.
+- Don't add internal links to other posts on this site (no `<Link to="/writings/...">` in post prose). Reference a related concept by name in plain text if it helps, without turning it into a hyperlink.
