@@ -13,10 +13,13 @@ import { componentTagger } from "lovable-tagger";
  * no matter how many blog images get added.
  *
  * - In dev: a middleware serves the files straight from ./cdn-assets.
- * - In build: every "/foo/bar.png" style reference is rewritten to
- *     https://cdn.jsdelivr.net/gh/<owner>/<repo>@<sha>/cdn-assets/foo/bar.png
- *   The commit SHA makes each URL immutable, so new post images appear
- *   instantly on deploy and are cached permanently by the CDN + browsers.
+ * - In build: every "/foo/bar.png" style reference is rewritten to a jsDelivr
+ *   URL, then wrapped through wsrv.nl (a free, Cloudflare-backed image CDN) so
+ *   images are re-encoded to WebP on the fly — typically 90% smaller than the
+ *   source PNG with no visible quality loss, keeping diagram text sharp:
+ *     https://wsrv.nl/?url=<jsdelivr-url>&output=webp&q=85
+ *   The commit SHA makes each source URL immutable, so new post images appear
+ *   instantly on deploy and are cached permanently by both CDNs + browsers.
  *
  * Adding future images: drop the file under ./cdn-assets/... and reference it
  * with a normal absolute path (e.g. src="/blog/new-post/diagram.png"). No other
@@ -24,6 +27,8 @@ import { componentTagger } from "lovable-tagger";
  */
 const OWNER_REPO = "vk0812/vk0812.github.io";
 const CDN_DIR = "cdn-assets";
+// wsrv.nl on-the-fly WebP compression quality (85 keeps diagram text crisp).
+const WEBP_QUALITY = 85;
 const RASTER_EXT = ["png", "jpg", "jpeg", "webp", "gif", "avif"];
 const RASTER_RE = new RegExp(`\\.(?:${RASTER_EXT.join("|")})$`, "i");
 
@@ -54,7 +59,10 @@ function resolveSha(): string {
 }
 
 function cdnAssetsPlugin(isBuild: boolean) {
-  const base = `https://cdn.jsdelivr.net/gh/${OWNER_REPO}@${resolveSha()}/${CDN_DIR}`;
+  const jsdelivr = `https://cdn.jsdelivr.net/gh/${OWNER_REPO}@${resolveSha()}/${CDN_DIR}`;
+  // Wrap the immutable jsDelivr URL through wsrv.nl for automatic WebP compression.
+  const toCdnUrl = (p: string) =>
+    `https://wsrv.nl/?url=${encodeURIComponent(`${jsdelivr}/${p}`)}&output=webp&q=${WEBP_QUALITY}`;
   return {
     name: "cdn-assets",
     enforce: "pre" as const,
@@ -83,7 +91,7 @@ function cdnAssetsPlugin(isBuild: boolean) {
       if (!REWRITE_RE.test(code)) return null;
       REWRITE_RE.lastIndex = 0;
       return {
-        code: code.replace(REWRITE_RE, (_m, q: string, p: string) => `${q}${base}/${p}`),
+        code: code.replace(REWRITE_RE, (_m, q: string, p: string) => `${q}${toCdnUrl(p)}`),
         map: null,
       };
     },

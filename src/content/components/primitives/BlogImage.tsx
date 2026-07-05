@@ -25,6 +25,8 @@ export const BlogImage = ({ src, alt, caption, delay = 0, size = "md" }: BlogIma
     <img
       src={src}
       alt={alt}
+      loading="lazy"
+      decoding="async"
       className="w-full rounded-lg border border-border shadow-sm"
     />
     {caption && (
