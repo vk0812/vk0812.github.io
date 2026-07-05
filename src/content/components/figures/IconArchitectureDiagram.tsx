@@ -233,12 +233,15 @@ export const IconArchitectureDiagram = ({
                 style={{ left: `${n.x}%`, top: `${n.y}%` }}
               >
                 <div className="relative">
-                  <div
-                    ref={(el) => {
-                      if (el) ringRefs.current.set(n.id, el);
-                    }}
-                    className="absolute -inset-2 rounded-2xl ring-2 ring-amber-400/70"
-                  />
+                  {animated && (
+                    <div
+                      ref={(el) => {
+                        if (el) ringRefs.current.set(n.id, el);
+                      }}
+                      className="absolute -inset-2 rounded-2xl ring-2 ring-amber-400/70"
+                      style={{ opacity: 0 }}
+                    />
+                  )}
                   <div className={`relative flex items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-xl bg-background border border-border shadow-sm ${n.color}`}>
                     <Icon className="h-6 w-6 sm:h-7 sm:w-7" strokeWidth={1.75} />
                   </div>

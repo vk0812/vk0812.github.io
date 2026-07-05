@@ -23,3 +23,4 @@ export { GroupedIconCard } from "./figures/GroupedIconCard";
 export type { GroupedIconItem } from "./figures/GroupedIconCard";
 export { ReplicationDiagram } from "./figures/ReplicationDiagram";
 export type { ReplicationPanel } from "./figures/ReplicationDiagram";
+export { DirectoryLookupDiagram, MessageAckChainDiagram } from "./animations/designing-messenger/ConceptViz";
