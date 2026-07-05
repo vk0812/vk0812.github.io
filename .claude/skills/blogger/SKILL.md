@@ -274,7 +274,7 @@ The code string is auto-trimmed. Theme switches with the site, GitHub light or V
 
 ## Figures and placeholders
 
-**Where final images go**: `public/blog/<topic>/<filename>.png`, referenced as `/blog/<topic>/<filename>.png` from the component (absolute path, no leading dot).
+**Where final images go**: `cdn-assets/blog/<topic>/<filename>.png` (NOT `public/`, that would bloat the deploy artifact). Reference it exactly the same way from the component, `/blog/<topic>/<filename>.png` (absolute path, no leading dot). A Vite plugin in `vite.config.ts` serves it locally in dev and, at build, rewrites the path to a jsDelivr + wsrv.nl WebP CDN URL, so images are ~90% smaller on the live site and the artifact stays tiny no matter how many you add. Nothing else to configure, just drop the file in `cdn-assets/...` and use the `/blog/...` path.
 
 **Placeholder convention**: when drafting, the user will swap real crops in later. For every figure the post needs, insert a `<BlogImage>` with `src="/placeholder.svg"` and a fully-written `caption`, `alt`, and `size`. The caption must accurately describe the figure that will eventually go there, so the user can drop in the right crop without re-reading the post.
 
@@ -325,6 +325,8 @@ If a new tag is needed, pick a Tailwind color family that doesn't clash and add 
 5. Grep the file for stray `:`, `;`, `—`, `–` in prose one more time (see Punctuation rule above), it's cheap and catches anything a mid-edit slipped in.
 6. Send the user the local URL.
 7. **Don't commit.** Leave commits to the user unless they explicitly ask.
+
+**Deployment**: pushing to `main` auto-builds and publishes to the `gh-pages` branch (served by GitHub Pages' classic pipeline). Never push to `gh-pages` by hand, and don't touch the deploy workflow.
 
 ## Constraints
 
