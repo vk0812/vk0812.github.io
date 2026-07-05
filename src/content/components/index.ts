@@ -18,3 +18,8 @@ export type { ApiEndpoint, SchemaField, SchemaTableSpec } from "./figures/Static
 export { HashCollisionDiagram, KeyHandoffDiagram, CacheFlowDiagram } from "./animations/url-shortener/ConceptViz";
 export { UrlSqueeze } from "./animations/url-shortener/UrlSqueeze";
 export { FeedFanoutDiagram, PhotoUploadDiagram } from "./animations/designing-instagram/ConceptViz";
+export { PresignedUploadDiagram, ChunkHashFlowDiagram } from "./animations/designing-dropbox/ConceptViz";
+export { GroupedIconCard } from "./figures/GroupedIconCard";
+export type { GroupedIconItem } from "./figures/GroupedIconCard";
+export { ReplicationDiagram } from "./figures/ReplicationDiagram";
+export type { ReplicationPanel } from "./figures/ReplicationDiagram";

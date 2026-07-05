@@ -55,7 +55,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 - Filler transitions ("Now, let's move on to...", "As we discussed before..."). Trust the reader.
 - Abbreviations and shortforms in prose: always spell out the full term ("load balancer" not "LB", "Weighted Round Robin" not "WRR"). Acronyms that are themselves the canonical name (WAF, CDN, CPU, DNS, HTTP, HTTPS, SSL, TLS) are fine.
 - Marketing-speak ("revolutionary", "game-changing", "unleash the power of"). Never.
-- Naming this blog's own other posts or calling out "this series" ("every other case study in this series", "the same pattern this series has already used"). Keep comparisons general instead, describe the mechanism or the class of system it shows up in ("the same pattern any system needing unique IDs without a single point of failure reaches for"), not a pointer back to specific posts on this site.
+- Naming this blog's own other posts or calling out "this series" ("every other case study in this series", "the same pattern this series has already used"). Keep comparisons general instead, describe the mechanism or the class of system it shows up in ("the same pattern any system needing unique IDs without a single point of failure reaches for"), not a pointer back to specific posts on this site. This includes naming a *system* that happens to be another post's topic purely as a comparison point ("unlike a URL shortener, which..." or "a Pastebin service deliberately..."), even with no link and even if you remember that other post's content well. You may not have (re-)read that post in this session, and the reference will drift out of sync with what it actually says. Describe the general mechanism instead ("services that truncate a hash to keep a link short", "a flat key space with no natural relationship between entries") so the comparison holds up without depending on another file's current content.
 
 **Bold text, sparing.** `<strong>` is available in `Paragraph` prose (`Bloom Filters`, `CDN` already use it inside `ListItem`s). For technical posts, also use it inline in regular paragraphs, but sparingly, 5 to 7 uses across a whole long case study, never more than one per paragraph. Reserve it for the few things that actually carry the argument, a load-bearing number stated once ("Assume **500 million new short links a month**"), or the first real mention of a named mechanism the rest of the post leans on (**Key Generation Service**, **Consistent hashing**, **Least Recently Used**, **object storage**). Don't bold for emphasis or decoration, and don't bold the same term twice.
 
@@ -125,10 +125,10 @@ The date format here is `DD/MM` (different from the post file's long-form date).
 `src/content/components/` is organized by how reusable a component is, not by which post first needed it. When adding something new, place it by this test, and it's always re-exported from the top-level `src/content/components/index.ts` barrel, which is the only path every post file imports from (`from "../components"`). Never make a post import a specific file path directly.
 
 - **`primitives/`**, the prose building blocks every post uses: `Paragraph`, `Heading`, `InlineCode`, `CodeBlock`, `BlogImage`, `Formula`, `Quote`, `List`, `Diagram`. New primitives are rare, propose one to the user first.
-- **`figures/`**, generic, config-driven, reusable across any future topic: `StatTiles` (counter tiles from a data array), `IconArchitectureDiagram` (node/edge/phase system diagram from a data array), `CapacityMathDiagram` (grouped back-of-envelope math that reveals line by line), `StaticCards` (`ApiEndpointsTable`, `SchemaCards`, static reference panels). If a new figure is driven entirely by props/data and isn't tied to one post's narrative, it belongs here, even if it plays a GSAP timeline internally (`CapacityMathDiagram` does), the test is reusability, not "does it animate."
-- **`animations/<slug>/`**, bespoke, hand-built GSAP/SVG animations that narrate one specific post's concept (hash collisions, cache hit/miss, key handoff, and so on). One folder per post slug. These are usually one-off and not reused, so don't force them into `figures/`. See `GSAP_ANIMATIONS.md` at the repo root for how to build a new one.
+- **`figures/`**, generic, config-driven, reusable across any future topic: `StatTiles` (counter tiles from a data array), `IconArchitectureDiagram` (node/edge/phase system diagram from a data array), `CapacityMathDiagram` (grouped back-of-envelope math that reveals line by line), `StaticCards` (`ApiEndpointsTable`, `SchemaCards`, static reference panels), `GroupedIconCard` (a titled card containing a grid of icon+label tiles, for "here's what's inside this component" breakdowns), `ReplicationDiagram` (a side-by-side comparison of two named configurations, each a small box diagram plus a one-line note). If a new figure is driven entirely by props/data and isn't tied to one post's narrative, it belongs here, even if it plays a GSAP timeline internally (`CapacityMathDiagram` does), the test is reusability, not "does it animate."
+- **`animations/<slug>/`**, bespoke, hand-built GSAP/SVG animations that narrate one specific post's concept (hash collisions, cache hit/miss, key handoff, and so on). One folder per post slug. These are usually one-off and not reused, so don't force them into `figures/`. See "Building bespoke animations" below for how to build a new one (`GSAP_ANIMATIONS.md` at the repo root has extra depth on the same material if needed, but this section is self-sufficient).
 
-When a post needs a new visual, first check if `figures/` already has something that fits (most tabular or stat-shaped needs do). Only reach for a new `animations/<slug>/` piece when the point is to narrate a process step by step, not just display data.
+When a post needs a new visual, first check if `figures/` already has something that fits (most tabular or stat-shaped needs do). Only reach for a new `animations/<slug>/` piece when the point is to narrate a process step by step, not just display data. **And even then, ask whether it needs to be a hand-coded SVG timeline at all.** A "here's what's inside this box" breakdown (`GroupedIconCard`, a title plus a grid of icon+label tiles) or a "compare two static configurations side by side" figure (`ReplicationDiagram`, two panels of boxes and a one-line note each) read just as clearly built with plain Tailwind divs, and divs can't produce the cramped-text bug custom SVG coordinates can (see "Layout spacing" under Building bespoke animations below). Reach for GSAP/SVG specifically when the point is motion, something drawing, moving, or forking over time, not just structure.
 
 **Reuse an existing bespoke animation across posts when the mechanism is literally the same.** `designing-pastebin.tsx` shares the Key Generation Service and cache-then-database read path with `designing-url-shortener.tsx`, so it imports `HashCollisionDiagram`, `KeyHandoffDiagram`, and `CacheFlowDiagram` straight from `animations/url-shortener/ConceptViz.tsx` and just writes a new caption, instead of duplicating the same GSAP timeline into a `animations/designing-pastebin/` folder. Only build a new bespoke animation when the post introduces a mechanism the site hasn't animated before (the object storage split, a CDN edge cache, and so on stayed prose in the pastebin post for this reason, no existing animation fit and a new one wasn't asked for).
 
@@ -152,8 +152,64 @@ All animation-aware components take a `delay` prop. Convention: start at `0.1`, 
 | `IconArchitectureDiagram` | Animated system diagram that builds up node by node | `nodes`, `edges`, `phases?` (cumulative build-up steps with a narrating `note`), `height`, `delay`, `caption` |
 | `ApiEndpointsTable` | REST endpoint reference instead of a bullet list | `items: ApiEndpoint[]` (`method`, `path`, `description`), `delay` |
 | `SchemaCards` | Database table schema instead of a bullet list | `tables: SchemaTableSpec[]` (`name`, `fields: {name, note?}[]`), `delay` |
+| `GroupedIconCard` | "Here's what's inside this component" breakdown, a titled card of icon+label tiles | `title`, `items: GroupedIconItem[]` (`icon`, `label`), `color?`, `delay` |
+| `ReplicationDiagram` | Side-by-side comparison of two named configurations (each a small box diagram plus a note) | `panels: [ReplicationPanel, ReplicationPanel]` (`title`, `writeLabel`, `fanLabel`, `nodes: string[]`, `highlightNodes?`, `note`), `delay` |
 
 **Prefer a data-driven figure over a bulleted list for structured, parallel data.** A REST API's endpoints, a database schema's fields, a set of named config options, anything that's really rows of the same shape reads better as `ApiEndpointsTable` or `SchemaCards` than as `<List><ListItem><strong>Label.</strong> ...</ListItem></List>`. Keep `List` for prose-shaped bullets (takeaways, pros/cons, loosely parallel sentences).
+
+## Building bespoke animations (GSAP + SVG)
+
+For the hand-built, one-off SVG timelines that narrate a process step by step (a hash collision, a cache hit/miss fork, two servers racing for a key). Reference implementations: `animations/url-shortener/ConceptViz.tsx` (`HashCollisionDiagram`, `KeyHandoffDiagram`, `CacheFlowDiagram`) and `animations/designing-dropbox/ConceptViz.tsx` (`PresignedUploadDiagram`, `ChunkHashFlowDiagram`). `GSAP_ANIMATIONS.md` at the repo root covers the same ground in more depth if you want it, but everything needed to build one correctly is here.
+
+**Reuse before rebuilding.** If a new post's mechanism is the same thing an existing animation already narrates (a cache-then-database read path, a key-handoff race), import the existing export from its `animations/<slug>/ConceptViz.tsx` and just write a new caption, the way `designing-pastebin.tsx` reuses all three url-shortener animations. Only build a new one when the post introduces a mechanism nothing on the site has animated yet.
+
+**Mental model.** One GSAP timeline plays a story: intro to phase 1 to phase 2 to recap. Four parts, an SVG scene (boxes, cells, labels, built once in JS), the GSAP timeline (sequences *when* things happen), on-canvas `phase` text (a plain-language line updated live so the animation narrates itself with zero interaction), and deterministic data (real values computed up front so visuals never lie).
+
+**The `Api` + `VizFigure` wrapper.** Every animation is a `setupXxx(svg)` function returning an `Api`, wrapped by a `VizFigure` component that gives it controls, theming, and in-view autoplay for free:
+
+```ts
+type Api = {
+  play: () => void;              // (re)build timeline from scratch and play
+  pause: () => void;
+  resume: () => void;
+  setRate: (r: number) => void;  // timeScale (speed buttons)
+  cleanup: () => void;           // kill timeline on unmount
+};
+
+function setupMyThing(svg: SVGSVGElement): Api {
+  while (svg.firstChild) svg.removeChild(svg.firstChild); // build scene ONCE
+  /* build static scene with mk()/mkText(), set initial positions at build time */
+  let tl: gsap.core.Timeline | null = null;
+  const play = () => { tl?.kill(); /* gsap.set(...) back to start state */ tl = gsap.timeline(); /* ... */ };
+  return { play, pause: () => tl?.pause(), resume: () => tl?.play(), setRate: (r) => tl?.timeScale(r), cleanup: () => tl?.kill() };
+}
+
+export const MyThingDiagram = ({ caption, delay }: { caption: string; delay?: number }) => (
+  <VizFigure caption={caption} viewBox="0 0 900 480" maxW="max-w-2xl" delay={delay} setup={setupMyThing} />
+);
+```
+
+Copy `VizFigure`, `mk()`, and `mkText()` verbatim from an existing `animations/<slug>/ConceptViz.tsx` the first time a post needs its own animation file, they're small and self-contained on purpose. `VizFigure` already handles the entrance fade, the `IntersectionObserver` (plays once when scrolled into view), and the control bar (play/pause, replay, 0.5x/1x/2x). Don't re-implement those. `play()` must `gsap.set()` everything back to its start state (including every `strokeDashoffset` back to full length) before rebuilding the timeline, or leftover state bleeds into the replay, this bug only shows up on the second play.
+
+**Theming, non-negotiable.** Colors come entirely from CSS vars scoped to `.viz`/`.dark .viz` in `src/index.css`. `setAttribute("stroke", "var(--v-warn)")` silently fails, SVG presentation attributes don't resolve `var()`. **Always color via `class`** (`.viz-stroke`, `.viz-box`, `.viz-panel`, `.viz-blue`, `.viz-warn`, `.viz-label`, `.viz-label-sm`, `.viz-node-lbl`, `.viz-phase`, `.viz-warn-lbl`, arrowhead fills `.viz-arrow-ink|blue|warn`), and animate opacity/position/fill-opacity, never color, so light/dark switching stays live. `.viz-warn` is reserved for an actual negative outcome (a collision, a bug, a real gotcha), `.viz-blue` is the neutral/positive highlight. Don't spend the warning color on emphasis that isn't a problem.
+
+**Layout basics.** Lay out in `viewBox` coordinates (it scales to fit). Center text with `text-anchor="middle"` (SVG defaults to left-anchored). A symmetric two-lane layout (mirrored columns) is the safest shape for "compare two things" stories, a single vertical chain with a fork is safest for "one thing, then it forks" stories (a hit/miss or match/no-match split). A node you move is a `<g>`, moved with `gsap.to(g, {x, y})`, set its start position at build time or it flashes at the origin before the first play.
+
+**Self-drawing line, the signature move.**
+```ts
+const len = Math.hypot(x2 - x1, y2 - y1);
+ln.style.strokeDasharray = String(len);
+tl.fromTo(ln, { strokeDashoffset: len, opacity: 1 }, { strokeDashoffset: 0, duration: 0.35, ease: "none" }, at);
+```
+Create the line `opacity: 0` and reveal it exactly when the draw starts, arrowheads render through a hidden dash offset otherwise. Give every marker a unique id per instance (`Math.random().toString(36).slice(2, 7)`), two animations on one page collide on a shared id otherwise.
+
+**Sequencing.** `">"` places a tween at the end of the timeline so far, `"<"` runs it concurrently with the previous tween's start, `"+=0.5"`/a number is relative or absolute time. `tl.add(() => { phase.textContent = "..."; }, at)` narrates *as it animates*, not just a summary after the fact. `tl.to({}, { duration: 1.2 })` is a deliberate read-pause between phases, don't skip these, a story with no pauses reads as a blur.
+
+**Honest, deterministic data.** Compute the real thing up front, verify by hand or `node -e` that two lanes actually produce different values before wiring them in. Fixed example values are fine when the animation isn't making a claim about the data itself (a handoff mechanism doesn't need a real hash function behind it), but don't assume, check.
+
+**Layout spacing, easy to get wrong.** A hand-coded SVG animation with too little vertical gap between a box's bottom edge and the label text below it produces cramped, overlapping-looking output, and this is very easy to get wrong by eyeballing coordinates. It already happened once in this repo (`PresignedUploadDiagram`'s first draft had a label sitting almost on top of the box above it, and the top phase text crowded the first box). As a rule of thumb, leave at least 25 to 30 viewBox units between a box's edge and any label text placed outside it, not the 10 to 15 units that reads fine in your head but cramped once rendered. Check that no label text touches or overlaps a box edge, that the top phase text has real breathing room before the first box, and that no arrow crosses through a box it isn't pointing at. This applies to every future SVG/GSAP animation on this site, not just the one that broke it.
+
+**Integration rules.** Never remove existing figures when adding one, only add. Place a new animation right after the paragraph describing the mechanism it visualizes. No `Figure N` numbering on animation captions (that's for `BlogImage` screenshots only), one plain descriptive sentence instead. Give it a small independent `delay` (`0.05` to `0.1`), not the next number in the surrounding cascade, it triggers on scroll via `IntersectionObserver`, not on mount (a `delay={1.7}` here once produced a multi-second blank gap before the animation appeared).
 
 ## Math (KaTeX)
 

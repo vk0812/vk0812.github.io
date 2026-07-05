@@ -15,6 +15,7 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "designing-dropbox", title: "Designing Dropbox", date: "05/07", tag: "Case Studies", year: 2026 },
   { id: "designing-instagram", title: "Designing Instagram", date: "04/07", tag: "Case Studies", year: 2026 },
   { id: "designing-pastebin", title: "Designing a Pastebin", date: "04/07", tag: "Case Studies", year: 2026 },
   { id: "designing-url-shortener", title: "Designing a URL Shortener", date: "03/07", tag: "Case Studies", year: 2026 },

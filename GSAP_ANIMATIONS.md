@@ -1,5 +1,12 @@
 # Building Blueprint Animations (GSAP + SVG) for the Blog
 
+> The blogger skill's `SKILL.md` (`.claude/skills/blogger/SKILL.md`, section
+> "Building bespoke animations") now carries a self-sufficient version of the
+> material in this file, since that's the file that's actually loaded every
+> time the skill runs. Keep both in sync when something changes, but if
+> you're only going to update one, update `SKILL.md` first, this file is the
+> deeper reference for when more detail or more worked examples are useful.
+
 How to add narrated, auto-playing concept animations to a post, the kind that
 explain a topic (hash collisions, a cache hit/miss path, two servers racing
 for the same key) the way [makingsoftware.com](https://www.makingsoftware.com)
@@ -40,6 +47,18 @@ folder for it. `designing-pastebin.tsx` imports `HashCollisionDiagram`,
 because the underlying mechanism (and the demo data honesty rules in section 7
 below) hadn't changed at all. Only reach for a brand new bespoke animation
 when the post introduces a mechanism nothing on the site has animated yet.
+
+**Not every "box diagram" needs to be an SVG timeline, either.** A titled
+card that just shows what's inside a component (a grid of icon+label tiles,
+`figures/GroupedIconCard.tsx`) or a side-by-side comparison of two static
+configurations (`figures/ReplicationDiagram.tsx`, two panels of boxes plus a
+note each) reads exactly as clearly built with plain Tailwind divs, a
+`motion.div` with `whileInView` for the fade-in, no `<svg>`, no coordinate
+math at all. Reach for this guide's hand-coded SVG approach specifically when
+the point is motion, something drawing, moving, or forking over time. If
+there's no time axis to the concept, a static div-based figure is safer (see
+section 8's verification rule for why coordinate math is the risky part) and
+usually faster to get right on the first try.
 
 ---
 
@@ -308,6 +327,31 @@ lines instead of collapsing it into one that quietly chains a rounding error.
   trigger fires.
 - One accent color (`.viz-warn`) is reserved for the actual gotcha or
   negative case, don't spend it on emphasis that isn't a problem.
+- **Verify before shipping, not optional.** Hand-picked SVG coordinates that
+  look fine in your head routinely render with a label crammed against the
+  box above it, `PresignedUploadDiagram`'s first draft shipped with exactly
+  this bug, "checks metadata for this chunk's hash" sitting almost on top of
+  the Block Server box, and the top phase text crowding the first box below
+  it. Screenshot the actual rendered figure before calling it done, every
+  time, not just the first time something breaks. The fastest way, assuming
+  the dev server is already running on port 8080:
+  1. `npm install --no-save playwright` once per machine (`--no-save` keeps
+     `package.json` clean), then `npx playwright install chromium` once if
+     the browser binary isn't cached yet.
+  2. A short Node script, `chromium.launch()`, `page.goto(url, { waitUntil:
+     'networkidle' })`, locate the figure by a unique caption or label
+     string, `scrollIntoViewIfNeeded()`, click the `2×` control if present,
+     wait a few seconds for the timeline to finish, screenshot the figure's
+     container. Walk up to the nearest `figure` element *or* the nearest
+     ancestor with a `not-prose` class when locating the container, a plain
+     Tailwind static figure isn't wrapped in `<figure>` the way `VizFigure`
+     is. Run with `NODE_PATH=$(pwd)/node_modules node script.js` if the
+     script lives outside the project directory.
+  3. Read the screenshot back with the `Read` tool. No label touching a box
+     edge, real breathing room (25 to 30 viewBox units, not 10 to 15) between
+     the top phase text and the first box, no arrow crossing a box it isn't
+     pointing at. Fix and re-screenshot until clean, then wire it into the
+     post. This applies to every new SVG/GSAP animation, not a one-time fix.
 
 ---
 
@@ -373,3 +417,16 @@ guide's bespoke SVG timelines, but relevant to the same posts), see
 `src/content/components/figures/CapacityMathDiagram.tsx` for the
 back-of-envelope math figure and its arithmetic-verification rule in section
 7 above.
+
+Two more in `src/content/components/animations/designing-dropbox/ConceptViz.tsx`:
+`setupPresignedUpload` (a single chain with one bypass arrow, showing a
+control-plane request/response pair alongside a data-plane transfer that
+skips the middle server entirely) and `setupChunkHashFlow` (built directly on
+`setupCacheFlow`'s proven coordinate skeleton, a hash-check fork instead of a
+cache hit/miss fork, reused specifically to avoid re-deriving spacing that
+was already known to work). And two static, non-GSAP figures worth knowing
+about for when a concept doesn't need a time axis at all,
+`src/content/components/figures/GroupedIconCard.tsx` (a titled card of
+icon+label tiles) and `src/content/components/figures/ReplicationDiagram.tsx`
+(two named configurations compared side by side), both plain Tailwind divs
+with a `whileInView` fade, no SVG coordinate math to get wrong.

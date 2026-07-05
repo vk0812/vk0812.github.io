@@ -22,6 +22,7 @@ import { messageQueues } from "./message-queues";
 import { designingUrlShortener } from "./designing-url-shortener";
 import { designingPastebin } from "./designing-pastebin";
 import { designingInstagram } from "./designing-instagram";
+import { designingDropbox } from "./designing-dropbox";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -47,6 +48,7 @@ export const blogPosts: Record<string, BlogPostData> = {
   "designing-url-shortener": designingUrlShortener,
   "designing-pastebin": designingPastebin,
   "designing-instagram": designingInstagram,
+  "designing-dropbox": designingDropbox,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";
