@@ -24,3 +24,8 @@ export type { GroupedIconItem } from "./figures/GroupedIconCard";
 export { ReplicationDiagram } from "./figures/ReplicationDiagram";
 export type { ReplicationPanel } from "./figures/ReplicationDiagram";
 export { DirectoryLookupDiagram, MessageAckChainDiagram } from "./animations/designing-messenger/ConceptViz";
+export {
+  TrieStructureDiagram,
+  TrieTopKDiagram,
+  TrieSerializationDiagram,
+} from "./animations/designing-typeahead/ConceptViz";

@@ -36,7 +36,9 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 
 **Reference images, important**
 - If the user supplies a reference image, read it with the Read tool BEFORE writing anything. Extract the exact example used (question text, answer values, formula variant, table entries) and state it back in a short confirmation message so the user can catch misreads early.
-- Use those exact values everywhere in the post: prose, inline formulas, code blocks, figure captions. Do not invent a "cleaner" or "simpler" version of the example even if it seems mathematically equivalent — readers compare the post against the image and inconsistencies are confusing.
+- For system design case studies, supplied images are references for understanding the mechanism and recreating the visual. Do NOT add the supplied image itself to the post or copy it into `cdn-assets`. Rebuild the visual with the site's existing code-driven figures or a bespoke static SVG / GSAP animation that matches the site's visual language.
+- Use the exact values and examples from the reference everywhere in the recreated visual and post prose. Do not invent a "cleaner" or "simpler" version of the example even if it seems mathematically equivalent, readers compare the post against the reference and inconsistencies are confusing.
+- The image rule depends on the post type. Case studies use code-built visuals and never embed supplied reference images as-is. Other posts may use `<BlogImage>` for final screenshots or figures when that is the intended format and the user has provided or approved the final asset.
 
 **Punctuation rule, important**
 - Do NOT use em dashes (`—`) or en dashes (`–`) anywhere. They look off in this site's typography and read as AI-generated.
@@ -284,7 +286,7 @@ The code string is auto-trimmed. Theme switches with the site, GitHub light or V
 
 **Where final images go**: `cdn-assets/blog/<topic>/<filename>.png` (NOT `public/`, that would bloat the deploy artifact). Reference it exactly the same way from the component, `/blog/<topic>/<filename>.png` (absolute path, no leading dot). A Vite plugin in `vite.config.ts` serves it locally in dev and, at build, rewrites the path to a jsDelivr + wsrv.nl WebP CDN URL, so images are ~90% smaller on the live site and the artifact stays tiny no matter how many you add. Nothing else to configure, just drop the file in `cdn-assets/...` and use the `/blog/...` path.
 
-**Placeholder convention**: when drafting, the user will swap real crops in later. For every figure the post needs, insert a `<BlogImage>` with `src="/placeholder.svg"` and a fully-written `caption`, `alt`, and `size`. The caption must accurately describe the figure that will eventually go there, so the user can drop in the right crop without re-reading the post.
+**Placeholder convention**: when drafting a non-case-study post where the user will swap real crops in later, insert a `<BlogImage>` with `src="/placeholder.svg"` and a fully-written `caption`, `alt`, and `size`. Case study posts should use code-built figures instead, even when the user supplies a reference image.
 
 ```tsx
 <BlogImage
@@ -342,6 +344,6 @@ If a new tag is needed, pick a Tailwind color family that doesn't clash and add 
 - Don't fabricate citations, paper titles, or numbers. If the user supplies a reference image or paper, derive examples from it; don't invent ones the source doesn't support.
 - Don't add features the post doesn't need (analytics, share buttons, related-posts widgets) unless asked.
 - Don't break the existing `example-showcase.tsx` post; it doubles as a component reference.
-- Don't crop reference images. The user handles cropping themselves; just leave placeholders with accurate captions.
+- Don't crop reference images or embed them as-is in case study posts. The user supplies them to communicate the desired content and composition. Recreate the figure with code, and only use the original image as a final asset when the post is not a case study and the user explicitly intends it as an image.
 - A new **static, data-driven figure** in `figures/` (a table, a card grid, a stat row) is fine to add directly when the post's content genuinely needs it, follow the existing `StaticCards.tsx` pattern (props in, plain Tailwind out, no gsap). A new **bespoke animation** in `animations/<slug>/`, or any component that introduces a new interaction pattern, gets proposed to the user first.
 - Don't add internal links to other posts on this site (no `<Link to="/writings/...">` in post prose). Reference a related concept by name in plain text if it helps, without turning it into a hyperlink.
