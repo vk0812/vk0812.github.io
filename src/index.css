@@ -256,6 +256,7 @@
 .viz-stroke { fill: none; stroke: var(--v-ink); stroke-width: 1.6; }
 .viz-thin   { fill: none; stroke: var(--v-ink); stroke-width: 1; opacity: 0.5; }
 .viz-panel  { fill: var(--v-panel); stroke: var(--v-ink); stroke-width: 1.5; }
+.viz-panel-warn { fill: var(--v-panel); stroke: var(--v-warn); stroke-width: 1.5; }
 .viz-label    { fill: var(--v-ink); font-size: 13px; letter-spacing: 0.06em; }
 .viz-label-sm { fill: var(--v-ink); font-size: 11px; letter-spacing: 0.04em; opacity: 0.6; }
 .viz-blue   { fill: none; stroke: var(--v-blue); stroke-width: 2; }

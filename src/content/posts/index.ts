@@ -26,6 +26,8 @@ import { designingDropbox } from "./designing-dropbox";
 import { designingMessenger } from "./designing-messenger";
 import { designingYoutube } from "./designing-youtube";
 import { designingTypeahead } from "./designing-typeahead";
+import { designingYelp } from "./designing-yelp";
+import { designingUber } from "./designing-uber";
 
 export const blogPosts: Record<string, BlogPostData> = {
   "example-showcase": exampleShowcase,
@@ -55,6 +57,8 @@ export const blogPosts: Record<string, BlogPostData> = {
   "designing-messenger": designingMessenger,
   "designing-youtube": designingYoutube,
   "designing-typeahead": designingTypeahead,
+  "designing-yelp": designingYelp,
+  "designing-uber": designingUber,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";

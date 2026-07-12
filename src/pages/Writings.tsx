@@ -15,6 +15,8 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "designing-uber", title: "Designing Uber", date: "12/07", tag: "Case Studies", year: 2026 },
+  { id: "designing-yelp", title: "Designing Yelp", date: "12/07", tag: "Case Studies", year: 2026 },
   { id: "designing-typeahead", title: "Designing Typeahead Suggestions", date: "11/07", tag: "Case Studies", year: 2026 },
   { id: "designing-youtube", title: "Designing YouTube", date: "10/07", tag: "Case Studies", year: 2026 },
   { id: "designing-messenger", title: "Designing Facebook Messenger", date: "06/07", tag: "Case Studies", year: 2026 },

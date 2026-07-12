@@ -29,3 +29,4 @@ export {
   TrieTopKDiagram,
   TrieSerializationDiagram,
 } from "./animations/designing-typeahead/ConceptViz";
+export { QuadTreeDiagram, ReverseIndexDiagram } from "./animations/designing-yelp/ConceptViz";
