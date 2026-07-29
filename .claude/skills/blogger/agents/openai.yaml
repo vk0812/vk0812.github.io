@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blogger"
+  short_description: "Draft and publish posts in Vidit's voice"
+  default_prompt: "Use $blogger to draft a new post for the writings section."
