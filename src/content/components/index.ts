@@ -30,3 +30,4 @@ export {
   TrieSerializationDiagram,
 } from "./animations/designing-typeahead/ConceptViz";
 export { QuadTreeDiagram, ReverseIndexDiagram } from "./animations/designing-yelp/ConceptViz";
+export { SeatHoldRaceDiagram } from "./animations/designing-ticketmaster/ConceptViz";
