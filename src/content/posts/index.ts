@@ -29,8 +29,77 @@ import { designingTypeahead } from "./designing-typeahead";
 import { designingYelp } from "./designing-yelp";
 import { designingUber } from "./designing-uber";
 import { designingTicketmaster } from "./designing-ticketmaster";
+import { designingGoogleDocs } from "./designing-google-docs";
+import { designingWebCrawler } from "./designing-web-crawler";
+import { designingPaymentSystem } from "./designing-payment-system";
+import { designingAdClickAggregator } from "./designing-ad-click-aggregator";
+import { designingMetricsMonitoring } from "./designing-metrics-monitoring";
+import { designingJobScheduler } from "./designing-job-scheduler";
+import { designingChatgpt } from "./designing-chatgpt";
+import { designingNotificationSystem } from "./designing-notification-system";
+import { changeDataCaptureOutbox } from "./change-data-capture-outbox";
+import { probabilityForMachineLearning } from "./probability-for-machine-learning";
+import { statisticsEstimationUncertainty } from "./statistics-estimation-uncertainty";
+import { informationTheoryForMl } from "./information-theory-for-ml";
+import { optimizationFundamentals } from "./optimization-fundamentals";
+import { generalizationBiasVariance } from "./generalization-bias-variance";
+import { linearRegressionFirstPrinciples } from "./linear-regression-first-principles";
+import { naiveBayesProbabilisticClassifiers } from "./naive-bayes-probabilistic-classifiers";
+import { decisionTrees } from "./decision-trees";
+import { learningToRank } from "./learning-to-rank";
+import { regularizedLinearModels } from "./regularized-linear-models";
+import { baggingRandomForests } from "./bagging-random-forests";
+import { logisticRegressionGlm } from "./logistic-regression-glm";
+import { gradientBoostedDecisionTrees } from "./gradient-boosted-decision-trees";
+import { nearestNeighborsInstanceBasedLearning } from "./nearest-neighbors-instance-based-learning";
+import { clustering } from "./clustering";
+import { svmKernelMethods } from "./svm-kernel-methods";
+import { dimensionalityReductionManifoldLearning } from "./dimensionality-reduction-manifold-learning";
+import { regressionRankingRetrievalForecastingMetrics } from "./regression-ranking-retrieval-forecasting-metrics";
+import { crossValidationHyperparameterOptimization } from "./cross-validation-hyperparameter-optimization";
+import { classificationMetricsDecisionThresholds } from "./classification-metrics-decision-thresholds";
+import { modelInterpretabilityExplainability } from "./model-interpretability-explainability";
+import { optimizersLearningRateSchedules } from "./optimizers-learning-rate-schedules";
+import { regularizingDeepNetworks } from "./regularizing-deep-networks";
+import { recurrentNetworksSequenceModeling } from "./recurrent-networks-sequence-modeling";
+import { neuralNetworksBackpropagationFromScratch } from "./neural-networks-backpropagation-from-scratch";
+import { lossFunctionsObjectiveDesign } from "./loss-functions-objective-design";
+import { normalizationResidualConnectionsModernBlocks } from "./normalization-residual-connections-modern-blocks";
+import { attentionAndTransformers } from "./attention-and-transformers";
+import { activationsInitializationGradientFlow } from "./activations-initialization-gradient-flow";
+import { embeddingsRepresentationLearning } from "./embeddings-representation-learning";
 
 export const blogPosts: Record<string, BlogPostData> = {
+  "embeddings-representation-learning": embeddingsRepresentationLearning,
+  "activations-initialization-gradient-flow": activationsInitializationGradientFlow,
+  "attention-and-transformers": attentionAndTransformers,
+  "normalization-residual-connections-modern-blocks": normalizationResidualConnectionsModernBlocks,
+  "loss-functions-objective-design": lossFunctionsObjectiveDesign,
+  "neural-networks-backpropagation-from-scratch": neuralNetworksBackpropagationFromScratch,
+  "recurrent-networks-sequence-modeling": recurrentNetworksSequenceModeling,
+  "regularizing-deep-networks": regularizingDeepNetworks,
+  "optimizers-learning-rate-schedules": optimizersLearningRateSchedules,
+  "model-interpretability-explainability": modelInterpretabilityExplainability,
+  "classification-metrics-decision-thresholds": classificationMetricsDecisionThresholds,
+  "cross-validation-hyperparameter-optimization": crossValidationHyperparameterOptimization,
+  "regression-ranking-retrieval-forecasting-metrics": regressionRankingRetrievalForecastingMetrics,
+  "dimensionality-reduction-manifold-learning": dimensionalityReductionManifoldLearning,
+  "svm-kernel-methods": svmKernelMethods,
+  "clustering": clustering,
+  "nearest-neighbors-instance-based-learning": nearestNeighborsInstanceBasedLearning,
+  "gradient-boosted-decision-trees": gradientBoostedDecisionTrees,
+  "logistic-regression-glm": logisticRegressionGlm,
+  "bagging-random-forests": baggingRandomForests,
+  "regularized-linear-models": regularizedLinearModels,
+  "learning-to-rank": learningToRank,
+  "decision-trees": decisionTrees,
+  "naive-bayes-probabilistic-classifiers": naiveBayesProbabilisticClassifiers,
+  "linear-regression-first-principles": linearRegressionFirstPrinciples,
+  "generalization-bias-variance": generalizationBiasVariance,
+  "optimization-fundamentals": optimizationFundamentals,
+  "information-theory-for-ml": informationTheoryForMl,
+  "statistics-estimation-uncertainty": statisticsEstimationUncertainty,
+  "probability-for-machine-learning": probabilityForMachineLearning,
   "example-showcase": exampleShowcase,
   "intern-exp": internExp,
   "contrastive-learning": contrastiveLearning,
@@ -61,6 +130,15 @@ export const blogPosts: Record<string, BlogPostData> = {
   "designing-yelp": designingYelp,
   "designing-uber": designingUber,
   "designing-ticketmaster": designingTicketmaster,
+  "designing-google-docs": designingGoogleDocs,
+  "designing-web-crawler": designingWebCrawler,
+  "designing-payment-system": designingPaymentSystem,
+  "designing-ad-click-aggregator": designingAdClickAggregator,
+  "designing-metrics-monitoring": designingMetricsMonitoring,
+  "designing-job-scheduler": designingJobScheduler,
+  "designing-chatgpt": designingChatgpt,
+  "designing-notification-system": designingNotificationSystem,
+  "change-data-capture-outbox": changeDataCaptureOutbox,
 };
 
 export type { BlogPostData, BlogPostMeta } from "./types";

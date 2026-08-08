@@ -20,6 +20,7 @@ VIEWPORT_COMPONENTS = {
     "ApiEndpointsTable",
     "CapacityMathDiagram",
     "IconArchitectureDiagram",
+    "ProbabilityDistributionCards",
     "ReplicationDiagram",
     "SchemaCards",
     "StatTiles",
