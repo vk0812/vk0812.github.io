@@ -18,7 +18,7 @@ export const gradientBoostedDecisionTrees: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Hand a single decision tree a tabular dataset and it does something honest but limited. Grown deep enough to fit the training data well, it memorizes noise along with signal. Kept shallow enough to avoid that, it's too crude to capture most of the real pattern. Random forests patch this by averaging many deep, noisy trees trained on different random slices of the data, which cancels out a lot of that noise. Gradient boosting solves the same underlying problem with a completely different move, instead of averaging many independent guesses, it builds one small, weak tree, looks at exactly where that tree went wrong, and grows the next tree specifically to fix those mistakes.
+        Hand a single decision tree a tabular dataset and it does something honest but limited. Grown deep enough to fit the training data well, it memorizes noise along with signal. Kept shallow enough to avoid that, it's too crude to capture most of the real pattern. Random forests patch this by averaging many deep, noisy trees trained on different random slices of the data, which cancels out a lot of that noise. Gradient boosting solves the same underlying problem with a completely different move. Instead of averaging many independent guesses, it builds one small, weak tree, looks at exactly where that tree went wrong, and grows the next tree specifically to fix those mistakes.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -66,7 +66,7 @@ export const gradientBoostedDecisionTrees: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.70}>
-        Squared error is the one case where this quantity happens to equal the plain residual. Swap in log loss for classification or a quantile loss for quantile regression and the negative gradient becomes a different expression, but the recipe never changes, compute what direction would most reduce the loss at each point right now, and train a small tree to predict that direction. That's why the family is called <strong>gradient boosting</strong> rather than just "residual boosting", the residual is a special case of a much more general trick, functional gradient descent carried out one small tree at a time instead of one parameter step at a time.
+        Squared error is the one case where this quantity happens to equal the plain residual. Swap in log loss for classification or a quantile loss for quantile regression and the negative gradient becomes a different expression, but the recipe never changes. Compute what direction would most reduce the loss at each point right now, and train a small tree to predict that direction. That's why the family is called <strong>gradient boosting</strong> rather than just "residual boosting". The residual is just a special case of a much more general trick, functional gradient descent carried out one small tree at a time instead of one parameter step at a time.
       </Paragraph>
 
       <Heading level={2} delay={0.75}>
@@ -74,11 +74,11 @@ export const gradientBoostedDecisionTrees: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.80}>
-        It's worth being precise about how different this is from bagging in spirit, since both approaches end up with "many trees added together" and it's easy to blur the two together. Bagging trains many trees independently, usually deep and individually high-variance, each on a different bootstrap resample of the data, then averages their predictions. Averaging independent noisy estimates cancels out variance, which is exactly the failure mode deep trees have, but averaging does nothing to fix a tree that's systematically biased in some direction, since every copy shares the same bias and averaging leaves that bias untouched.
+        It's worth being precise about how different this is from bagging, since both approaches end up with "many trees added together" and it's easy to blur the two together. Bagging trains many trees independently, usually deep and individually high-variance, each on a different bootstrap resample of the data, then averages their predictions. Averaging independent noisy estimates cancels out variance, which is exactly the failure mode deep trees have. But averaging does nothing to fix a tree that's systematically biased in some direction, since every copy shares the same bias and averaging leaves that bias untouched.
       </Paragraph>
 
       <Paragraph delay={0.85}>
-        Boosting attacks the opposite failure mode. Each tree is shallow and individually high-bias, barely better than a coin flip on its own, and the trees are anything but independent, each one is grown specifically to explain what every earlier tree got wrong. That sequential dependency is precisely what a bagged ensemble doesn't have and doesn't want, bagging's trees need to be as uncorrelated as possible for averaging to help, while boosting's trees are deliberately built to correlate with the current errors.
+        Boosting attacks the opposite failure mode. Each tree is shallow and individually high-bias, barely better than a coin flip on its own. And the trees are anything but independent: each one is grown specifically to explain what every earlier tree got wrong. That sequential dependency is precisely what a bagged ensemble doesn't have and doesn't want. Bagging's trees need to be as uncorrelated as possible for averaging to help, while boosting's trees are deliberately built to correlate with the current errors.
       </Paragraph>
 
       <ReplicationDiagram
@@ -111,11 +111,11 @@ export const gradientBoostedDecisionTrees: BlogPostData = {
       </Heading>
 
       <Paragraph delay={1.00}>
-        The <Formula>{`\\eta`}</Formula> in the update rule above is the <strong>learning rate</strong>, sometimes called shrinkage in this context, and it plays almost exactly the same role it plays in gradient descent over parameters. Set <Formula>{`\\eta = 1`}</Formula> and each tree gets to correct the full residual it was trained on, which sounds efficient but tends to overfit fast, the ensemble chases every quirk in the training residuals at full strength, round after round.
+        The <Formula>{`\\eta`}</Formula> in the update rule above is the <strong>learning rate</strong>, sometimes called shrinkage in this context, and it plays almost exactly the same role it plays in gradient descent over parameters. Set <Formula>{`\\eta = 1`}</Formula> and each tree gets to correct the full residual it was trained on. That sounds efficient, but it tends to overfit fast: the ensemble chases every quirk in the training residuals at full strength, round after round.
       </Paragraph>
 
       <Paragraph delay={1.05}>
-        Set <Formula>{`\\eta`}</Formula> to something small instead, a common range is <InlineCode>0.01</InlineCode> to <InlineCode>0.1</InlineCode>, and each individual tree only nudges the ensemble a little. That means more rounds are needed to reach the same overall fit, but the path there is smoother and less prone to fitting noise a single aggressive step would have locked in permanently. In practice, many small steps with a low learning rate and a few hundred to a few thousand trees reliably beats a handful of large steps with a high one, for the same reason a cautious gradient descent schedule usually generalizes better than one huge leap toward the training optimum. The trade is compute, not accuracy, a lower learning rate needs more trees to converge, which costs more training time for a model that tends to generalize better once it gets there.
+        Set <Formula>{`\\eta`}</Formula> to something small instead, a common range is <InlineCode>0.01</InlineCode> to <InlineCode>0.1</InlineCode>, and each individual tree only nudges the ensemble a little. That means more rounds are needed to reach the same overall fit, but the path there is smoother and less prone to fitting noise a single aggressive step would have locked in permanently. In practice, many small steps with a low learning rate and a few hundred to a few thousand trees reliably beats a handful of large steps with a high one, for the same reason a cautious gradient descent schedule usually generalizes better than one huge leap toward the training optimum. The trade is compute, not accuracy. A lower learning rate needs more trees to converge, which costs more training time, for a model that tends to generalize better once it gets there.
       </Paragraph>
 
       <Heading level={2} delay={1.10}>
@@ -127,7 +127,7 @@ export const gradientBoostedDecisionTrees: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={1.20}>
-        A depth-3 tree can only express interactions between at most three features at a time, and it fits its assigned residuals crudely rather than precisely. That's a feature here, not a limitation to work around. Since hundreds of these shallow trees stack up sequentially, a small amount of expressive power per tree compounds into a very expressive overall function, while keeping any single tree from latching onto a coincidental pattern in the residuals it happened to be handed that round. Going deeper per tree usually doesn't help nearly as much as it sounds like it should, and it tends to make the ensemble converge to an overfit fit faster in terms of rounds, which then has to be compensated for with a lower learning rate or earlier stopping anyway.
+        A depth-3 tree can only express interactions between at most three features at a time, and it fits its assigned residuals crudely rather than precisely. That's a feature here, not a limitation to work around. Since hundreds of these shallow trees stack up sequentially, a small amount of expressive power per tree compounds into a very expressive overall function, while keeping any single tree from latching onto a coincidental pattern in the residuals it happened to be handed that round. Going deeper per tree usually doesn't help nearly as much as it sounds like it should. It also tends to make the ensemble converge to an overfit fit faster, in terms of rounds, which then has to be compensated for with a lower learning rate or earlier stopping anyway.
       </Paragraph>
 
       <Heading level={2} delay={1.25}>
@@ -221,7 +221,7 @@ for rnd in range(1, 4):
       />
 
       <Paragraph delay={1.90}>
-        The starting prediction is the flat mean, <Formula>{`8.3333`}</Formula> everywhere, which puts total squared error at <Formula>{`43.33`}</Formula>. The first stump splits on <Formula>{`x \\leq 3.5`}</Formula>, since the low-<Formula>{`x`}</Formula> points (targets <Formula>{`5, 7, 6`}</Formula>) sit noticeably below the mean and the high-<Formula>{`x`}</Formula> points (targets <Formula>{`10, 9, 13`}</Formula>) sit noticeably above it. Shrinking that correction by <Formula>{`0.5`}</Formula> and adding it in drops the squared error to <Formula>{`18.83`}</Formula>, already less than half of where it started. The second stump finds a finer split at <Formula>{`x \\leq 5.5`}</Formula>, isolating the point at <Formula>{`x=6`}</Formula> whose target of <Formula>{`13`}</Formula> is still the worst-fit point in the set, pulling squared error down to <Formula>{`7.81`}</Formula>. The third stump goes back to splitting near <Formula>{`x \\leq 3.5`}</Formula>, fine-tuning both groups a bit further and landing at <Formula>{`4.81`}</Formula>, under an ninth of the starting error after just three small trees.
+        The starting prediction is the flat mean, <Formula>{`8.3333`}</Formula> everywhere, which puts total squared error at <Formula>{`43.33`}</Formula>. The first stump splits on <Formula>{`x \\leq 3.5`}</Formula>, since the low-<Formula>{`x`}</Formula> points (targets <Formula>{`5, 7, 6`}</Formula>) sit noticeably below the mean and the high-<Formula>{`x`}</Formula> points (targets <Formula>{`10, 9, 13`}</Formula>) sit noticeably above it. Shrinking that correction by <Formula>{`0.5`}</Formula> and adding it in drops the squared error to <Formula>{`18.83`}</Formula>, already less than half of where it started. The second stump finds a finer split at <Formula>{`x \\leq 5.5`}</Formula>, isolating the point at <Formula>{`x=6`}</Formula> whose target of <Formula>{`13`}</Formula> is still the worst-fit point in the set, pulling squared error down to <Formula>{`7.81`}</Formula>. The third stump goes back to splitting near <Formula>{`x \\leq 3.5`}</Formula>, fine-tuning both groups a bit further and landing at <Formula>{`4.81`}</Formula>, under a ninth of the starting error after just three small trees.
       </Paragraph>
 
       <ResidualBoostingDiagram

@@ -53,7 +53,7 @@ export const nearestNeighborsInstanceBasedLearning: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.55}>
-        <strong>Cosine distance</strong> ignores magnitude entirely and only looks at the angle between two vectors, computed as one minus the cosine of that angle. It fits data where direction carries the meaning and length is mostly noise, a document represented as word counts, a user's rating vector across a catalog, text or image embeddings from a neural network. Two documents that use the same vocabulary in the same proportions point in nearly the same direction whether one of them is a paragraph and the other is a full page, and cosine distance treats them as close, where Euclidean distance would be thrown off by the length difference alone.
+        <strong>Cosine distance</strong> ignores magnitude entirely and only looks at the angle between two vectors, computed as one minus the cosine of that angle. It fits data where direction carries the meaning and length is mostly noise, a document represented as word counts, a user's rating vector across a catalog, text or image embeddings from a neural network. Two documents that use the same vocabulary in the same proportions point in nearly the same direction, whether one of them is a paragraph and the other is a full page. Cosine distance treats them as close, where Euclidean distance would be thrown off by the length difference alone.
       </Paragraph>
 
       <Formula block delay={0.60}>
@@ -182,7 +182,7 @@ print(vote(top_manhattan))  # Red`}
       </Heading>
 
       <Paragraph delay={1.35}>
-        Distance stops being a very meaningful signal once the number of features grows large, a phenomenon usually called the <strong>curse of dimensionality</strong>. The intuition is that in a low-dimensional space, points cluster unevenly, some genuinely close, some genuinely far. Add enough independent dimensions and, loosely speaking, every random pair of points ends up roughly the same distance apart, because there are simply so many directions for coordinates to differ in that the differences average out into a similar total regardless of which two points are picked.
+        Distance stops being a very meaningful signal once the number of features grows large, a phenomenon usually called the <strong>curse of dimensionality</strong>. The intuition is that in a low-dimensional space, points cluster unevenly, some genuinely close, some genuinely far. Add enough independent dimensions and, loosely speaking, every random pair of points ends up roughly the same distance apart. There are simply so many directions for coordinates to differ in that the differences average out into a similar total, regardless of which two points are picked.
       </Paragraph>
 
       <CodeBlock
@@ -205,7 +205,7 @@ for d in [2, 10, 100, 1000]:
       />
 
       <Paragraph delay={1.45}>
-        With two features, the farthest of a thousand random points is over 130 times farther from the query than the nearest one, distance is a genuinely useful signal for telling points apart. Push that same experiment out to a thousand features and the farthest point is only about 11 percent farther away than the nearest one, everyone is nearly equidistant. A nearest-neighbor search still technically returns "the closest" points at that scale, but closest and farthest have become nearly the same number, and a ranking built on nearly identical distances isn't telling the model much. In practice this is exactly why nearest neighbor methods tend to need dimensionality reduction or careful feature selection before they're pointed at anything with hundreds of raw features, and why they thrive instead on a compact, well-chosen embedding rather than a wide, raw feature vector.
+        With two features, the farthest of a thousand random points is over 130 times farther from the query than the nearest one. At that scale, distance is a genuinely useful signal for telling points apart. Push that same experiment out to a thousand features and the farthest point is only about 11 percent farther away than the nearest one. Everyone is nearly equidistant. A nearest-neighbor search still technically returns "the closest" points at that scale, but closest and farthest have become nearly the same number, and a ranking built on nearly identical distances isn't telling the model much. In practice this is exactly why nearest neighbor methods tend to need dimensionality reduction or careful feature selection before they're pointed at anything with hundreds of raw features, and why they thrive instead on a compact, well-chosen embedding rather than a wide, raw feature vector.
       </Paragraph>
 
       <Heading level={2} delay={1.50}>
@@ -213,11 +213,11 @@ for d in [2, 10, 100, 1000]:
       </Heading>
 
       <Paragraph delay={1.55}>
-        The single knob in this whole method is <InlineCode>k</InlineCode>, how many neighbors get a vote, and it controls the exact same bias-variance tension that shows up everywhere else a model's flexibility gets tuned. A small <InlineCode>k</InlineCode>, one or three, lets the prediction swing on the label of a single nearby point, which makes the decision boundary jagged and lets an individual mislabeled or noisy point drag a whole region of the input space with it. That's low bias, the model can trace an arbitrarily wiggly true boundary, but high variance, swap the training set for a slightly different sample and the boundary near any given point can look completely different.
+        The single knob in this whole method is <InlineCode>k</InlineCode>, how many neighbors get a vote, and it controls the exact same bias-variance tension that shows up everywhere else a model's flexibility gets tuned. A small <InlineCode>k</InlineCode>, one or three, lets the prediction swing on the label of a single nearby point, which makes the decision boundary jagged and lets an individual mislabeled or noisy point drag a whole region of the input space with it. That's low bias: the model can trace an arbitrarily wiggly true boundary. But it's high variance: swap the training set for a slightly different sample and the boundary near any given point can look completely different.
       </Paragraph>
 
       <Paragraph delay={1.60}>
-        A large <InlineCode>k</InlineCode> averages over many more neighbors, which smooths the decision boundary out and makes any one noisy point far less influential. That's the opposite tradeoff, lower variance, since one weird training point barely moves a vote taken over fifty neighbors, but higher bias, because the boundary gets smoothed even in places where the true boundary genuinely was jagged, and pushing <InlineCode>k</InlineCode> all the way up toward the size of the whole training set eventually washes out the local structure entirely and just predicts whichever class is most common overall. Somewhere in between sits a <InlineCode>k</InlineCode> that fits the actual noise level and local structure of the data, usually found the same way any other hyperparameter is, by checking a range of values against a held-out validation set rather than picking one on faith.
+        A large <InlineCode>k</InlineCode> averages over many more neighbors, which smooths the decision boundary out and makes any one noisy point far less influential. That's the opposite tradeoff: lower variance, since one weird training point barely moves a vote taken over fifty neighbors, but higher bias, because the boundary gets smoothed even in places where the true boundary genuinely was jagged. Pushing <InlineCode>k</InlineCode> all the way up toward the size of the whole training set eventually washes out the local structure entirely and just predicts whichever class is most common overall. Somewhere in between sits a <InlineCode>k</InlineCode> that fits the actual noise level and local structure of the data, usually found the same way any other hyperparameter is, by checking a range of values against a held-out validation set rather than picking one on faith.
       </Paragraph>
 
       <Heading level={2} delay={1.65}>
@@ -253,7 +253,7 @@ for d in [2, 10, 100, 1000]:
       </Heading>
 
       <Paragraph delay={2.05}>
-        Most parametric models spend a large, one-time cost during training and a small, cheap cost at prediction time, a forward pass through a fixed set of weights takes roughly the same amount of work no matter how large the original training set was. Nearest neighbor methods invert that completely. Training cost is nearly zero, copying data into memory. Every ounce of cost instead shows up at inference time, and it shows up twice over, in <strong>memory</strong>, the entire training set has to be kept around indefinitely rather than discarded after a weight update, and in <strong>latency</strong>, brute-force search over that whole stored set on every single prediction.
+        Most parametric models spend a large, one-time cost during training and a small, cheap cost at prediction time, a forward pass through a fixed set of weights takes roughly the same amount of work no matter how large the original training set was. Nearest neighbor methods invert that completely. Training cost is nearly zero, copying data into memory. Every ounce of cost instead shows up at inference time, and it shows up twice over. In <strong>memory</strong>, the entire training set has to be kept around indefinitely rather than discarded after a weight update. In <strong>latency</strong>, every prediction means a brute-force search over that whole stored set.
       </Paragraph>
 
       <Paragraph delay={2.10}>

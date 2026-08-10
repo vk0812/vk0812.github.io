@@ -34,7 +34,7 @@ export const generalizationBiasVariance: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.30}>
-        Training loss and generalization can move in completely different directions. A model can keep improving on its training set long after it has stopped improving, or has actively started getting worse, on data it hasn't seen. That gap between the two curves is the entire reason a validation set exists, and ignoring it is exactly how a model with a beautiful training loss curve ends up embarrassing everyone in production.
+        Training loss and generalization can move in completely different directions. A model can keep improving on its training set long after it has stopped improving, or has actively started getting worse, on data it hasn't seen. That gap between the two curves is the entire reason a validation set exists. Ignoring it is exactly how a model with a beautiful training loss curve ends up embarrassing everyone in production.
       </Paragraph>
 
       <Heading level={2} delay={0.35}>
@@ -42,7 +42,7 @@ export const generalizationBiasVariance: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.40}>
-        Picture ten points scattered along a gentle curve, each with a bit of random noise added. Fit a straight line through them and the line misses the curve badly everywhere, it's not flexible enough to capture the shape, so both the training error and the error on new points from the same curve stay high. That's <strong>underfitting</strong>, a model too simple to represent the pattern actually being asked of it.
+        Picture ten points scattered along a gentle curve, each with a bit of random noise added. Fit a straight line through them and the line misses the curve badly everywhere. It's not flexible enough to capture the shape, so both the training error and the error on new points from the same curve stay high. That's <strong>underfitting</strong>, a model too simple to represent the pattern actually being asked of it.
       </Paragraph>
 
       <Paragraph delay={0.45}>
@@ -50,7 +50,7 @@ export const generalizationBiasVariance: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.50}>
-        Slide a knob from "too simple" to "too flexible" and the same pattern shows up every time. Training error falls the entire way, more flexibility always means a better fit to the exact points shown. Validation error falls at first, as the extra flexibility captures real structure, then turns around and rises again, as that same flexibility starts fitting noise instead. The point where validation error is lowest is where the model has captured about as much real signal as this amount of data can support, without yet chasing noise.
+        Slide a knob from "too simple" to "too flexible" and the same pattern shows up every time. Training error falls the entire way: more flexibility always means a better fit to the exact points shown. Validation error falls at first, as the extra flexibility captures real structure, then turns around and rises again, as that same flexibility starts fitting noise instead. The point where validation error is lowest is where the model has captured about as much real signal as this amount of data can support, without yet chasing noise.
       </Paragraph>
 
       <ComplexityErrorCurveDiagram
@@ -67,11 +67,11 @@ export const generalizationBiasVariance: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.65}>
-        Every model also carries an <strong>inductive bias</strong>, a built-in assumption about what kinds of patterns are likely, baked in before a single training example arrives. A linear model assumes the relationship is roughly a straight line. A convolutional network assumes that nearby pixels matter more to each other than far-apart ones. None of that is a flaw to be engineered away. A model with zero inductive bias has no basis for preferring any function over any other function that fits the training data equally well, which means it has no principled way to guess correctly on a new input it hasn't seen. Some bias toward one kind of pattern over another is not just useful, it's the only reason a model can generalize past its training set at all. This is the informal intuition behind the "no free lunch" idea in learning theory, no single learning algorithm dominates every possible problem, only algorithms whose built-in assumptions happen to match the structure of the problem in front of them.
+        Every model also carries an <strong>inductive bias</strong>, a built-in assumption about what kinds of patterns are likely, baked in before a single training example arrives. A linear model assumes the relationship is roughly a straight line. A convolutional network assumes that nearby pixels matter more to each other than far-apart ones. None of that is a flaw to be engineered away. A model with zero inductive bias has no basis for preferring any function over any other function that fits the training data equally well. That means it has no principled way to guess correctly on a new input it hasn't seen. Some bias toward one kind of pattern over another is not just useful. It's the only reason a model can generalize past its training set at all. This is the informal intuition behind the "no free lunch" idea in learning theory: no single learning algorithm dominates every possible problem, only algorithms whose built-in assumptions happen to match the structure of the problem in front of them.
       </Paragraph>
 
       <Paragraph delay={0.70}>
-        This is also the honest answer to why a simpler model sometimes beats a more powerful one on the same task. A high-capacity model isn't automatically better, it's a better fit only when there's enough data and enough real signal to justify the extra flexibility. Hand it a small, noisy dataset and its extra capacity becomes extra rope for fitting noise instead of pattern, and a simpler model with more appropriate inductive bias for the problem ends up winning on the metric that actually matters, validation performance.
+        This is also the honest answer to why a simpler model sometimes beats a more powerful one on the same task. A high-capacity model isn't automatically better. It's a better fit only when there's enough data and enough real signal to justify the extra flexibility. Hand it a small, noisy dataset and its extra capacity becomes extra rope for fitting noise instead of pattern, and a simpler model with more appropriate inductive bias for the problem ends up winning on the metric that actually matters, validation performance.
       </Paragraph>
 
       <Heading level={2} delay={0.75}>
@@ -87,15 +87,23 @@ export const generalizationBiasVariance: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.90}>
-        Each term answers a different question about the same model. <strong>Squared bias</strong> asks, averaged over every possible training set the model could have been trained on, how far off is the model's typical prediction from the true value. A straight line forced onto a curved relationship has high bias, it's systematically wrong in the same direction no matter which particular sample of points it was trained on. <strong>Variance</strong> asks a different question entirely, how much does the model's prediction change from one training set to another. A high-degree polynomial has high variance, train it on one noisy sample of ten points and it looks completely different from training it on another equally valid sample of ten points from the same distribution. <strong>Irreducible noise</strong>, <Formula>{`\\sigma^2`}</Formula>, is the piece nothing can fix, the genuine randomness in how the target was generated in the first place, present even for a model that gets everything else exactly right.
+        Each term answers a different question about the same model. <strong>Squared bias</strong> asks: averaged over every possible training set the model could have been trained on, how far off is the model's typical prediction from the true value? A straight line forced onto a curved relationship has high bias. It's systematically wrong in the same direction no matter which particular sample of points it was trained on.
+      </Paragraph>
+
+      <Paragraph delay={0.92}>
+        <strong>Variance</strong> asks a different question entirely: how much does the model's prediction change from one training set to another? A high-degree polynomial has high variance. Train it on one noisy sample of ten points and it looks completely different from training it on another equally valid sample of ten points from the same distribution. <strong>Irreducible noise</strong>, <Formula>{`\\sigma^2`}</Formula>, is the piece nothing can fix — the genuine randomness in how the target was generated in the first place, present even for a model that gets everything else exactly right.
       </Paragraph>
 
       <Paragraph delay={0.95}>
-        Underfitting is what high bias and low variance look like in practice, the model is consistently wrong but consistently wrong in the same way across different training sets. Overfitting is what low bias and high variance look like, the model can represent the true pattern well on average, but any one specific fit swings wildly depending on which noisy sample it happened to be handed.
+        Underfitting is what high bias and low variance look like in practice: the model is consistently wrong, but consistently wrong in the same way across different training sets. Overfitting is what low bias and high variance look like: the model can represent the true pattern well on average, but any one specific fit swings wildly depending on which noisy sample it happened to be handed.
       </Paragraph>
 
       <Paragraph delay={1.00}>
-        It's worth being precise about what this bias and variance are properties of. They describe how a model's fitted predictions behave across many different training sets drawn from the same distribution, not how a single number computed from one sample compares to a true parameter. A related but distinct idea shows up in ordinary statistical estimation, where bias and variance describe an estimation procedure itself, how a formula for turning a sample into a parameter guess behaves on average and how much it wobbles from sample to sample. The two ideas rhyme because they're doing the same kind of accounting, systematic error against sample-to-sample wobble, just applied to different objects, a fitted predictive model in one case and an estimation rule in the other. Worth keeping straight, since the same two words get reused for both.
+        It's worth being precise about what this bias and variance are properties of. They describe how a model's fitted predictions behave across many different training sets drawn from the same distribution, not how a single number computed from one sample compares to a true parameter.
+      </Paragraph>
+
+      <Paragraph delay={1.02}>
+        A related but distinct idea shows up in ordinary statistical estimation, where bias and variance describe an estimation procedure itself: how a formula for turning a sample into a parameter guess behaves on average, and how much it wobbles from sample to sample. The two ideas rhyme because they're doing the same kind of accounting — systematic error against sample-to-sample wobble — just applied to different objects: a fitted predictive model in one case, an estimation rule in the other. Worth keeping straight, since the same two words get reused for both.
       </Paragraph>
 
       <Heading level={2} delay={1.05}>
@@ -143,7 +151,11 @@ for deg in [1, 3, 9]:
       />
 
       <Paragraph delay={1.20}>
-        Degree 1 shows textbook underfitting, bias squared of <Formula>{`0.2136`}</Formula> dwarfs its variance of <Formula>{`0.0371`}</Formula>, a straight line just can't bend to match a sine wave no matter which 20 noisy points it sees. Degree 3 lands in the middle and does the best overall, bias squared collapses to <Formula>{`0.0068`}</Formula> while variance only creeps up slightly to <Formula>{`0.0380`}</Formula>, giving the lowest total of the three by a wide margin. Degree 9 is where it falls apart, a polynomial with that many free parameters has more than enough flexibility to chase the specific noise in any given 20-point sample, and its variance explodes to <Formula>{`2401.2826`}</Formula>, a different noisy training set produces a wildly different fit almost every time. Add each model's total to the irreducible noise floor of <Formula>{`0.3^2 = 0.09`}</Formula> and the ranking is unambiguous, degree 3 wins, not because it's the most powerful model available, but because it's the best match for how much real signal 20 noisy points can actually support.
+        Degree 1 shows textbook underfitting: bias squared of <Formula>{`0.2136`}</Formula> dwarfs its variance of <Formula>{`0.0371`}</Formula>. A straight line just can't bend to match a sine wave no matter which 20 noisy points it sees. Degree 3 lands in the middle and does the best overall: bias squared collapses to <Formula>{`0.0068`}</Formula> while variance only creeps up slightly to <Formula>{`0.0380`}</Formula>, giving the lowest total of the three by a wide margin.
+      </Paragraph>
+
+      <Paragraph delay={1.22}>
+        Degree 9 is where it falls apart. A polynomial with that many free parameters has more than enough flexibility to chase the specific noise in any given 20-point sample, and its variance explodes to <Formula>{`2401.2826`}</Formula> — a different noisy training set produces a wildly different fit almost every time. Add each model's total to the irreducible noise floor of <Formula>{`0.3^2 = 0.09`}</Formula> and the ranking is unambiguous: degree 3 wins, not because it's the most powerful model available, but because it's the best match for how much real signal 20 noisy points can actually support.
       </Paragraph>
 
       <Heading level={2} delay={1.25}>
@@ -151,11 +163,15 @@ for deg in [1, 3, 9]:
       </Heading>
 
       <Paragraph delay={1.30}>
-        If overfitting means variance too high relative to what the data can support, one direct fix is to deliberately trade some of that variance away for a bit more bias. <strong>Regularization</strong> does exactly this, it constrains how far a model's fitted parameters are allowed to wander, usually by penalizing large parameter values directly. An <InlineCode>L2</InlineCode> penalty adds the sum of squared coefficients to the training objective, which pulls every coefficient toward zero unless the data provides a strong enough signal to justify keeping it large.
+        If overfitting means variance too high relative to what the data can support, one direct fix is to deliberately trade some of that variance away for a bit more bias. <strong>Regularization</strong> does exactly this: it constrains how far a model's fitted parameters are allowed to wander, usually by penalizing large parameter values directly. An <InlineCode>L2</InlineCode> penalty adds the sum of squared coefficients to the training objective, which pulls every coefficient toward zero unless the data provides a strong enough signal to justify keeping it large.
       </Paragraph>
 
       <Paragraph delay={1.35}>
-        Running the same degree-9 polynomial from above, but fitting it with a small <InlineCode>L2</InlineCode> penalty instead of an unconstrained least-squares fit, changes the picture completely. Unregularized, degree 9 came out to bias squared of roughly <Formula>{`2.27`}</Formula> and variance of roughly <Formula>{`3993.86`}</Formula> on this particular run. Adding a modest penalty term brings bias squared down to about <Formula>{`0.008`}</Formula> and variance down to about <Formula>{`0.123`}</Formula>, a swing from a total error near four thousand to a total error near <Formula>{`0.13`}</Formula>. A little deliberate bias bought an enormous reduction in variance. Push the penalty much harder and bias starts climbing again as the coefficients get pulled toward zero more than the true pattern warrants, which is exactly the underfitting side of the same tradeoff showing up from a different direction. The full mechanics of how ridge and lasso penalties actually shape a fitted model are worth their own dedicated post, the point to take here is narrower, regularization is a direct, tunable lever on the bias-variance tradeoff, not a separate trick unrelated to it.
+        Running the same degree-9 polynomial from above, but fitting it with a small <InlineCode>L2</InlineCode> penalty instead of an unconstrained least-squares fit, changes the picture completely. Unregularized, degree 9 came out to bias squared of roughly <Formula>{`2.27`}</Formula> and variance of roughly <Formula>{`3993.86`}</Formula> on this particular run. Adding a modest penalty term brings bias squared down to about <Formula>{`0.008`}</Formula> and variance down to about <Formula>{`0.123`}</Formula> — a swing from a total error near four thousand to a total error near <Formula>{`0.13`}</Formula>. A little deliberate bias bought an enormous reduction in variance.
+      </Paragraph>
+
+      <Paragraph delay={1.37}>
+        Push the penalty much harder and bias starts climbing again, as the coefficients get pulled toward zero more than the true pattern warrants. That's exactly the underfitting side of the same tradeoff showing up from a different direction. The full mechanics of how ridge and lasso penalties actually shape a fitted model are worth their own dedicated post. The point to take here is narrower: regularization is a direct, tunable lever on the bias-variance tradeoff, not a separate trick unrelated to it.
       </Paragraph>
 
       <Heading level={2} delay={1.40}>
@@ -163,7 +179,7 @@ for deg in [1, 3, 9]:
       </Heading>
 
       <Paragraph delay={1.45}>
-        Complexity is one axis to slide along. Training set size is another, and it comes with its own diagnostic, plotting training and validation error against how much training data was used. A <strong>learning curve</strong> answers a question the complexity-versus-error picture can't, whether the fix for a struggling model is a different model or just more data.
+        Complexity is one axis to slide along. Training set size is another, and it comes with its own diagnostic: plotting training and validation error against how much training data was used. A <strong>learning curve</strong> answers a question the complexity-versus-error picture can't: whether the fix for a struggling model is a different model or just more data.
       </Paragraph>
 
       <Paragraph delay={1.50}>
@@ -176,7 +192,11 @@ for deg in [1, 3, 9]:
       />
 
       <Paragraph delay={1.55}>
-        A wide, persistent gap between the two flattened curves is the signature of overfitting, the model needs either more data or less capacity, and this is precisely why adding more data sometimes helps a lot, when that gap is still visibly closing, and sometimes barely moves the needle at all, when both curves have already flattened and are sitting right on top of each other. Both curves flattening out together at a high error level, with barely any gap between them, is the signature of underfitting instead, more data won't help much there, since the model has already used what data it has about as well as it's able to, the ceiling is the model's capacity, not the sample size.
+        A wide, persistent gap between the two flattened curves is the signature of overfitting: the model needs either more data or less capacity. This is precisely why adding more data sometimes helps a lot, when that gap is still visibly closing, and sometimes barely moves the needle at all, when both curves have already flattened and are sitting right on top of each other.
+      </Paragraph>
+
+      <Paragraph delay={1.57}>
+        Both curves flattening out together at a high error level, with barely any gap between them, is the signature of underfitting instead. More data won't help much there, since the model has already used what data it has about as well as it's able to. The ceiling is the model's capacity, not the sample size.
       </Paragraph>
 
       <Paragraph delay={1.60}>
@@ -196,7 +216,7 @@ for deg in [1, 3, 9]:
       </List>
 
       <Paragraph delay={1.75}>
-        None of this replaces the discipline of actually holding out a validation set and looking at it honestly. The bias-variance decomposition and a learning curve are just the vocabulary for explaining what that validation number is already trying to tell a model builder, whether the next move is a bigger model, a smaller one, more data, or a bit of deliberate regularization. Thanks for reading.
+        None of this replaces the discipline of actually holding out a validation set and looking at it honestly. The bias-variance decomposition and a learning curve are just the vocabulary for explaining what that validation number is already trying to tell a model builder: whether the next move is a bigger model, a smaller one, more data, or a bit of deliberate regularization. Thanks for reading.
       </Paragraph>
     </>
   ),

@@ -18,7 +18,7 @@ export const clustering: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Most of the machine learning worth talking about starts from a labeled example, a photo tagged "cat," a support ticket tagged "billing," a transaction tagged "fraud." Someone already decided what the right answer looks like, and the model's job is to learn to reproduce that decision on new inputs. Clustering starts somewhere else entirely. Hand it a pile of customers, documents, or sensor readings with no tags attached at all, and ask it a much stranger question, does this data have any internal structure worth naming.
+        Most of the machine learning worth talking about starts from a labeled example, a photo tagged "cat," a support ticket tagged "billing," a transaction tagged "fraud." Someone already decided what the right answer looks like, and the model's job is to learn to reproduce that decision on new inputs. Clustering starts somewhere else entirely. Hand it a pile of customers, documents, or sensor readings with no tags attached at all, and ask it a much stranger question: does this data have any internal structure worth naming?
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -34,7 +34,7 @@ export const clustering: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.30}>
-        Why does that particular loop converge at all, instead of oscillating forever? Each of the two steps can only ever decrease (or hold steady) the same quantity, the total squared distance from every point to its assigned centroid, usually called <strong>within-cluster variance</strong>. The assign step can't make it worse, moving a point to its nearest centroid is by definition the smallest distance available for that point. The update step can't make it worse either, the mean of a set of points is exactly the single location that minimizes the sum of squared distances to all of them. Two steps, each one only ever shrinking or holding the same number steady, means the whole loop has to settle into a fixed point eventually. It just isn't guaranteed to be the best fixed point, which is the next problem.
+        Why does that particular loop converge at all, instead of oscillating forever? Each of the two steps can only ever decrease (or hold steady) the same quantity: the total squared distance from every point to its assigned centroid, usually called <strong>within-cluster variance</strong>. The assign step can't make it worse, moving a point to its nearest centroid is by definition the smallest distance available for that point. The update step can't make it worse either, the mean of a set of points is exactly the single location that minimizes the sum of squared distances to all of them. Two steps, each one only ever shrinking or holding the same number steady, means the whole loop has to settle into a fixed point eventually. It just isn't guaranteed to be the best fixed point, which is the next problem.
       </Paragraph>
 
       <Heading level={2} delay={0.35}>
@@ -97,7 +97,7 @@ for iteration in range(1, 4):
       </Heading>
 
       <Paragraph delay={0.75}>
-        K-means assigns every point using ordinary Euclidean distance to a centroid, which means every cluster it can ever describe is, in effect, a roughly circular (or spherical, in higher dimensions) blob of similar size to the other clusters. That's not a limitation anyone chose on purpose, it falls directly out of what the assign step is doing, the set of points closer to one centroid than another is always a straight-line boundary, a Voronoi cell, no matter what the true data looks like.
+        K-means assigns every point using ordinary Euclidean distance to a centroid, which means every cluster it can ever describe is, in effect, a roughly circular (or spherical, in higher dimensions) blob of similar size to the other clusters. That's not a limitation anyone chose on purpose. It falls directly out of what the assign step is doing: the set of points closer to one centroid than another is always a straight-line boundary, a Voronoi cell, no matter what the true data looks like.
       </Paragraph>
 
       <Paragraph delay={0.80}>
@@ -122,7 +122,7 @@ for iteration in range(1, 4):
       </Paragraph>
 
       <Paragraph delay={1.05}>
-        "Closest clusters" needs a definition once a cluster has more than one point in it, and the choice of definition, called the <strong>linkage criterion</strong>, changes the resulting shapes noticeably. <InlineCode>single linkage</InlineCode> measures the distance between the two nearest points in each cluster, which lets it trace out long, thin, curving shapes, at the cost of being prone to chaining unrelated points together through a few close intermediaries. <InlineCode>complete linkage</InlineCode> measures the distance between the two farthest points in each cluster, which favors compact, evenly sized clusters and resists chaining. <InlineCode>average linkage</InlineCode> averages the distance between every pair across the two clusters, landing somewhere between the other two in behavior. None of the three is universally correct, the right one depends on whether the data's real clusters are expected to be tight blobs or elongated chains.
+        "Closest clusters" needs a definition once a cluster has more than one point in it, and the choice of definition, called the <strong>linkage criterion</strong>, changes the resulting shapes noticeably. <InlineCode>single linkage</InlineCode> measures the distance between the two nearest points in each cluster. That lets it trace out long, thin, curving shapes, but it's also prone to chaining unrelated points together through a few close intermediaries. <InlineCode>complete linkage</InlineCode> measures the distance between the two farthest points in each cluster, which favors compact, evenly sized clusters and resists chaining. <InlineCode>average linkage</InlineCode> averages the distance between every pair across the two clusters, landing somewhere between the other two in behavior. None of the three is universally correct, the right one depends on whether the data's real clusters are expected to be tight blobs or elongated chains.
       </Paragraph>
 
       <Heading level={2} delay={1.10}>
@@ -134,7 +134,7 @@ for iteration in range(1, 4):
       </Paragraph>
 
       <Paragraph delay={1.20}>
-        That definition is exactly why DBSCAN handles the two-streaks case correctly where K-means didn't, it never asks "which centroid is this point closest to," it only asks "does this point sit in a chain of nearby points." Since the within-streak gaps (around <Formula>{`35.9`}</Formula>) stay smaller than the cross-streak gap (around <Formula>{`41.1`}</Formula>), an <InlineCode>eps</InlineCode> set anywhere in between links up each streak internally while never bridging across to the other one, recovering the actual shape instead of a straight-line cut through it. The same mechanism is what makes DBSCAN naturally robust to outliers, a single stray point far from everything else simply never becomes a core point and gets marked noise instead of dragging a centroid toward itself, something K-means has no way to do since every point is forced into some cluster whether it belongs or not.
+        That definition is exactly why DBSCAN handles the two-streaks case correctly where K-means didn't: it never asks "which centroid is this point closest to," it only asks "does this point sit in a chain of nearby points." Since the within-streak gaps (around <Formula>{`35.9`}</Formula>) stay smaller than the cross-streak gap (around <Formula>{`41.1`}</Formula>), an <InlineCode>eps</InlineCode> set anywhere in between links up each streak internally while never bridging across to the other one, recovering the actual shape instead of a straight-line cut through it. The same mechanism is what makes DBSCAN naturally robust to outliers. A single stray point far from everything else simply never becomes a core point, and gets marked noise instead of dragging a centroid toward itself. K-means has no way to do that, since every point is forced into some cluster whether it belongs or not.
       </Paragraph>
 
       <Heading level={2} delay={1.25}>
@@ -154,7 +154,7 @@ for iteration in range(1, 4):
       </Heading>
 
       <Paragraph delay={1.45}>
-        Classification has a clean answer to "is this good," check predictions against known labels on a held-out set. Clustering doesn't have that option, there's no label to check against, the entire point of the exercise was to find structure nobody had already named. That doesn't mean every clustering is equally trustworthy, it just means the checks have to look for something other than accuracy.
+        Classification has a clean answer to "is this good": check predictions against known labels on a held-out set. Clustering doesn't have that option. There's no label to check against, since the entire point of the exercise was to find structure nobody had already named. That doesn't mean every clustering is equally trustworthy. It just means the checks have to look for something other than accuracy.
       </Paragraph>
 
       <Paragraph delay={1.50}>

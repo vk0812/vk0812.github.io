@@ -18,7 +18,7 @@ export const normalizationResidualConnectionsModernBlocks: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.1}>
-        Stack ten plain feedforward layers on top of each other with no special tricks and training usually still works, if a little slowly. Stack a hundred and it typically falls apart, loss stalls, gradients either vanish on the way back or blow up into NaNs, and adding more depth makes the model worse instead of better. That degradation is not really about the model running out of capacity. It is about the numbers flowing through the network drifting to a scale training was never designed to handle, and about gradients having no clean path back to the earliest layers. Two ideas fixed both problems at once and turned "deep" into something that actually means something, normalizing activations at each layer, and adding a shortcut that lets information skip straight past a layer's transformation.
+        Stack ten plain feedforward layers on top of each other with no special tricks and training usually still works, if a little slowly. Stack a hundred and it typically falls apart. Loss stalls, gradients either vanish on the way back or blow up into NaNs, and adding more depth makes the model worse instead of better. That degradation is not really about the model running out of capacity. It is about the numbers flowing through the network drifting to a scale training was never designed to handle, and about gradients having no clean path back to the earliest layers. Two ideas fixed both problems at once and turned "deep" into something that actually means something: normalizing activations at each layer, and adding a shortcut that lets information skip straight past a layer's transformation.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -131,7 +131,7 @@ print(X_ln.var(axis=1))   # [1. 1. 1. 1.]`}
       />
 
       <Paragraph delay={1.0}>
-        That last observation is the whole point of layer norm in one example, it only ever looks inside a single example's own features, so the absolute scale one example happens to arrive at means nothing to it, and no statistic ever needs another example in the batch to be computed. That independence is exactly why layer norm fits sequence models and transformers so naturally. A batch of sentences padded to different lengths, or a decoder generating one token at a time at inference, has no stable notion of "the batch" to average over the way a fixed batch of images does. Layer norm sidesteps the question entirely, every token normalizes against its own features regardless of batch size, sequence length, or whether it is training or generating one token at inference.
+        That last observation is the whole point of layer norm. It only ever looks inside a single example's own features, so the absolute scale one example happens to arrive at means nothing to it, and no statistic ever needs another example in the batch to be computed. That independence is exactly why layer norm fits sequence models and transformers so naturally. A batch of sentences padded to different lengths, or a decoder generating one token at a time at inference, has no stable notion of "the batch" to average over the way a fixed batch of images does. Layer norm sidesteps the question entirely: every token normalizes against its own features regardless of batch size, sequence length, or whether it is training or generating one token at inference.
       </Paragraph>
 
       <Heading level={2} delay={1.05}>
@@ -139,7 +139,7 @@ print(X_ln.var(axis=1))   # [1. 1. 1. 1.]`}
       </Heading>
 
       <Paragraph delay={1.1}>
-        <strong>Group normalization</strong> sits between the two. It also computes statistics per example rather than across the batch, so it shares layer norm's independence from batch size, but instead of using all of an example's features at once, it splits the channels into a handful of groups (say 32) and normalizes each group separately. This matters for vision models trained with small batches, object detection and segmentation networks often can only fit one or two high-resolution images per batch due to memory, which makes batch norm's batch-axis statistics too noisy to trust. Group norm gives those models a batch-size-independent alternative without going all the way to normalizing every channel together the way plain layer norm would.
+        <strong>Group normalization</strong> sits between the two. It also computes statistics per example rather than across the batch, so it shares layer norm's independence from batch size, but instead of using all of an example's features at once, it splits the channels into a handful of groups (say 32) and normalizes each group separately. This matters for vision models trained with small batches. Object detection and segmentation networks often can only fit one or two high-resolution images per batch due to memory, which makes batch norm's batch-axis statistics too noisy to trust. Group norm gives those models a batch-size-independent alternative without going all the way to normalizing every channel together the way plain layer norm would.
       </Paragraph>
 
       <Heading level={2} delay={1.15}>
@@ -173,7 +173,7 @@ print(X_rms)
       />
 
       <Paragraph delay={1.4}>
-        The values differ from layer norm's output, but the same core property survives, every row still lands on the same shape once each example is normalized against its own statistics. What RMSNorm actually buys is speed, no mean to compute, no second pass to re-center, and one fewer learned parameter (many implementations drop the additive <Formula>{`\\beta`}</Formula> shift entirely, keeping only <Formula>{`\\gamma`}</Formula>). That savings is small per call, but a large language model calls its normalization layer an enormous number of times, once per sublayer per token per layer, so a cheaper normalization adds up across a full training run. This is why RMSNorm shows up throughout most modern large language models rather than the original layer norm formula.
+        The values differ from layer norm's output, but the same core property survives: every row still lands on the same shape once each example is normalized against its own statistics. What RMSNorm actually buys is speed: no mean to compute, no second pass to re-center, and one fewer learned parameter (many implementations drop the additive <Formula>{`\\beta`}</Formula> shift entirely, keeping only <Formula>{`\\gamma`}</Formula>). That savings is small per call, but a large language model calls its normalization layer an enormous number of times, once per sublayer per token per layer, so a cheaper normalization adds up across a full training run. This is why RMSNorm shows up throughout most modern large language models rather than the original layer norm formula.
       </Paragraph>
 
       <Heading level={2} delay={1.45}>
@@ -239,7 +239,7 @@ print(X_rms)
       />
 
       <Paragraph delay={2.0}>
-        Look closely at the post-norm version and the identity path from the previous section is gone. The last thing that happens is a normalization, which is not the identity function, so the clean "just add 1" gradient path from two sections ago no longer holds exactly, the layer norm's own Jacobian is sitting right in the middle of it. In a shallow network that is a minor wrinkle. Stack enough post-norm blocks and it compounds badly enough that training very deep post-norm transformers reliably needs a careful learning rate warmup just to avoid diverging in the first few hundred steps. Pre-norm keeps the addition as the very last operation, so the identity path really is untouched all the way through, at the cost of the sublayer's own output no longer being explicitly renormalized afterward, which some later work addresses by adding a final normalization layer at the very end of the whole stack instead of after each block.
+        Look closely at the post-norm version and the identity path from the previous section is gone. The last thing that happens is a normalization, which is not the identity function. So the clean "just add 1" gradient path from two sections ago no longer holds exactly, the layer norm's own Jacobian is sitting right in the middle of it. In a shallow network that is a minor wrinkle. Stack enough post-norm blocks and it compounds badly enough that training very deep post-norm transformers reliably needs a careful learning rate warmup just to avoid diverging in the first few hundred steps. Pre-norm keeps the addition as the very last operation, so the identity path really is untouched all the way through. The cost is that the sublayer's own output is no longer explicitly renormalized afterward, which some later work addresses by adding a final normalization layer at the very end of the whole stack instead of after each block.
       </Paragraph>
 
       <Heading level={2} delay={2.05}>
@@ -255,7 +255,7 @@ print(X_rms)
       </Formula>
 
       <Paragraph delay={2.2}>
-        The intuition is a soft, learned, per-position switch, rather than every unit passing through the same fixed nonlinearity regardless of context, the network can learn to suppress or amplify specific features depending on what the input actually looks like. Variants that swap in a different gating activation, SwiGLU and GEGLU among them, have become the default feedforward sublayer in most modern transformer implementations, usually at the cost of a slightly wider hidden dimension to keep the parameter count comparable to the ungated version.
+        The intuition is a soft, learned, per-position switch. Rather than every unit passing through the same fixed nonlinearity regardless of context, the network can learn to suppress or amplify specific features depending on what the input actually looks like. Variants that swap in a different gating activation, SwiGLU and GEGLU among them, have become the default feedforward sublayer in most modern transformer implementations, usually at the cost of a slightly wider hidden dimension to keep the parameter count comparable to the ungated version.
       </Paragraph>
 
       <Heading level={2} delay={2.25}>
@@ -279,7 +279,7 @@ print(X_rms)
       </List>
 
       <Paragraph delay={2.45}>
-        None of these four ideas is individually complicated, a mean and a variance over a chosen axis, an addition, a reordering of two operations, an elementwise product. What is genuinely impressive is how much depth that combination unlocks once it is assembled correctly, and how consistently the same small recipe shows up whether the block in question is doing attention, a feedforward pass, or something else entirely. Thanks for reading.
+        None of these four ideas is individually complicated: a mean and a variance over a chosen axis, an addition, a reordering of two operations, an elementwise product. What is genuinely impressive is how much depth that combination unlocks once it is assembled correctly, and how consistently the same small recipe shows up whether the block in question is doing attention, a feedforward pass, or something else entirely. Thanks for reading.
       </Paragraph>
     </>
   ),

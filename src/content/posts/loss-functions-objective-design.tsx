@@ -20,7 +20,7 @@ export const lossFunctionsObjectiveDesign: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Two teams can take the exact same architecture, the exact same training data, and the exact same number of epochs, and still ship models that behave completely differently in production. The usual reason isn't the model at all. It's the loss function. A network doesn't know what "good" means, it only knows what number it's being pushed to shrink, and every choice buried in that number, which errors get punished harder, how imbalance gets handled, how several goals get combined into one, shows up later as an actual behavior someone notices in production.
+        Two teams can take the exact same architecture, the exact same training data, and the exact same number of epochs, and still ship models that behave completely differently in production. The usual reason isn't the model at all. It's the loss function. A network doesn't know what "good" means. It only knows what number it's being pushed to shrink. Every choice buried in that number, which errors get punished harder, how imbalance gets handled, how several goals get combined into one, shows up later as an actual behavior someone notices in production.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -40,7 +40,7 @@ export const lossFunctionsObjectiveDesign: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.35}>
-        Only one of the two terms survives for any given example, whichever one matches the true label, and that surviving term is <Formula>{`-\\log`}</Formula> of whatever probability the model assigned to the correct answer. That's the entire mechanism. Confident and correct means a probability near 1, so <Formula>{`-\\log`}</Formula> of it is nearly zero, almost no penalty. Confident and wrong means a probability near 0, and <Formula>{`-\\log`}</Formula> of a number near zero blows up toward infinity, a severe penalty. This is a negative log-likelihood under a coin-flip (Bernoulli) model of the label, the same information-theoretic quantity that measures the average cost of describing outcomes drawn from one distribution using a code built for another.
+        Only one of the two terms survives for any given example, whichever one matches the true label, and that surviving term is <Formula>{`-\\log`}</Formula> of whatever probability the model assigned to the correct answer. That's the entire mechanism. Confident and correct means a probability near 1, so <Formula>{`-\\log`}</Formula> of it is nearly zero, almost no penalty. Confident and wrong means a probability near 0, and <Formula>{`-\\log`}</Formula> of a number near zero blows up toward infinity, a severe penalty. This is a negative log-likelihood under a coin-flip (Bernoulli) model of the label. In information theory, the same quantity measures the average cost of describing outcomes from one distribution using a code built for another.
       </Paragraph>
 
       <Paragraph delay={0.40}>
@@ -138,7 +138,7 @@ print(mse[3] / mse.sum(), mae[3] / mae.sum(), huber[3] / huber.sum())
       />
 
       <Paragraph delay={1.25}>
-        The outlier's residual is 6, twelve times bigger than the next-largest residual of 0.5. Under MSE, that single point accounts for 98% of the total loss, the other four points might as well not exist as far as the gradient is concerned. Under MAE, the same point accounts for 81%, still dominant but far less absolute. Huber lands in between at 95%, closer to MSE than MAE, which makes sense given <Formula>{`\\delta = 1`}</Formula> is small relative to this residual, past the threshold the outlier's contribution grows only linearly instead of quadratically, so it stops swallowing the loss entirely even though it's still the largest single term. Push <Formula>{`\\delta`}</Formula> up toward the outlier's own residual size and Huber drifts back toward MSE's behavior, the threshold is doing real work here, not just cosmetic tuning.
+        The outlier's residual is 6, twelve times bigger than the next-largest residual of 0.5. Under MSE, that single point accounts for 98% of the total loss, the other four points might as well not exist as far as the gradient is concerned. Under MAE, the same point accounts for 81%, still dominant but far less absolute. Huber lands in between at 95%, closer to MSE than MAE. That makes sense given <Formula>{`\\delta = 1`}</Formula> is small relative to this residual. Past the threshold, the outlier's contribution grows only linearly instead of quadratically, so it stops swallowing the loss entirely, even though it's still the largest single term. Push <Formula>{`\\delta`}</Formula> up toward the outlier's own residual size and Huber drifts back toward MSE's behavior. The threshold is doing real work here, not just cosmetic tuning.
       </Paragraph>
 
       <Heading level={2} delay={1.30}>
@@ -158,7 +158,7 @@ print(mse[3] / mse.sum(), mae[3] / mae.sum(), huber[3] / huber.sum())
       </Paragraph>
 
       <Paragraph delay={1.50}>
-        A related family, contrastive and triplet losses, extends the same margin idea to embeddings instead of a single score, pulling a matching pair's vectors closer together and pushing a non-matching pair's vectors at least some margin apart, which is the mechanism behind most modern retrieval and image-text matching systems. The full derivation of that objective (a softmax over a batch of similarities, temperature-scaled) is its own topic and not worth re-deriving here, the short version is that it's still fundamentally a margin argument, just applied to a whole batch of pairs at once instead of one score.
+        A related family, contrastive and triplet losses, extends the same margin idea to embeddings instead of a single score. It pulls a matching pair's vectors closer together and pushes a non-matching pair's vectors at least some margin apart, which is the mechanism behind most modern retrieval and image-text matching systems. The full derivation of that objective (a softmax over a batch of similarities, temperature-scaled) is its own topic and not worth re-deriving here. The short version: it's still fundamentally a margin argument, just applied to a whole batch of pairs at once instead of one score.
       </Paragraph>
 
       <Heading level={2} delay={1.55}>
@@ -213,7 +213,7 @@ for pi, c, f in zip(p, ce, focal):
       </Heading>
 
       <Paragraph delay={1.95}>
-        Ordinary cross-entropy trains against a hard one-hot label, all probability mass on the correct class, none anywhere else. Pushed hard enough, that objective is technically satisfied only when the model outputs a probability of exactly 1 on the correct class, which the softmax function can only ever approach and never fully reach, driving the pre-softmax logits toward larger and larger magnitude the longer training continues. That tendency toward extreme overconfidence turns out to hurt calibration and generalization even when it doesn't hurt training accuracy. <strong>Label smoothing</strong> softens the target itself so the objective is achievable and stops encouraging that runaway confidence.
+        Ordinary cross-entropy trains against a hard one-hot label, all probability mass on the correct class, none anywhere else. Pushed hard enough, that objective is technically satisfied only when the model outputs a probability of exactly 1 on the correct class. Softmax can only ever approach that value, never fully reach it, and chasing it drives the pre-softmax logits toward larger and larger magnitude the longer training continues. That tendency toward extreme overconfidence turns out to hurt calibration and generalization even when it doesn't hurt training accuracy. <strong>Label smoothing</strong> softens the target itself so the objective is achievable and stops encouraging that runaway confidence.
       </Paragraph>
 
       <Formula block delay={2.00}>
@@ -237,7 +237,7 @@ for pi, c, f in zip(p, ce, focal):
       </Formula>
 
       <Paragraph delay={2.25}>
-        The weights <Formula>{`w_t`}</Formula> look like a minor implementation detail and are actually one of the most consequential choices in the whole setup. Different losses live on completely different natural scales, a classification cross-entropy might sit around 0.5 while a regression MSE on unnormalized pixel coordinates might sit in the thousands, and gradient descent has no idea that's an artifact of units rather than a signal about which task matters more. Left unweighted, the task with the numerically larger loss dominates the combined gradient and the network quietly stops improving on the other task at all, sometimes without any obvious warning sign in the aggregate training loss, which keeps going down the whole time because the dominant task is still improving.
+        The weights <Formula>{`w_t`}</Formula> look like a minor implementation detail and are actually one of the most consequential choices in the whole setup. Different losses live on completely different natural scales, a classification cross-entropy might sit around 0.5 while a regression MSE on unnormalized pixel coordinates might sit in the thousands, and gradient descent has no idea that's an artifact of units rather than a signal about which task matters more. Left unweighted, the task with the numerically larger loss dominates the combined gradient, and the network quietly stops improving on the other task at all. Often there's no obvious warning sign in the aggregate training loss, which keeps going down the whole time because the dominant task is still improving.
       </Paragraph>
 
       <Paragraph delay={2.30}>

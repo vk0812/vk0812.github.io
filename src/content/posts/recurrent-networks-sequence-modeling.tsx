@@ -18,7 +18,7 @@ export const recurrentNetworksSequenceModeling: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        A feedforward network looks at an input and produces an output, and that's the whole story. Feed it the same image twice, in any order, and it doesn't care, there's no notion of "before" or "after" anywhere in the computation. That's fine for images, but it falls apart the moment order is the whole point. "Dog bites man" and "man bites dog" have the exact same words. A stock price from Monday means something different depending on what happened the four days before it. Language, audio, sensor readings, anything that unfolds in time needs a model that can carry information from one step to the next.
+        A feedforward network looks at an input and produces an output, and that's the whole story. Feed it the same image twice, in any order, and it doesn't care. There's no notion of "before" or "after" anywhere in the computation. That's fine for images, but it falls apart the moment order is the whole point. "Dog bites man" and "man bites dog" have the exact same words. A stock price from Monday means something different depending on what happened the four days before it. Language, audio, sensor readings, anything that unfolds in time needs a model that can carry information from one step to the next.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -92,7 +92,7 @@ for t, x in enumerate(X, start=1):
       />
 
       <Paragraph delay={0.60}>
-        Notice how <Formula>{`h_1`}</Formula> depends only on <Formula>{`x_1`}</Formula> starting from a zero hidden state, but by <Formula>{`h_3`}</Formula> the vector <Formula>{`[-0.6176, 0.5345]`}</Formula> is a genuine mixture of everything since the start, <Formula>{`x_1`}</Formula>, <Formula>{`x_2`}</Formula>, and <Formula>{`x_3`}</Formula> have all been folded together through the same two weight matrices, applied three times in a row. That folding is exactly what gives a recurrent network memory, and it's also exactly what makes training one harder than training a feedforward network.
+        Notice how <Formula>{`h_1`}</Formula> depends only on <Formula>{`x_1`}</Formula> starting from a zero hidden state. But by <Formula>{`h_3`}</Formula> the vector <Formula>{`[-0.6176, 0.5345]`}</Formula> is a genuine mixture of everything since the start: <Formula>{`x_1`}</Formula>, <Formula>{`x_2`}</Formula>, and <Formula>{`x_3`}</Formula> have all been folded together through the same two weight matrices, applied three times in a row. That folding is exactly what gives a recurrent network memory, and it's also exactly what makes training one harder than training a feedforward network.
       </Paragraph>
 
       <Heading level={2} delay={0.65}>
@@ -129,7 +129,7 @@ for t, x in enumerate(X, start=1):
       />
 
       <Paragraph delay={1.05}>
-        Five steps back, the gradient's magnitude has dropped from 1.0 to about 0.0365, a factor of roughly 27. Extend the sequence to fifty or a hundred steps with this same kind of weight matrix and the gradient reaching the earliest timesteps is indistinguishable from zero in floating point. The network trains fine on whatever happened recently and is simply unable to adjust its weights based on anything from far in the past, not because the information isn't relevant, but because the gradient carrying that information decayed to nothing on the way back. This connects to the same broader activation and gradient flow concerns that show up in very deep feedforward networks, a recurrent network unrolled over a hundred timesteps is, from the optimizer's point of view, a hundred-layer-deep network, and it inherits all the same difficulties, just guaranteed to happen every time rather than depending on how the layers happen to be initialized.
+        Five steps back, the gradient's magnitude has dropped from 1.0 to about 0.0365, a factor of roughly 27. Extend the sequence to fifty or a hundred steps with this same kind of weight matrix and the gradient reaching the earliest timesteps is indistinguishable from zero in floating point. The network trains fine on whatever happened recently and is simply unable to adjust its weights based on anything from far in the past, not because the information isn't relevant, but because the gradient carrying that information decayed to nothing on the way back. This connects to the same broader activation and gradient flow concerns that show up in very deep feedforward networks. From the optimizer's point of view, a recurrent network unrolled over a hundred timesteps is a hundred-layer-deep network, and it inherits all the same difficulties, just guaranteed to happen every time rather than depending on how the layers happen to be initialized.
       </Paragraph>
 
       <Heading level={2} delay={1.10}>
@@ -154,7 +154,7 @@ for t, x in enumerate(X, start=1):
       />
 
       <Paragraph delay={1.30}>
-        The gradient flowing backward through the cell state now has to pass through <Formula>{`f_t`}</Formula>, an elementwise multiply, instead of a full matrix multiply followed by a squashing derivative. If the network learns to set a forget gate near 1 for information it wants to preserve, the gradient through that path is multiplied by something close to 1 rather than by a fixed sub-1 factor at every single step. This doesn't make vanishing gradients impossible in an LSTM, a forget gate can still learn to be small, closing off that path deliberately, but it gives the network an actual mechanism to choose to preserve gradient flow when the task calls for it, which a plain recurrent network never had. That's the whole idea behind gating, not a bigger network, just a switch that can be set to nearly lossless.
+        The gradient flowing backward through the cell state now has to pass through <Formula>{`f_t`}</Formula>, an elementwise multiply, instead of a full matrix multiply followed by a squashing derivative. If the network learns to set a forget gate near 1 for information it wants to preserve, the gradient through that path is multiplied by something close to 1 rather than by a fixed sub-1 factor at every single step. This doesn't make vanishing gradients impossible in an LSTM. A forget gate can still learn to be small, closing off that path deliberately. But it gives the network an actual mechanism to choose to preserve gradient flow when the task calls for it, which a plain recurrent network never had. That's the whole idea behind gating, not a bigger network, just a switch that can be set to nearly lossless.
       </Paragraph>
 
       <Heading level={2} delay={1.35}>
@@ -182,7 +182,7 @@ for t, x in enumerate(X, start=1):
       </Paragraph>
 
       <Paragraph delay={1.65}>
-        The result at position <Formula>{`t`}</Formula> has seen both everything before it and everything after it, which is strictly more context than a one-directional network can offer at that same position. The tradeoff is that a bidirectional network can't be used for anything that has to produce output before the full sequence exists, it needs the whole input up front, so it shows up in tagging and classification tasks far more than in generation tasks.
+        The result at position <Formula>{`t`}</Formula> has seen both everything before it and everything after it, which is strictly more context than a one-directional network can offer at that same position. The tradeoff is that a bidirectional network can't be used for anything that has to produce output before the full sequence exists. It needs the whole input up front, so it shows up in tagging and classification tasks far more than in generation tasks.
       </Paragraph>
 
       <Heading level={2} delay={1.70}>
@@ -194,7 +194,7 @@ for t, x in enumerate(X, start=1):
       </Paragraph>
 
       <Paragraph delay={1.80}>
-        The whole burden of "everything relevant about the input sentence" has to be squeezed into that single fixed-size context vector, no matter how long the input sentence was. That's a real bottleneck, and it's worth keeping in mind for later, it's the exact limitation that the next major architectural idea after recurrence was built to remove.
+        The whole burden of "everything relevant about the input sentence" has to be squeezed into that single fixed-size context vector, no matter how long the input sentence was. That's a real bottleneck, and it's worth keeping in mind for later: it's the exact limitation that the next major architectural idea after recurrence was built to remove.
       </Paragraph>
 
       <Heading level={2} delay={1.85}>
@@ -214,11 +214,11 @@ for t, x in enumerate(X, start=1):
       </Heading>
 
       <Paragraph delay={2.05}>
-        Gating pushed the practical range of "how far back can gradient meaningfully travel" much further than a plain RNN could manage, and it made recurrent networks genuinely useful for real sequence tasks for a couple of decades. But two limitations remain even with an LSTM or a GRU doing the recurrence. The vanishing gradient problem is reduced, not eliminated, extremely long sequences can still overwhelm the gates' ability to preserve signal. And the sequence to sequence bottleneck from above is structural, no amount of better gating changes the fact that a fixed-size context vector has to represent an arbitrarily long input.
+        Gating pushed the practical range of "how far back can gradient meaningfully travel" much further than a plain RNN could manage, and it made recurrent networks genuinely useful for real sequence tasks for a couple of decades. But two limitations remain even with an LSTM or a GRU doing the recurrence. The vanishing gradient problem is reduced, not eliminated: extremely long sequences can still overwhelm the gates' ability to preserve signal. And the sequence to sequence bottleneck from above is structural, no amount of better gating changes the fact that a fixed-size context vector has to represent an arbitrarily long input.
       </Paragraph>
 
       <Paragraph delay={2.10}>
-        Attention mechanisms, and the transformer architectures built around them, address both of these by giving the decoder direct access to every encoder position instead of forcing all of that information through one hidden state and one sequential path. That's a large enough idea to deserve its own treatment rather than a few sentences here, but it's worth naming clearly, attention wasn't invented in a vacuum, it was invented specifically to route around the two problems this post just walked through by hand.
+        Attention mechanisms, and the transformer architectures built around them, address both of these by giving the decoder direct access to every encoder position instead of forcing all of that information through one hidden state and one sequential path. That's a large enough idea to deserve its own treatment rather than a few sentences here. But it's worth naming clearly: attention wasn't invented in a vacuum. It was invented specifically to route around the two problems this post just walked through by hand.
       </Paragraph>
 
       <Heading level={2} delay={2.15}>
@@ -234,7 +234,7 @@ for t, x in enumerate(X, start=1):
       </List>
 
       <Paragraph delay={2.25}>
-        Recurrence is a genuinely simple idea, carry a summary forward, update it one step at a time, reuse the same rule everywhere. Most of the complexity that got added on top, gates, bidirectionality, encoder decoder splits, teacher forcing, exists to patch specific failure modes of that simple idea rather than to replace it. Understanding those failure modes by hand, with real gradients that actually shrink in front of you, makes it a lot clearer why the field eventually moved toward an architecture that doesn't process a sequence step by step at all. Thanks for reading.
+        Recurrence is a genuinely simple idea: carry a summary forward, update it one step at a time, reuse the same rule everywhere. Most of the complexity that got added on top, gates, bidirectionality, encoder decoder splits, teacher forcing, exists to patch specific failure modes of that simple idea rather than to replace it. Understanding those failure modes by hand, with real gradients that actually shrink in front of you, makes it a lot clearer why the field eventually moved toward an architecture that doesn't process a sequence step by step at all. Thanks for reading.
       </Paragraph>
     </>
   ),

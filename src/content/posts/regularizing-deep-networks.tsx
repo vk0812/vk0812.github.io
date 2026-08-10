@@ -18,7 +18,7 @@ export const regularizingDeepNetworks: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.1}>
-        A convolutional network with twenty million parameters can memorize a training set of a few thousand images outright, labels, JPEG artifacts, and whatever incidental noise happened to be in the photos, and still report a training accuracy in the high nineties. None of the tricks that keep a linear model honest, an L2 penalty on the coefficients, picking a lower polynomial degree, transfer cleanly to a network this large. The parameter count alone guarantees enough capacity to fit almost any finite training set exactly, so the interesting question moves from "can this model fit the data" to "what stops it from fitting only the data it happened to see."
+        A convolutional network with twenty million parameters can memorize a training set of a few thousand images outright: labels, JPEG artifacts, and whatever incidental noise happened to be in the photos. It still reports a training accuracy in the high nineties. None of the tricks that keep a linear model honest, an L2 penalty on the coefficients, picking a lower polynomial degree, transfer cleanly to a network this large. The parameter count alone guarantees enough capacity to fit almost any finite training set exactly, so the interesting question moves from "can this model fit the data" to "what stops it from fitting only the data it happened to see."
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -30,7 +30,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.25}>
-        <strong>Weight decay</strong> is the deep-learning-era name for the same L2 penalty behind ridge regression, added directly to the loss so large weights cost something. There's no closed-form solution the way there is for a linear model, the objective is non-convex and gets optimized by gradient descent, but the mechanics of the penalty itself are identical, every weight gets pulled toward zero by an amount proportional to its own current value, on every single step.
+        <strong>Weight decay</strong> is the deep-learning-era name for the same L2 penalty behind ridge regression, added directly to the loss so large weights cost something. There's no closed-form solution the way there is for a linear model, the objective is non-convex and gets optimized by gradient descent instead. But the mechanics of the penalty itself are identical: every weight gets pulled toward zero, on every single step, by an amount proportional to its own current value.
       </Paragraph>
 
       <Formula block delay={0.3}>
@@ -46,7 +46,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.45}>
-        <strong>Dropout</strong> randomly zeroes out a fraction of a layer's units on every training step, a fresh random mask each forward pass, and lets the rest of the network carry on as if those units didn't exist. A unit surviving one step and dropped the next has no way of knowing in advance which of its neighbors will be there to help it, so it can't afford to specialize into "the unit that only works because unit 47 is also active." That failure mode has a name, <strong>co-adaptation</strong>, a set of units that only function correctly together, having jointly overfit to some detail of the training set, and dropout is aimed directly at preventing it.
+        <strong>Dropout</strong> randomly zeroes out a fraction of a layer's units on every training step, a fresh random mask each forward pass, and lets the rest of the network carry on as if those units didn't exist. A unit surviving one step and dropped the next has no way of knowing in advance which of its neighbors will be there to help it, so it can't afford to specialize into "the unit that only works because unit 47 is also active." That failure mode has a name: <strong>co-adaptation</strong>, a set of units that only function correctly together, having jointly overfit to some detail of the training set. Dropout is aimed directly at preventing it.
       </Paragraph>
 
       <Paragraph delay={0.5}>
@@ -58,7 +58,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.6}>
-        That division by <Formula>{`p_{\\text{keep}}`}</Formula> is the detail that trips people up the first time they implement this by hand. During training, roughly a <Formula>{`1 - p_{\\text{keep}}`}</Formula> fraction of units are zero at any given step, so the sum feeding into the next layer is systematically smaller than it would be with every unit present. Scaling the surviving units up by <Formula>{`1 / p_{\\text{keep}}`}</Formula> keeps the expected value of that sum unchanged, which is what lets inference skip the masking step entirely. At inference time every unit is active and nothing gets scaled at all, since the training-time scaling already accounted for it. This is called <strong>inverted dropout</strong>, and it's the version every modern framework implements by default specifically so inference stays a single, fast, deterministic forward pass with no dependence on which mode the model happens to be in.
+        That division by <Formula>{`p_{\\text{keep}}`}</Formula> is the detail that trips people up the first time they implement this by hand. During training, roughly a <Formula>{`1 - p_{\\text{keep}}`}</Formula> fraction of units are zero at any given step, so the sum feeding into the next layer is systematically smaller than it would be with every unit present. Scaling the surviving units up by <Formula>{`1 / p_{\\text{keep}}`}</Formula> keeps the expected value of that sum unchanged, which is what lets inference skip the masking step entirely. At inference time every unit is active and nothing gets scaled at all, since the training-time scaling already accounted for it. This is called <strong>inverted dropout</strong>. It's the version every modern framework implements by default, specifically so inference stays a single, fast, deterministic forward pass with no dependence on which mode the model happens to be in.
       </Paragraph>
 
       <DropoutMaskDiagram
@@ -67,7 +67,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       />
 
       <Paragraph delay={0.65}>
-        There's a useful way to think about what dropout is actually doing across an entire training run, not just on one step. Every mask defines a slightly different, smaller subnetwork, and a single training run ends up sampling an enormous number of these subnetworks, one per step, each nudged slightly toward fitting the data well on its own. Inference then runs something close to the average prediction over all of those subnetworks at once, since every unit is present and its output already reflects how often it survived. That's the intuition behind calling dropout a cheap approximation to training an ensemble of exponentially many networks and averaging their predictions, without ever paying the cost of actually training more than one network.
+        There's a useful way to think about what dropout is actually doing across an entire training run, not just on one step. Every mask defines a slightly different, smaller subnetwork. A single training run ends up sampling an enormous number of these subnetworks, one per step, each nudged slightly toward fitting the data well on its own. Inference then runs something close to the average prediction over all of those subnetworks at once, since every unit is present and its output already reflects how often it survived. That's the intuition behind calling dropout a cheap approximation to training an ensemble of exponentially many networks and averaging their predictions, without ever paying the cost of actually training more than one network.
       </Paragraph>
 
       <Heading level={2} delay={0.7}>
@@ -79,7 +79,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.8}>
-        The training-time effect is the same trick as dropout at a coarser grain, a network of, say, 110 residual blocks effectively trains as a mixture of shallower networks of varying depth, and at test time every block runs, with each block's contribution scaled by its own survival probability, mirroring dropout's inverted scaling exactly. The payoff is specific to very deep residual architectures, it cuts training time noticeably since skipped blocks don't run their forward or backward pass at all that step, and it fights the same co-adaptation and overfitting dropout fights, just applied to whole layers rather than individual units.
+        The training-time effect is the same trick as dropout at a coarser grain. A network of, say, 110 residual blocks effectively trains as a mixture of shallower networks of varying depth. At test time every block runs, with each block's contribution scaled by its own survival probability, mirroring dropout's inverted scaling exactly. The payoff is specific to very deep residual architectures. It cuts training time noticeably, since skipped blocks don't run their forward or backward pass at all that step, and it fights the same co-adaptation and overfitting dropout fights, just applied to whole layers rather than individual units.
       </Paragraph>
 
       <Heading level={2} delay={0.85}>
@@ -91,7 +91,7 @@ export const regularizingDeepNetworks: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.95}>
-        The reason this counts as regularization and not just good bookkeeping is that a network's effective capacity keeps growing throughout training, not just at initialization. Early in training, weights are close to their random initialization and the function the network computes is close to whatever it started as, mild and smooth by construction. As training continues, weights drift further from that starting point and the function the network represents gets more flexible, more able to bend around individual training points, exactly the flexibility that eventually starts fitting noise instead of signal. Stopping early is stopping before that flexibility outruns what the data can support, without ever adding a term to the loss or removing a single connection.
+        The reason this counts as regularization and not just good bookkeeping is that a network's effective capacity keeps growing throughout training, not just at initialization. Early in training, weights are close to their random initialization and the function the network computes is close to whatever it started as, mild and smooth by construction. As training continues, weights drift further from that starting point, and the function the network represents gets more flexible, more able to bend around individual training points. That's exactly the flexibility that eventually starts fitting noise instead of signal. Stopping early is stopping before that flexibility outruns what the data can support, without ever adding a term to the loss or removing a single connection.
       </Paragraph>
 
       <Heading level={2} delay={1}>
@@ -167,7 +167,7 @@ for p in [0.0, 0.3]:
       />
 
       <Paragraph delay={1.15}>
-        Without dropout, training loss hits essentially zero by epoch 100 and stays there for the rest of the run, while validation loss keeps climbing the entire time, settling at 1.0538, an enormous 1.0538 gap between a model that fits its training points exactly and one that's actively getting worse on new data as training continues. With dropout, training loss can't reach zero, the random masking keeps knocking it back up, it settles around 0.03 instead, and validation loss ends the run at 0.9125 rather than 1.0538, with a final gap of 0.8801 instead of 1.0538. Neither number is dramatic in isolation, this is a genuinely tiny, noisy dataset and forty points can only ever support so much, but the direction is exactly what the mechanism predicts, a little deliberate underfitting on the training set in exchange for a real, measured reduction in the training-validation gap.
+        Without dropout, training loss hits essentially zero by epoch 100 and stays there for the rest of the run, while validation loss keeps climbing the entire time, settling at 1.0538. That's an enormous gap between a model that fits its training points exactly and one that's actively getting worse on new data as training continues. With dropout, training loss can't reach zero, the random masking keeps knocking it back up, so it settles around 0.03 instead. Validation loss ends the run at 0.9125 rather than 1.0538, for a final gap of 0.8801 instead of 1.0538. Neither number is dramatic in isolation; this is a genuinely tiny, noisy dataset, and forty points can only ever support so much. But the direction is exactly what the mechanism predicts: a little deliberate underfitting on the training set, in exchange for a real, measured reduction in the training-validation gap.
       </Paragraph>
 
       <RegularizationLossCurveDiagram
@@ -184,7 +184,7 @@ for p in [0.0, 0.3]:
       </Heading>
 
       <Paragraph delay={1.3}>
-        The overfitting signature above generalizes past this one example, and it's worth being able to name on sight. Training loss falling steadily while validation loss falls for a while and then turns around and rises, with a gap between the two curves that keeps widening as training continues, is overfitting, full stop, and it's exactly what both loss curves plotted above show for the no-dropout run. The fix is some combination of the levers in this post, more regularization, less capacity, more data, or stopping earlier, not more epochs of the same training.
+        The overfitting signature above generalizes past this one example, and it's worth being able to name on sight. Training loss falling steadily, while validation loss falls for a while and then turns around and rises, with the gap between the two curves widening as training continues, that's overfitting, full stop. It's exactly what both loss curves plotted above show for the no-dropout run. The fix is some combination of the levers in this post: more regularization, less capacity, more data, or stopping earlier. Not more epochs of the same training.
       </Paragraph>
 
       <Paragraph delay={1.35}>
@@ -269,7 +269,7 @@ def mixup_batch(x, y_onehot, alpha=0.2, rng=np.random.default_rng(0)):
       </Paragraph>
 
       <Paragraph delay={2.25}>
-        Train a network on a genuinely enormous dataset, one large enough that even a very high-capacity model can no longer come close to memorizing it, and the gap between training and validation loss shrinks on its own, simply because there's too much real data for the model to substitute memorization for actually learning the underlying pattern. Heavy dropout or aggressive weight decay in that regime doesn't help nearly as much as it does on a small dataset, and can actively hurt, since forcing the network to underfit training data it could otherwise learn genuine, useful structure from just throws away signal the model had every ability to use well. This is the practical reasoning behind why the largest modern models tend to use comparatively light explicit regularization, some weight decay, sometimes a bit of dropout in specific places, but nothing close to what the same architecture would need on a dataset a thousand times smaller. The right amount of regularization isn't a fixed property of an architecture, it's a property of how much real signal the available data can support relative to how much the model is capable of fitting, the exact same accounting the bias-variance tradeoff made explicit for far simpler models.
+        Train a network on a genuinely enormous dataset, one large enough that even a very high-capacity model can no longer come close to memorizing it. The gap between training and validation loss shrinks on its own, simply because there's too much real data for the model to substitute memorization for actually learning the underlying pattern. Heavy dropout or aggressive weight decay in that regime doesn't help nearly as much as it does on a small dataset. It can actively hurt, since forcing the network to underfit training data it could otherwise learn genuine, useful structure from just throws away signal the model had every ability to use well. This is the practical reasoning behind why the largest modern models tend to use comparatively light explicit regularization, some weight decay, sometimes a bit of dropout in specific places, but nothing close to what the same architecture would need on a dataset a thousand times smaller. The right amount of regularization isn't a fixed property of an architecture, it's a property of how much real signal the available data can support relative to how much the model is capable of fitting, the exact same accounting the bias-variance tradeoff made explicit for far simpler models.
       </Paragraph>
 
       <Heading level={2} delay={2.3}>

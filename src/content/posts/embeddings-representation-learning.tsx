@@ -17,7 +17,7 @@ export const embeddingsRepresentationLearning: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Type "sneakers for flat feet" into a shopping search bar and the results include listings that never use the word "sneakers" at all, just "trainers" or "running shoes." Nobody wrote a rule connecting those words. The system learned, from a huge pile of text and clicks, that they tend to mean the same thing in the same contexts, and it represents that closeness as literal closeness in space. That representation is an embedding, and figuring out how to build one well, and how to compare two of them fairly, turns out to be a surprisingly deep rabbit hole.
+        Type "sneakers for flat feet" into a shopping search bar and the results include listings that never use the word "sneakers" at all, just "trainers" or "running shoes." Nobody wrote a rule connecting those words. The system learned, from a huge pile of text and clicks, that they tend to mean the same thing in the same contexts, and it represents that closeness as literal closeness in space. That representation is an embedding. Figuring out how to build one well, and how to compare two of them fairly, turns out to be a surprisingly deep rabbit hole.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -49,7 +49,7 @@ export const embeddingsRepresentationLearning: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.50}>
-        A transformer language model does something noticeably different. Feed it "I sat on the river bank" and then "I deposited a check at the bank," and the vector it produces for the token "bank" is not the same in both sentences. Every layer of self-attention lets each token's representation absorb information from the rest of the sentence, so the output vector for "bank" ends up shaped by whichever neighboring words are actually present. That's a <strong>contextual embedding</strong>, a different vector per token depending on what surrounds it, computed on the fly rather than looked up from a fixed table. Static embeddings are cheaper and simpler, contextual embeddings capture the fact that a single word genuinely means different things in different sentences, and most modern systems that can afford the extra compute use the contextual kind.
+        A transformer language model does something noticeably different. Feed it "I sat on the river bank" and then "I deposited a check at the bank," and the vector it produces for the token "bank" is not the same in both sentences. Every layer of self-attention lets each token's representation absorb information from the rest of the sentence, so the output vector for "bank" ends up shaped by whichever neighboring words are actually present. That's a <strong>contextual embedding</strong>, a different vector per token depending on what surrounds it, computed on the fly rather than looked up from a fixed table. Static embeddings are cheaper and simpler. Contextual embeddings capture the fact that a single word genuinely means different things in different sentences, and most modern systems that can afford the extra compute use the contextual kind.
       </Paragraph>
 
       <Heading level={2} delay={0.55}>
@@ -57,7 +57,7 @@ export const embeddingsRepresentationLearning: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.60}>
-        Whichever way an embedding gets built, the end result is the same shape of object, a point in an ordinary vector space where distance and angle are meaningful. That's the whole payoff of moving away from one-hot vectors. Once "similar meaning" is represented as "nearby point," every question about meaning turns into a question about geometry, which is close to which, which direction separates one group of points from another, and geometry is something a computer can already do arithmetic on.
+        Whichever way an embedding gets built, the end result is the same shape of object, a point in an ordinary vector space where distance and angle are meaningful. That's the whole payoff of moving away from one-hot vectors. Once "similar meaning" is represented as "nearby point," every question about meaning turns into a question about geometry: which point is close to which, which direction separates one group of points from another. And geometry is something a computer can already do arithmetic on.
       </Paragraph>
 
       <Heading level={2} delay={0.65}>
@@ -85,7 +85,7 @@ export const embeddingsRepresentationLearning: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.95}>
-        The first term pushes the true neighboring word's score up, the sum pushes each of the <Formula>{`k`}</Formula> randomly sampled negative words' scores down. This is the same pull-together-push-apart training signal that contrastive objectives use more generally, whether the negatives come from a random sample out of a vocabulary or from the rest of a training batch, and it turns a sum over the whole vocabulary into a sum over a small, fixed number of negatives, which is exactly what makes training embeddings on billions of examples practical at all.
+        The first term pushes the true neighboring word's score up, the sum pushes each of the <Formula>{`k`}</Formula> randomly sampled negative words' scores down. This is the same pull-together-push-apart training signal that contrastive objectives use more generally, whether the negatives come from a random sample out of a vocabulary or from the rest of a training batch. It turns a sum over the whole vocabulary into a sum over a small, fixed number of negatives, which is exactly what makes training embeddings on billions of examples practical at all.
       </Paragraph>
 
       <Heading level={2} delay={1.00}>
@@ -101,7 +101,7 @@ export const embeddingsRepresentationLearning: BlogPostData = {
       </Formula>
 
       <Paragraph delay={1.15}>
-        Cosine similarity divides out the length of both vectors and looks only at the angle between them, so it lives in a fixed range from negative one to one no matter how big either vector happens to be. Dot product skips that division, so it rewards both a small angle and a large magnitude at once, two vectors pointing in nearly the same direction score even higher on dot product if both of them are long. Euclidean distance measures a completely different thing again, the straight-line gap between the two points, which mixes direction and magnitude together in yet another way.
+        Cosine similarity divides out the length of both vectors and looks only at the angle between them, so it lives in a fixed range from negative one to one no matter how big either vector happens to be. Dot product skips that division, so it rewards both a small angle and a large magnitude at once: two vectors pointing in nearly the same direction score even higher on dot product if both of them are long. Euclidean distance measures a completely different thing again, the straight-line gap between the two points, which mixes direction and magnitude together in yet another way.
       </Paragraph>
 
       <Paragraph delay={1.20}>
@@ -139,7 +139,7 @@ for name, v in [("close", close), ("far", far)]:
       />
 
       <Paragraph delay={1.40}>
-        The three metrics don't just disagree by degree, they disagree about which candidate wins. Cosine similarity says <InlineCode>close</InlineCode> is by far the better match, <Formula>{`0.9997`}</Formula> against <Formula>{`0.8066`}</Formula>, because it's almost perfectly aligned with the query's direction. Dot product flips that ranking entirely, <Formula>{`16.1`}</Formula> against <Formula>{`4.075`}</Formula>, because <InlineCode>far</InlineCode>'s bigger norm outweighs its worse angle. Euclidean distance agrees with dot product here, ranking <InlineCode>far</InlineCode> as closer, <Formula>{`2.93`}</Formula> against <Formula>{`3.02`}</Formula>, for the same underlying reason, a vector with a much smaller norm than the query can't get physically close to it in raw coordinate space no matter how well its direction matches.
+        The three metrics don't just disagree by degree. They disagree about which candidate wins. Cosine similarity says <InlineCode>close</InlineCode> is by far the better match, <Formula>{`0.9997`}</Formula> against <Formula>{`0.8066`}</Formula>, because it's almost perfectly aligned with the query's direction. Dot product flips that ranking entirely, <Formula>{`16.1`}</Formula> against <Formula>{`4.075`}</Formula>, because <InlineCode>far</InlineCode>'s bigger norm outweighs its worse angle. Euclidean distance agrees with dot product here, ranking <InlineCode>far</InlineCode> as closer, <Formula>{`2.93`}</Formula> against <Formula>{`3.02`}</Formula>, for the same underlying reason: a vector with a much smaller norm than the query can't get physically close to it in raw coordinate space no matter how well its direction matches.
       </Paragraph>
 
       <EmbeddingSimilarityScatter
@@ -148,7 +148,7 @@ for name, v in [("close", close), ("far", far)]:
       />
 
       <Paragraph delay={1.45}>
-        Normalizing both vectors before comparing them, dividing each one by its own norm so every vector has length one, resolves the disagreement. Once <InlineCode>query</InlineCode>, <InlineCode>close</InlineCode>, and <InlineCode>far</InlineCode> are all rescaled to unit length, the dot product between any two of them becomes exactly their cosine similarity, and Euclidean distance between the normalized vectors turns out to rank them in the same order cosine does too, <Formula>{`0.0245`}</Formula> for <InlineCode>close</InlineCode> against <Formula>{`0.622`}</Formula> for <InlineCode>far</InlineCode>. This is the entire reason embeddings usually get <strong>L2-normalized</strong> before any similarity search or nearest-neighbor lookup, it removes norm from the comparison and leaves only the direction, which is the part that was supposed to carry meaning in the first place.
+        Normalizing both vectors before comparing them, dividing each one by its own norm so every vector has length one, resolves the disagreement. Once <InlineCode>query</InlineCode>, <InlineCode>close</InlineCode>, and <InlineCode>far</InlineCode> are all rescaled to unit length, the dot product between any two of them becomes exactly their cosine similarity, and Euclidean distance between the normalized vectors turns out to rank them in the same order cosine does too, <Formula>{`0.0245`}</Formula> for <InlineCode>close</InlineCode> against <Formula>{`0.622`}</Formula> for <InlineCode>far</InlineCode>. This is the entire reason embeddings usually get <strong>L2-normalized</strong> before any similarity search or nearest-neighbor lookup: it removes norm from the comparison and leaves only the direction, which is the part that was supposed to carry meaning in the first place.
       </Paragraph>
 
       <Heading level={2} delay={1.50}>
@@ -156,7 +156,11 @@ for name, v in [("close", close), ("far", far)]:
       </Heading>
 
       <Paragraph delay={1.55}>
-        How many numbers should each vector hold. Too few and there simply isn't room to encode the distinctions that matter, dozens of unrelated concepts get forced to share the same handful of directions and start interfering with each other. Too many and training gets slower, storage and retrieval both get more expensive (a billion vectors at 1536 dimensions is a very different storage bill than a billion vectors at 128), and past a certain point the extra dimensions mostly just fit noise in the training data rather than capturing anything real. Static word embeddings historically settled around a few hundred dimensions, GloVe and word2vec are commonly trained at 100 to 300. Transformer hidden states run larger, 768 or 1024 are typical middle-of-the-road choices, since they're carrying a lot more than one word's worth of information through each layer. There's no formula that hands back the right number, in practice it gets chosen empirically, train at a few candidate sizes and check which one actually improves the downstream task, rather than picking a size that just sounds appropriately large.
+        How many numbers should each vector hold? Too few and there simply isn't room to encode the distinctions that matter, dozens of unrelated concepts get forced to share the same handful of directions and start interfering with each other. Too many and training gets slower, storage and retrieval both get more expensive (a billion vectors at 1536 dimensions is a very different storage bill than a billion vectors at 128), and past a certain point the extra dimensions mostly just fit noise in the training data rather than capturing anything real.
+      </Paragraph>
+
+      <Paragraph delay={1.57}>
+        Static word embeddings historically settled around a few hundred dimensions; GloVe and word2vec are commonly trained at 100 to 300. Transformer hidden states run larger, with 768 or 1024 typical middle-of-the-road choices, since they're carrying a lot more than one word's worth of information through each layer. There's no formula that hands back the right number. In practice it gets chosen empirically: train at a few candidate sizes and check which one actually improves the downstream task, rather than picking a size that just sounds appropriately large.
       </Paragraph>
 
       <Heading level={2} delay={1.60}>
@@ -164,7 +168,7 @@ for name, v in [("close", close), ("far", far)]:
       </Heading>
 
       <Paragraph delay={1.65}>
-        A failure mode worth knowing about by name is <strong>embedding collapse</strong>, where the model gives up on spreading representations out and maps a large chunk of distinct inputs to nearly the same point in space. A collapsed embedding table can still drive the loss down, if every vector points in roughly the same direction, every dot product looks similarly high, and a training objective that's too easy to satisfy this way stops pushing the model to actually separate things that are genuinely different. This tends to show up when negative examples are too easy (every negative is obviously unrelated, so there's no pressure to place things precisely) or when there aren't enough distinct negatives being contrasted against each positive. It's the practical reason contrastive training setups care so much about having plenty of hard negatives, a handful of well-chosen negatives per step does more to keep an embedding space honest than the same number of trivially easy ones.
+        A failure mode worth knowing about by name is <strong>embedding collapse</strong>, where the model gives up on spreading representations out and maps a large chunk of distinct inputs to nearly the same point in space. A collapsed embedding table can still drive the loss down. If every vector points in roughly the same direction, every dot product looks similarly high, and a training objective that's too easy to satisfy this way stops pushing the model to actually separate things that are genuinely different. This tends to show up when negative examples are too easy (every negative is obviously unrelated, so there's no pressure to place things precisely) or when there aren't enough distinct negatives being contrasted against each positive. It's the practical reason contrastive training setups care so much about having plenty of hard negatives: a handful of well-chosen negatives per step does more to keep an embedding space honest than the same number of trivially easy ones.
       </Paragraph>
 
       <Heading level={2} delay={1.70}>
@@ -172,7 +176,11 @@ for name, v in [("close", close), ("far", far)]:
       </Heading>
 
       <Paragraph delay={1.75}>
-        A trained embedding space usually has a few hundred dimensions, which is not something a human can look at directly, so it's tempting to project it down to two dimensions for a scatter plot and eyeball the clusters. That projection is genuinely useful for spotting rough groupings, but it comes with real traps. A projection method built to preserve local neighborhood structure, rather than the honest global geometry, can make two clusters that are actually close together in the real embedding space look far apart in the picture, or make a tight, cohesive group of points look artificially sprawling. Cluster size and inter-cluster distance in a two-dimensional plot like that generally aren't measuring anything real, only which points ended up near which other points locally, and a different random seed can shuffle the whole layout around without changing anything about the underlying embeddings. Treat a two-dimensional projection as a way to spot rough groupings, not as a substitute for actually measuring similarity in the real, full-dimensional space.
+        A trained embedding space usually has a few hundred dimensions, which is not something a human can look at directly. So it's tempting to project it down to two dimensions for a scatter plot and eyeball the clusters. That projection is genuinely useful for spotting rough groupings, but it comes with real traps. A projection method built to preserve local neighborhood structure, rather than the honest global geometry, can make two clusters that are actually close together in the real embedding space look far apart in the picture, or make a tight, cohesive group of points look artificially sprawling.
+      </Paragraph>
+
+      <Paragraph delay={1.77}>
+        Cluster size and inter-cluster distance in a two-dimensional plot like that generally aren't measuring anything real, only which points ended up near which other points locally. A different random seed can shuffle the whole layout around without changing anything about the underlying embeddings. Treat a two-dimensional projection as a way to spot rough groupings, not as a substitute for actually measuring similarity in the real, full-dimensional space.
       </Paragraph>
 
       <Heading level={2} delay={1.80}>
@@ -190,7 +198,7 @@ for name, v in [("close", close), ("far", far)]:
       </List>
 
       <Paragraph delay={1.95}>
-        Put together, these three checks pull in slightly different directions on purpose, one asks whether the geometry encodes relationships cleanly, one asks whether a downstream model can actually use it, and one asks whether it retrieves the right thing when it matters. A representation that only passes one of the three is usually not done yet.
+        Put together, these three checks pull in slightly different directions on purpose: one asks whether the geometry encodes relationships cleanly, one asks whether a downstream model can actually use it, and one asks whether it retrieves the right thing when it matters. A representation that only passes one of the three is usually not done yet.
       </Paragraph>
 
       <Heading level={2} delay={2.00}>
@@ -206,7 +214,7 @@ for name, v in [("close", close), ("far", far)]:
       </List>
 
       <Paragraph delay={2.10}>
-        Everything above is really one idea wearing several outfits, meaning gets represented as position, and every choice along the way, how many dimensions, whether to normalize, which metric to compare with, is really a choice about what "close" is allowed to mean. Get that choice right and the rest of the system, search, recommendation, classification, mostly falls out for free. Thanks for reading.
+        Everything above is really one idea wearing several outfits: meaning gets represented as position. Every choice along the way — how many dimensions, whether to normalize, which metric to compare with — is really a choice about what "close" is allowed to mean. Get that choice right and the rest of the system, search, recommendation, classification, mostly falls out for free. Thanks for reading.
       </Paragraph>
     </>
   ),

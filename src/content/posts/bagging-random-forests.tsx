@@ -32,7 +32,7 @@ export const baggingRandomForests: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.30}>
-        This is the exact same resampling mechanism used more generally in statistics to estimate how much a computed statistic would wobble across repeated samples, when there isn't a clean formula available for its standard error. Here the goal is narrower and more mechanical, it's not being used to build a confidence interval around some summary number, it's being used purely to manufacture many alternate training sets out of one, so that many different models can be trained on inputs that are related but not identical.
+        This is the exact same resampling mechanism used more generally in statistics to estimate how much a computed statistic would wobble across repeated samples, when there isn't a clean formula available for its standard error. Here the goal is narrower and more mechanical. It isn't being used to build a confidence interval around some summary number. It's being used purely to manufacture many alternate training sets out of one, so that many different models can be trained on inputs that are related but not identical.
       </Paragraph>
 
       <Heading level={2} delay={0.35}>
@@ -44,7 +44,7 @@ export const baggingRandomForests: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.45}>
-        Nothing here requires the base model to be a tree specifically, bagging works as a wrapper around any model, but trees are the model bagging gets paired with almost every time in practice, precisely because an unpruned tree is such a textbook example of a low-bias, high-variance predictor. A model that's already stable to begin with, like a plain linear regression, has much less to gain from being bagged, there's not much variance left to average away.
+        Nothing here requires the base model to be a tree specifically. Bagging works as a wrapper around any model, but trees are the model it gets paired with almost every time in practice, precisely because an unpruned tree is such a textbook example of a low-bias, high-variance predictor. A model that's already stable to begin with, like a plain linear regression, has much less to gain from being bagged: there's not much variance left to average away.
       </Paragraph>
 
       <Heading level={2} delay={0.50}>
@@ -52,11 +52,11 @@ export const baggingRandomForests: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.55}>
-        This is the part of bagging that's worth sitting with, because it looks almost too convenient. Averaging a collection of unbiased-but-noisy predictors gives a new predictor whose expected value is the same as any one of them, so bias barely moves, while its variance can drop substantially, because independent noise partially cancels when it's averaged rather than compounding. That's the general bias-variance tradeoff idea in miniature, ordinarily reducing variance means giving up some flexibility and accepting a bit more bias in exchange. Averaging many high-variance, low-bias trees is one of the few tricks that dodges that exchange, buying a variance reduction that doesn't cost nearly the bias it should.
+        This is the part of bagging that's worth sitting with, because it looks almost too convenient. Averaging a collection of unbiased-but-noisy predictors gives a new predictor whose expected value is the same as any one of them, so bias barely moves, while its variance can drop substantially, because independent noise partially cancels when it's averaged rather than compounding. That's the general bias-variance tradeoff idea in miniature: ordinarily, reducing variance means giving up some flexibility and accepting a bit more bias in exchange. Averaging many high-variance, low-bias trees is one of the few tricks that dodges that exchange, buying a variance reduction that doesn't cost nearly the bias it should.
       </Paragraph>
 
       <Paragraph delay={0.60}>
-        The catch is that the trees can't be fully independent, they're all trained on resamples of the exact same underlying data, so their errors are correlated to some degree. For <Formula>{`N`}</Formula> predictors each with variance <Formula>{`\\sigma^2`}</Formula> and average pairwise correlation <Formula>{`\\rho`}</Formula>, the variance of their average works out to
+        The catch is that the trees can't be fully independent. They're all trained on resamples of the exact same underlying data, so their errors are correlated to some degree. For <Formula>{`N`}</Formula> predictors each with variance <Formula>{`\\sigma^2`}</Formula> and average pairwise correlation <Formula>{`\\rho`}</Formula>, the variance of their average works out to
       </Paragraph>
 
       <Formula block delay={0.65}>
@@ -149,11 +149,11 @@ for n in [1, 2, 5, 10, 25, 50, 100]:
       </Heading>
 
       <Paragraph delay={1.15}>
-        Bagging alone still has that correlation problem from a couple of sections up, every tree sees a bootstrap resample of the same data, and if one feature is a genuinely strong predictor, most of those trees will discover it and split on it near the root, producing trees that look more alike than they'd need to for averaging to work its best. A <strong>Random Forest</strong> adds one more source of randomness on top of bagging to break that up. At every single split, instead of considering every available feature, the tree considers only a random subset of them, typically around the square root of the total feature count for classification, or about a third of it for regression, and picks the best split within that random subset.
+        Bagging alone still has that correlation problem from a couple of sections up. Every tree sees a bootstrap resample of the same data, so if one feature is a genuinely strong predictor, most of those trees will discover it and split on it near the root. That produces trees that look more alike than they'd need to for averaging to work its best. A <strong>Random Forest</strong> adds one more source of randomness on top of bagging to break that up. At every single split, instead of considering every available feature, the tree considers only a random subset of them, typically around the square root of the total feature count for classification, or about a third of it for regression, and picks the best split within that random subset.
       </Paragraph>
 
       <Paragraph delay={1.20}>
-        This forces different trees to discover different structure even when they'd otherwise agree, a strong feature that got excluded from the random subset at some split has to be passed over in favor of a weaker one, and a different tree with a different random subset makes a different call at the same node. The trees end up meaningfully less correlated with each other, which is exactly the lever the variance formula above cares about, a lower <Formula>{`\\rho`}</Formula> pushes the variance floor <Formula>{`\\rho\\sigma^2`}</Formula> down, so averaging keeps paying off for longer as more trees are added. That's the single sentence version of what separates a Random Forest from plain bagged trees, decorrelating the trees on purpose so the averaging step has more independent noise to cancel out.
+        This forces different trees to discover different structure even when they'd otherwise agree. A strong feature that got excluded from the random subset at some split has to be passed over in favor of a weaker one, and a different tree with a different random subset makes a different call at the same node. The trees end up meaningfully less correlated with each other, which is exactly the lever the variance formula above cares about: a lower <Formula>{`\\rho`}</Formula> pushes the variance floor <Formula>{`\\rho\\sigma^2`}</Formula> down, so averaging keeps paying off for longer as more trees are added. That's the single sentence version of what separates a Random Forest from plain bagged trees, decorrelating the trees on purpose so the averaging step has more independent noise to cancel out.
       </Paragraph>
 
       <Heading level={2} delay={1.25}>
@@ -165,7 +165,7 @@ for n in [1, 2, 5, 10, 25, 50, 100]:
       </Paragraph>
 
       <Paragraph delay={1.35}>
-        <strong>Feature importance</strong> comes out of the same training process almost as a byproduct. Every time any tree in the forest splits on a given feature, that split reduces impurity by some amount, and averaging that impurity reduction across every split on that feature, across every tree in the forest, produces a single importance score per feature. Features that get chosen for splits often, and that produce large impurity drops when they're chosen, end up with high importance. It's a genuinely useful diagnostic, but it comes with a real caveat worth remembering, this style of importance is biased toward high-cardinality features, a feature with many distinct values (a raw user ID, a fine-grained zip code) offers more possible split points to try, which mechanically gives it more chances to look useful even when it isn't, so a high importance score is a hint worth investigating rather than a settled conclusion on its own.
+        <strong>Feature importance</strong> comes out of the same training process almost as a byproduct. Every time any tree in the forest splits on a given feature, that split reduces impurity by some amount, and averaging that impurity reduction across every split on that feature, across every tree in the forest, produces a single importance score per feature. Features that get chosen for splits often, and that produce large impurity drops when they're chosen, end up with high importance. It's a genuinely useful diagnostic, but it comes with a real caveat worth remembering: this style of importance is biased toward high-cardinality features. A feature with many distinct values, a raw user ID or a fine-grained zip code, offers more possible split points to try. That mechanically gives it more chances to look useful even when it isn't, so a high importance score is a hint worth investigating rather than a settled conclusion on its own.
       </Paragraph>
 
       <Heading level={2} delay={1.40}>
@@ -181,7 +181,7 @@ for n in [1, 2, 5, 10, 25, 50, 100]:
       </Heading>
 
       <Paragraph delay={1.55}>
-        Random Forests earn their reputation as a strong default for tabular data with a mix of numeric and categorical features, moderate size, and no strong prior about which specific handful of features actually matter. They need almost no feature scaling, handle nonlinear relationships and interactions without being told about them explicitly, and are hard to badly misconfigure, a forest with too many trees just costs more compute, it doesn't overfit the way a single deep tree can.
+        Random Forests earn their reputation as a strong default for tabular data with a mix of numeric and categorical features, moderate size, and no strong prior about which specific handful of features actually matter. They need almost no feature scaling, handle nonlinear relationships and interactions without being told about them explicitly, and are hard to badly misconfigure. A forest with too many trees just costs more compute; it doesn't overfit the way a single deep tree can.
       </Paragraph>
 
       <List delay={1.60}>

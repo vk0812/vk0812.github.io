@@ -136,7 +136,7 @@ export const probabilityForMachineLearning: BlogPostData = {
       />
 
       <Paragraph delay={1.10}>
-        Every term in that computation has a name worth keeping straight. The <strong>prior</strong>, <Formula>{`P(S)`}</Formula>, is the belief before any evidence arrives. The <strong>likelihood</strong>, <Formula>{`P(F \\mid S)`}</Formula>, describes how compatible the evidence is with each hypothesis. The <strong>posterior</strong>, <Formula>{`P(S \\mid F)`}</Formula>, is the updated belief afterward. Bayes' rule doesn't claim the word proves anything, it moves the belief from 20% to about 65%, given these specific assumptions, and a different prior or a different word would move it somewhere else entirely.
+        Every term in that computation has a name worth keeping straight. The <strong>prior</strong>, <Formula>{`P(S)`}</Formula>, is the belief before any evidence arrives. The <strong>likelihood</strong>, <Formula>{`P(F \\mid S)`}</Formula>, describes how compatible the evidence is with each hypothesis. The <strong>posterior</strong>, <Formula>{`P(S \\mid F)`}</Formula>, is the updated belief afterward. Bayes' rule doesn't claim the word proves anything. It moves the belief from 20% to about 65%, given these specific assumptions, and a different prior or a different word would move it somewhere else entirely.
       </Paragraph>
 
       <CodeBlock
@@ -170,7 +170,7 @@ print(round(posterior, 3))  # 0.652`}
       </Formula>
 
       <Paragraph delay={1.35}>
-        Training almost never minimizes the error on one lucky example, it minimizes an <strong>expected loss</strong> averaged across the whole data distribution. Expectation is also what turns a raw probability into an actual business decision. Take a fraud model that flags a transaction with probability 0.3. Missing real fraud (a false negative) might cost 500 dollars in losses and disputes. Flagging a legitimate transaction for review (a false positive) costs maybe 5 dollars in support time. The expected cost of approving the transaction outright is <Formula>{`0.3 \\times 500 = 150`}</Formula> dollars, while the expected cost of flagging it is <Formula>{`0.7 \\times 5 = 3.50`}</Formula> dollars. Flagging wins by a wide margin, not because 0.3 sounds high, but because expectation multiplied that probability by how much a miss actually costs.
+        Training almost never minimizes the error on one lucky example. It minimizes an <strong>expected loss</strong> averaged across the whole data distribution. Expectation is also what turns a raw probability into an actual business decision. Take a fraud model that flags a transaction with probability 0.3. Missing real fraud (a false negative) might cost 500 dollars in losses and disputes. Flagging a legitimate transaction for review (a false positive) costs maybe 5 dollars in support time. The expected cost of approving the transaction outright is <Formula>{`0.3 \\times 500 = 150`}</Formula> dollars, while the expected cost of flagging it is <Formula>{`0.7 \\times 5 = 3.50`}</Formula> dollars. Flagging wins by a wide margin, not because 0.3 sounds high, but because expectation multiplied that probability by how much a miss actually costs.
       </Paragraph>
 
       <Paragraph delay={1.40}>
@@ -190,7 +190,7 @@ print(round(posterior, 3))  # 0.652`}
       </Formula>
 
       <Paragraph delay={1.60}>
-        A positive covariance means the variables tend to rise together, a negative one means one tends to fall as the other rises, and zero means no linear relationship was detected in the data. Zero covariance is not the same guarantee as independence though, a variable and its own square have zero covariance despite being as dependent as two numbers can be, so a nonlinear relationship can still be hiding in a covariance of zero.
+        A positive covariance means the variables tend to rise together, a negative one means one tends to fall as the other rises, and zero means no linear relationship was detected in the data. Zero covariance is not the same guarantee as independence though. A variable and its own square have zero covariance despite being as dependent as two numbers can be, so a nonlinear relationship can still be hiding in a covariance of zero.
       </Paragraph>
 
       <Heading level={2} delay={1.65}>
@@ -198,7 +198,7 @@ print(round(posterior, 3))  # 0.652`}
       </Heading>
 
       <Paragraph delay={1.70}>
-        Probability and likelihood share the same formula but ask opposite questions. Probability fixes the model's parameters and asks how likely different data outcomes are. <strong>Likelihood</strong> fixes the data that was actually observed and asks which parameter values make that specific data most plausible. Training a model is almost always the second question, hunting through parameter space for the values that make the training labels look as expected as possible.
+        Probability and likelihood share the same formula but ask opposite questions. Probability fixes the model's parameters and asks how likely different data outcomes are. <strong>Likelihood</strong> fixes the data that was actually observed and asks which parameter values make that specific data most plausible. Training a model is almost always the second question: hunting through parameter space for the values that make the training labels look as expected as possible.
       </Paragraph>
 
       <Paragraph delay={1.75}>
@@ -218,7 +218,7 @@ print(round(posterior, 3))  # 0.652`}
       </Formula>
 
       <Paragraph delay={1.95}>
-        Setting the derivative to zero and solving lands on the obvious answer, <Formula>{`p = 0.7`}</Formula>, the observed proportion of heads. That's not a coincidence specific to coins, it's the general shape of maximum likelihood estimation, and the same mechanism scales up to a classifier with millions of parameters instead of one.
+        Setting the derivative to zero and solving lands on the obvious answer, <Formula>{`p = 0.7`}</Formula>, the observed proportion of heads. That's not a coincidence specific to coins. It's the general shape of maximum likelihood estimation, and the same mechanism scales up to a classifier with millions of parameters instead of one.
       </Paragraph>
 
       <Paragraph delay={2.00}>

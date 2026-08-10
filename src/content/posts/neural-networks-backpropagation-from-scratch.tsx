@@ -17,7 +17,7 @@ export const neuralNetworksBackpropagationFromScratch: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Strip away the framework, the autograd, the GPU kernels, and a neural network's forward pass is barely more than a matrix multiply and a squashing function, repeated a handful of times. What actually lets that stack of multiplies get better at a task, backpropagation, is one clean application of a rule from first-year calculus, applied mechanically however many layers get stacked on top of it. It looks intimidating mostly because of the notation, not the idea.
+        Strip away the framework, the autograd, the GPU kernels, and a neural network's forward pass is barely more than a matrix multiply and a squashing function, repeated a handful of times. What actually lets that stack of multiplies get better at a task is backpropagation, one clean application of a rule from first-year calculus. It gets applied mechanically, however many layers are stacked on top of it. It looks intimidating mostly because of the notation, not the idea.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -85,7 +85,7 @@ export const neuralNetworksBackpropagationFromScratch: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.95}>
-        <Formula>{`W^{(2)}W^{(1)}`}</Formula> is itself just some matrix, and <Formula>{`W^{(2)}b^{(1)} + b^{(2)}`}</Formula> is itself just some vector, so the whole two-layer stack collapses algebraically into a single linear map, no different in expressive power from one perceptron layer. Stack ten linear layers with no nonlinearity between them and the result is still, provably, one linear map. Depth buys nothing without something nonlinear breaking that collapse, which is the entire reason every real hidden layer has a squashing function (sigmoid, tanh, ReLU, whichever a given architecture picks) sitting between the matrix multiplies rather than nothing at all.
+        <Formula>{`W^{(2)}W^{(1)}`}</Formula> is itself just some matrix, and <Formula>{`W^{(2)}b^{(1)} + b^{(2)}`}</Formula> is itself just some vector, so the whole two-layer stack collapses algebraically into a single linear map, no different in expressive power from one perceptron layer. Stack ten linear layers with no nonlinearity between them and the result is still, provably, one linear map. Depth buys nothing without something nonlinear breaking that collapse. That's the entire reason every real hidden layer has a squashing function (sigmoid, tanh, ReLU, whichever a given architecture picks) sitting between the matrix multiplies rather than nothing at all.
       </Paragraph>
 
       <Heading level={2} delay={1.00}>
@@ -113,7 +113,7 @@ export const neuralNetworksBackpropagationFromScratch: BlogPostData = {
       </Formula>
 
       <Paragraph delay={1.30}>
-        The interesting step is moving the delta back one more layer, into the hidden layer, since the hidden layer's weights don't touch the loss directly, only through everything downstream of them. The chain rule handles that indirection by first asking how the loss depends on the hidden activation <Formula>{`a^{(1)}`}</Formula> (through every path that activation feeds into, which for this network is just the output unit), then converting that into a derivative with respect to <Formula>{`z^{(1)}`}</Formula> using the hidden layer's own nonlinearity.
+        The interesting step is moving the delta back one more layer, into the hidden layer, since the hidden layer's weights don't touch the loss directly, only through everything downstream of them. The chain rule handles that indirection in two steps. First it asks how the loss depends on the hidden activation <Formula>{`a^{(1)}`}</Formula> (through every path that activation feeds into, which for this network is just the output unit). Then it converts that into a derivative with respect to <Formula>{`z^{(1)}`}</Formula>, using the hidden layer's own nonlinearity.
       </Paragraph>
 
       <Formula block delay={1.35}>
@@ -158,7 +158,7 @@ export const neuralNetworksBackpropagationFromScratch: BlogPostData = {
       />
 
       <Paragraph delay={1.80}>
-        None of that arithmetic was taken on faith. The same forward and backward pass, run in NumPy, reproduces every one of these numbers to at least six decimal places, and a finite-difference gradient check, nudging each individual weight up and down by a tiny amount and measuring how much the loss moves, agrees with the analytic backprop gradients to within <Formula>{`10^{-11}`}</Formula>, well past the point where the difference could be anything other than floating-point noise.
+        None of that arithmetic was taken on faith. The same forward and backward pass, run in NumPy, reproduces every one of these numbers to at least six decimal places. A finite-difference gradient check, nudging each individual weight up and down by a tiny amount and measuring how much the loss moves, agrees with the analytic backprop gradients to within <Formula>{`10^{-11}`}</Formula>, well past the point where the difference could be anything other than floating-point noise.
       </Paragraph>
 
       <CodeBlock
@@ -231,7 +231,7 @@ def forward_loss(W1, b1, W2, b2):
       </Paragraph>
 
       <Paragraph delay={2.15}>
-        Vectorizing this way isn't just a coding convenience. A modern CPU or GPU is enormously more efficient running one large matrix multiply than the equivalent work split into many small per-example loops, so batching a few dozen or a few hundred examples into one matrix operation is most of where a real training loop's speed comes from. The mini-batch size itself is also a genuine tuning knob, a bigger batch gives a less noisy, more accurate estimate of the true gradient over the whole dataset but costs more compute and memory per step, a smaller batch is cheaper per step and its extra gradient noise can even help the optimizer avoid narrow, sharp minima, at the cost of a jumpier training curve.
+        Vectorizing this way isn't just a coding convenience. A modern CPU or GPU is enormously more efficient running one large matrix multiply than the equivalent work split into many small per-example loops, so batching a few dozen or a few hundred examples into one matrix operation is most of where a real training loop's speed comes from. The mini-batch size itself is also a genuine tuning knob. A bigger batch gives a less noisy, more accurate estimate of the true gradient over the whole dataset, but costs more compute and memory per step. A smaller batch is cheaper per step, and its extra gradient noise can even help the optimizer avoid narrow, sharp minima, at the cost of a jumpier training curve.
       </Paragraph>
 
       <Heading level={2} delay={2.20}>

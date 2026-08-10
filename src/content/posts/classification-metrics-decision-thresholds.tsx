@@ -128,7 +128,7 @@ export const classificationMetricsDecisionThresholds: BlogPostData = {
       </Heading>
 
       <Paragraph delay={1.30}>
-        ROC-AUC has a blind spot, and it's the same one that makes plain accuracy misleading, the false positive rate is measured against the negative class, and when negatives vastly outnumber positives, a false-positive count that swamps the tiny positive class barely moves the FPR at all. A <strong>precision-recall curve</strong> plots precision against recall instead, and precision is measured against everything the model actually flagged, positive class size included directly in the denominator. That makes it far more sensitive to what a rare positive class does to real-world usability.
+        ROC-AUC has a blind spot, and it's the same one that makes plain accuracy misleading. The false positive rate is measured against the negative class, so when negatives vastly outnumber positives, a false-positive count that swamps the tiny positive class barely moves the FPR at all. A <strong>precision-recall curve</strong> plots precision against recall instead, and precision is measured against everything the model actually flagged, positive class size included directly in the denominator. That makes it far more sensitive to what a rare positive class does to real-world usability.
       </Paragraph>
 
       <Paragraph delay={1.35}>
@@ -166,7 +166,7 @@ print(average_precision_score(yte, scores))  # 0.089 (this is PR-AUC)`}
       />
 
       <Paragraph delay={1.50}>
-        The takeaway isn't that ROC-AUC is wrong, it's answering a real question (how well does the model rank positives above negatives), just not the question "will this be usable in production when positives are rare." PR-AUC, and the PR curve behind it, is the metric to reach for whenever the positive class is a small fraction of the data, fraud, churn, rare disease, defect detection, anything where "flag everyone" isn't a serious option but naive threshold tuning can accidentally get close to it.
+        The takeaway isn't that ROC-AUC is wrong. It answers a real question, how well does the model rank positives above negatives, just not the question "will this be usable in production when positives are rare." PR-AUC, and the PR curve behind it, is the metric to reach for whenever the positive class is a small fraction of the data: fraud, churn, rare disease, defect detection, anything where "flag everyone" isn't a serious option but naive threshold tuning can accidentally get close to it.
       </Paragraph>
 
       <Heading level={2} delay={1.55}>
@@ -174,7 +174,7 @@ print(average_precision_score(yte, scores))  # 0.089 (this is PR-AUC)`}
       </Heading>
 
       <Paragraph delay={1.60}>
-        Plain accuracy assumes the model gets exactly one guess, useful for a binary spam filter, less useful for a model ranking many classes or many candidates, a search engine's top results, a product recommender, an image classifier choosing among a thousand categories. <strong>Top-k accuracy</strong> counts a prediction correct if the true label is anywhere in the model's top <Formula>{`k`}</Formula> ranked guesses, not just its single best one.
+        Plain accuracy assumes the model gets exactly one guess. That's useful for a binary spam filter, but less useful for a model ranking many classes or many candidates: a search engine's top results, a product recommender, an image classifier choosing among a thousand categories. <strong>Top-k accuracy</strong> counts a prediction correct if the true label is anywhere in the model's top <Formula>{`k`}</Formula> ranked guesses, not just its single best one.
       </Paragraph>
 
       <CodeBlock
@@ -198,7 +198,7 @@ print(top1, top2, top3)  # 0.75  0.875  0.875`}
       </Heading>
 
       <Paragraph delay={1.80}>
-        Multi-class problems raise a question binary ones don't, once precision or recall is computed separately for each class, how should those per-class numbers combine into one overall score. <strong>Macro averaging</strong> takes the plain, unweighted mean across classes, every class counts equally regardless of how common it is. <strong>Micro averaging</strong> pools every true positive, false positive, and false negative across all classes first and computes precision and recall once on the totals, so common classes dominate the result in proportion to how much data they actually have.
+        Multi-class problems raise a question binary ones don't: once precision or recall is computed separately for each class, how should those per-class numbers combine into one overall score? <strong>Macro averaging</strong> takes the plain, unweighted mean across classes, every class counts equally regardless of how common it is. <strong>Micro averaging</strong> pools every true positive, false positive, and false negative across all classes first and computes precision and recall once on the totals, so common classes dominate the result in proportion to how much data they actually have.
       </Paragraph>
 
       <Paragraph delay={1.85}>
@@ -238,7 +238,7 @@ print(recall_score(y_true, y_pred, average="micro"))      # 0.94`}
       </Formula>
 
       <Paragraph delay={2.15}>
-        Predict positive whenever the model's output exceeds <Formula>{`t^*`}</Formula>. A fraud model where a missed fraud costs 500 dollars and an unnecessary manual review costs 5 dollars gets <Formula>{`t^* = 5/(5+500) \\approx 1\\%`}</Formula>, an extremely low bar for flagging a transaction, which is exactly the right call when missing fraud is a hundred times more expensive than a false alarm. A different problem where the two mistakes cost about the same lands back near 0.5. The formula makes the earlier ROC-versus-PR discussion concrete, the model's ranking of examples (what ROC-AUC and PR-AUC measure) is fixed once training is done, but the threshold applied on top of that ranking is a business decision, not a modeling one, and it should move with the actual dollar figures rather than stay parked at the default.
+        Predict positive whenever the model's output exceeds <Formula>{`t^*`}</Formula>. A fraud model where a missed fraud costs 500 dollars and an unnecessary manual review costs 5 dollars gets <Formula>{`t^* = 5/(5+500) \\approx 1\\%`}</Formula>, an extremely low bar for flagging a transaction, which is exactly the right call when missing fraud is a hundred times more expensive than a false alarm. A different problem where the two mistakes cost about the same lands back near 0.5. The formula makes the earlier ROC-versus-PR discussion concrete. The model's ranking of examples, what ROC-AUC and PR-AUC measure, is fixed once training is done. But the threshold applied on top of that ranking is a business decision, not a modeling one, and it should move with the actual dollar figures rather than stay parked at the default.
       </Paragraph>
 
       <Heading level={2} delay={2.20}>

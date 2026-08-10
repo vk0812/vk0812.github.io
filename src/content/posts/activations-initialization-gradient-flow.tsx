@@ -20,11 +20,11 @@ export const activationsInitializationGradientFlow: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Stack ten or fifteen layers of a plain feedforward network, initialize the weights however feels natural, and a real thing happens before a single training step has any chance to help. The gradient reaching the earliest layers can be a thousand times smaller than the gradient reaching the last one, or occasionally a thousand times bigger, and either way those early layers barely move. Nobody wrote a bug. The network just picked an activation and a starting scale for its weights that quietly strangled its own backward pass, and the loss curve that results looks identical to a model that's broken for some completely different reason.
+        Stack ten or fifteen layers of a plain feedforward network and initialize the weights however feels natural. Something goes wrong before a single training step even gets a chance to help. The gradient reaching the earliest layers can end up a thousand times smaller than the gradient reaching the last one, or occasionally a thousand times bigger. Either way, those early layers barely move. Nobody wrote a bug. The network just picked an activation and a starting weight scale that quietly strangled its own backward pass, and the resulting loss curve looks identical to a model that's broken for some completely different reason.
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        Two choices are responsible for almost all of it, which nonlinearity sits between the layers, and how the weights get scaled before training even starts. Neither one shows up in the loss function or the optimizer. Both of them decide, before anything is learned, whether a signal traveling forward stays a reasonable size and whether a gradient traveling backward survives the trip.
+        Two choices are responsible for almost all of it: which nonlinearity sits between the layers, and how the weights get scaled before training even starts. Neither one shows up in the loss function or the optimizer. Both of them decide, before anything is learned, whether a signal traveling forward stays a reasonable size and whether a gradient traveling backward survives the trip.
       </Paragraph>
 
       <Heading level={2} delay={0.20}>
@@ -57,7 +57,7 @@ export const activationsInitializationGradientFlow: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.50}>
-        The cost shows up on the other side of zero. ReLU's derivative for <Formula>{`z \\leq 0`}</Formula> is exactly <Formula>{`0`}</Formula>, not small, actually zero, so a unit that ends up with a negative pre-activation for a given input passes no gradient back through that input at all. A unit whose weights and bias drift into a region where it outputs zero for every example in the training set is a <strong>dead unit</strong>, permanently inactive, contributing nothing to the forward pass and receiving no gradient to climb back out with. This isn't a rare edge case either, in a freshly initialized network with symmetric random weights, roughly half of any given ReLU layer's units are inactive for a typical input, simply because half of a zero-mean pre-activation distribution sits below zero.
+        The cost shows up on the other side of zero. ReLU's derivative for <Formula>{`z \\leq 0`}</Formula> is exactly <Formula>{`0`}</Formula>, not small, actually zero. So a unit with a negative pre-activation for a given input passes no gradient back through that input at all. A unit whose weights and bias drift into a region where it outputs zero for every example in the training set is a <strong>dead unit</strong>: permanently inactive, contributing nothing to the forward pass, and receiving no gradient to climb back out with. This isn't a rare edge case either. In a freshly initialized network with symmetric random weights, roughly half of any given ReLU layer's units are inactive for a typical input, simply because half of a zero-mean pre-activation distribution sits below zero.
       </Paragraph>
 
       <Paragraph delay={0.55}>
@@ -197,7 +197,11 @@ for label, scale in [("xavier scale", xavier_scale), ("he scale", he_scale)]:
       </Heading>
 
       <Paragraph delay={1.45}>
-        None of this is really two separate topics wearing one heading. An activation function decides, unit by unit, how much of an incoming gradient survives passing through it, a saturated sigmoid or tanh unit passes almost none, an inactive ReLU unit passes exactly none, an active ReLU unit passes all of it. Initialization decides the starting odds of a unit landing in a healthy regime in the first place, a weight scale that's too large drives tanh units straight into saturation before training even begins, a weight scale that ignores what an activation actually does to variance, treating ReLU like it preserves everything the way an identity function would, quietly halves the signal at every layer without anyone choosing that on purpose. Depth is what turns either mistake from a minor inefficiency into a wall, since a per-layer effect that would be barely noticeable at three layers compounds into a factor of hundreds by fifteen, and into something indistinguishable from zero well before fifty.
+        None of this is really two separate topics wearing one heading. An activation function decides, unit by unit, how much of an incoming gradient survives passing through it. A saturated sigmoid or tanh unit passes almost none. An inactive ReLU unit passes exactly none. An active ReLU unit passes all of it.
+      </Paragraph>
+
+      <Paragraph delay={1.47}>
+        Initialization decides the starting odds of a unit landing in a healthy regime in the first place. A weight scale that's too large drives tanh units straight into saturation before training even begins. A weight scale that ignores what an activation actually does to variance, treating ReLU like it preserves everything the way an identity function would, quietly halves the signal at every layer without anyone choosing that on purpose. Depth is what turns either mistake from a minor inefficiency into a wall: a per-layer effect that would be barely noticeable at three layers compounds into a factor of hundreds by fifteen, and into something indistinguishable from zero well before fifty.
       </Paragraph>
 
       <Paragraph delay={1.50}>
@@ -217,7 +221,7 @@ for label, scale in [("xavier scale", xavier_scale), ("he scale", he_scale)]:
       </List>
 
       <Paragraph delay={1.65}>
-        Modern architectures layer plenty more on top of this, residual connections that give a gradient a direct path around any single problematic layer, normalization schemes that re-center and re-scale activations mid-network rather than trusting the initial scale to hold for the whole forward pass. But none of those tools are solving a new problem, they're patching the exact same one demonstrated here with nothing but NumPy and fifteen or twenty plain layers, that depth multiplies whatever a single layer does to a gradient's magnitude, for better or very much for worse. Thanks for reading.
+        Modern architectures layer plenty more on top of this: residual connections that give a gradient a direct path around any single problematic layer, and normalization schemes that re-center and re-scale activations mid-network rather than trusting the initial scale to hold for the whole forward pass. But none of those tools are solving a new problem. They're patching the exact same one demonstrated here with nothing but NumPy and fifteen or twenty plain layers: depth multiplies whatever a single layer does to a gradient's magnitude, for better or very much for worse. Thanks for reading.
       </Paragraph>
     </>
   ),

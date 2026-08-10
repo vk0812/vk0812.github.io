@@ -42,7 +42,7 @@ export const svmKernelMethods: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.40}>
-        Once that widest road is drawn, most of the data points turn out to be irrelevant to it. A point sitting deep inside its own cluster, far from the road, could move around quite a bit, or even be deleted from the dataset entirely, and the road wouldn't shift by a millimeter. Only the points sitting right at the road's edge, the houses whose front porch touches the curb, actually pin the road in place. Move one of those and the whole boundary has to move with it.
+        Once that widest road is drawn, most of the data points turn out to be irrelevant to it. A point sitting deep inside its own cluster, far from the road, could move around quite a bit, or even be deleted from the dataset entirely. The road wouldn't shift by a millimeter. Only the points sitting right at the road's edge, the houses whose front porch touches the curb, actually pin the road in place. Move one of those and the whole boundary has to move with it.
       </Paragraph>
 
       <Paragraph delay={0.45}>
@@ -104,7 +104,7 @@ print("support vectors =", clf.support_vectors_)
       </Heading>
 
       <Paragraph delay={0.75}>
-        Logistic regression and a support vector machine both draw a boundary between classes, but they're punished by completely different rules during training. Logistic regression uses cross-entropy, which cares about probability, a point predicted correctly with only 60 percent confidence still contributes some loss, because the model could have been more sure.
+        Logistic regression and a support vector machine both draw a boundary between classes, but they're punished by completely different rules during training. Logistic regression uses cross-entropy, which cares about probability. A point predicted correctly with only 60 percent confidence still contributes some loss, because the model could have been more sure.
       </Paragraph>
 
       <Paragraph delay={0.80}>
@@ -116,7 +116,7 @@ print("support vectors =", clf.support_vectors_)
       </Formula>
 
       <Paragraph delay={0.90}>
-        Here <Formula>{`f(x) = w \\cdot x + b`}</Formula> is the raw, unsquashed distance from the boundary, and <Formula>{`y \\in \\{-1, +1\\}`}</Formula> is the true label. If a point is on the correct side and far enough past the margin that <Formula>{`y f(x) \\geq 1`}</Formula>, the loss is exactly zero, not small, zero. Being safely past the margin earns no further reward, and being exactly on the correct side but still inside the margin still costs something, because that point is too close for comfort even though it's technically classified right. Cross-entropy never truly reaches zero for a finite prediction, it keeps asking for more confidence forever. Hinge loss stops asking once a point has cleared the margin by enough, which is exactly why only the points near the boundary end up mattering, everything else already sits at zero loss and contributes no gradient at all.
+        Here <Formula>{`f(x) = w \\cdot x + b`}</Formula> is the raw, unsquashed distance from the boundary, and <Formula>{`y \\in \\{-1, +1\\}`}</Formula> is the true label. If a point is on the correct side and far enough past the margin that <Formula>{`y f(x) \\geq 1`}</Formula>, the loss is exactly zero, not small, zero. Being safely past the margin earns no further reward. Being on the correct side but still inside the margin still costs something, because that point is too close for comfort even though it's technically classified right. Cross-entropy never truly reaches zero for a finite prediction. It keeps asking for more confidence forever. Hinge loss stops asking once a point has cleared the margin by enough. That's exactly why only the points near the boundary end up mattering, everything else already sits at zero loss and contributes no gradient at all.
       </Paragraph>
 
       <Heading level={2} delay={0.95}>
@@ -166,7 +166,7 @@ for C in [1000, 0.1, 0.01]:
       />
 
       <Paragraph delay={1.30}>
-        At <Formula>{`C = 1000`}</Formula>, violations are so expensive that the boundary contorts to keep the outlier on the correct side, the margin shrinks to <Formula>{`1.51`}</Formula>, and only two points anchor it. At <Formula>{`C = 0.1`}</Formula>, the margin widens to nearly <Formula>{`4`}</Formula> and picks up two more support vectors, still classifying every point correctly but with a much more relaxed boundary. Push <InlineCode>C</InlineCode> down to <Formula>{`0.01`}</Formula> and the optimizer stops caring about correctness at all, the margin balloons to almost <Formula>{`20`}</Formula> and training accuracy collapses to just above chance, because a huge margin was worth more to the objective than getting points right. <InlineCode>C</InlineCode> is exactly this dial, not a hyperparameter to set once and forget, tuning it too high overfits to every quirky point, tuning it too low ignores the data almost entirely.
+        At <Formula>{`C = 1000`}</Formula>, violations are so expensive that the boundary contorts to keep the outlier on the correct side. The margin shrinks to <Formula>{`1.51`}</Formula>, and only two points anchor it. At <Formula>{`C = 0.1`}</Formula>, the margin widens to nearly <Formula>{`4`}</Formula> and picks up two more support vectors, still classifying every point correctly but with a much more relaxed boundary. Push <InlineCode>C</InlineCode> down to <Formula>{`0.01`}</Formula> and the optimizer stops caring about correctness at all. The margin balloons to almost <Formula>{`20`}</Formula> and training accuracy collapses to just above chance, because a huge margin was worth more to the objective than getting points right. <InlineCode>C</InlineCode> is exactly this dial, not a hyperparameter to set once and forget. Tuning it too high overfits to every quirky point; tuning it too low ignores the data almost entirely.
       </Paragraph>
 
       <Heading level={2} delay={1.35}>
@@ -182,11 +182,11 @@ for C in [1000, 0.1, 0.01]:
       </Heading>
 
       <Paragraph delay={1.50}>
-        The fix isn't to abandon linear boundaries, it's to change where the boundary gets drawn. Lift that same ring-and-cluster data into a higher dimension, for instance by adding a third coordinate equal to each point's squared distance from the center, and the cluster (close to the center, small third coordinate) separates cleanly from the ring (far from the center, large third coordinate) with a completely flat, linear boundary in that new space. Project that flat boundary back down into the original two dimensions and it reappears as a closed curve, exactly the shape needed to separate a ring from what it surrounds.
+        The fix isn't to abandon linear boundaries, it's to change where the boundary gets drawn. Lift that same ring-and-cluster data into a higher dimension, for instance by adding a third coordinate equal to each point's squared distance from the center. The cluster (close to the center, small third coordinate) now separates cleanly from the ring (far from the center, large third coordinate), with a completely flat, linear boundary in that new space. Project that flat boundary back down into the original two dimensions and it reappears as a closed curve, exactly the shape needed to separate a ring from what it surrounds.
       </Paragraph>
 
       <Paragraph delay={1.55}>
-        Actually computing that higher-dimensional mapping for every point would usually be expensive, sometimes the target space is infinite-dimensional. The <strong>kernel trick</strong> sidesteps the mapping entirely. Every place a support vector machine's math needs the dot product of two mapped points, <Formula>{`\\phi(x) \\cdot \\phi(z)`}</Formula>, a <strong>kernel function</strong> <Formula>{`K(x, z)`}</Formula> computes that exact same number directly from the original, un-mapped points, without ever constructing <Formula>{`\\phi`}</Formula> explicitly. The mapping is real and does the conceptual work, but nothing in the actual computation ever touches it, only a similarity score between pairs of original points.
+        Actually computing that higher-dimensional mapping for every point would usually be expensive. Sometimes the target space is even infinite-dimensional. The <strong>kernel trick</strong> sidesteps the mapping entirely. Every place a support vector machine's math needs the dot product of two mapped points, <Formula>{`\\phi(x) \\cdot \\phi(z)`}</Formula>, a <strong>kernel function</strong> <Formula>{`K(x, z)`}</Formula> computes that exact same number directly from the original, un-mapped points, without ever constructing <Formula>{`\\phi`}</Formula> explicitly. The mapping is real and does the conceptual work, but nothing in the actual computation ever touches it, only a similarity score between pairs of original points.
       </Paragraph>
 
       <Heading level={2} delay={1.60}>
@@ -225,7 +225,7 @@ for C in [1000, 0.1, 0.01]:
       </Paragraph>
 
       <Paragraph delay={1.95}>
-        That's exactly why deep learning, not kernel methods, took over the large-scale end of machine learning, a neural network's cost scales with its parameter count and the size of a mini-batch, not with the square of the full dataset. Support vector machines haven't disappeared as a result, they're still a genuinely strong choice on small to medium tabular datasets, especially ones with more features than examples, where a kernel matrix stays a manageable size and the margin-maximizing boundary tends to generalize well without needing the volume of data a deep network wants. Kernel methods more broadly also still show up wherever a problem is naturally described by a similarity function rather than a fixed feature vector, structured or sequence data where defining a good kernel is easier than engineering explicit features.
+        That's exactly why deep learning, not kernel methods, took over the large-scale end of machine learning. A neural network's cost scales with its parameter count and the size of a mini-batch, not with the square of the full dataset. Support vector machines haven't disappeared as a result. They're still a genuinely strong choice on small to medium tabular datasets, especially ones with more features than examples, where a kernel matrix stays a manageable size and the margin-maximizing boundary tends to generalize well without needing the volume of data a deep network wants. Kernel methods more broadly also still show up wherever a problem is naturally described by a similarity function rather than a fixed feature vector, structured or sequence data where defining a good kernel is easier than engineering explicit features.
       </Paragraph>
 
       <Heading level={2} delay={2.00}>

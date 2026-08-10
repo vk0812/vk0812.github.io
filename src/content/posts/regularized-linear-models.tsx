@@ -17,11 +17,11 @@ export const regularizedLinearModels: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        Fit a straight line through a handful of points and it usually looks reasonable. Fit a linear model with fifty features to twenty-five rows of data and something strange happens. The fit on the training rows looks great, sometimes suspiciously perfect, and then it falls apart the moment new data shows up. Nothing about ordinary least squares broke. It did exactly what it was asked to do, minimize error on the rows it could see, and with that many knobs to turn relative to how much data was available, it found a way to explain every wiggle, including the wiggles that were just noise.
+        Fit a straight line through a handful of points and it usually looks reasonable. Fit a linear model with fifty features to twenty-five rows of data and something strange happens. The fit on the training rows looks great, sometimes suspiciously perfect, and then it falls apart the moment new data shows up. Nothing about ordinary least squares broke. It did exactly what it was asked to do: minimize error on the rows it could see. With that many knobs to turn relative to how much data was available, it found a way to explain every wiggle, including the wiggles that were just noise.
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        That's the failure mode regularization exists to fix. A model with a lot of flexibility relative to the amount of data it's trained on tends to swing wildly depending on exactly which rows happened to land in the training set, which is a variance problem more than a bias problem. Regularization trades away a little bit of fit on the training data in exchange for a model that doesn't swing so hard from one dataset to the next. For linear models specifically, that trade shows up as a small addition to the training objective, and the exact shape of that addition, whether it's Ridge, Lasso, or something in between, changes what the fitted coefficients end up looking like in ways that matter well beyond a validation score.
+        That's the failure mode regularization exists to fix. A model with a lot of flexibility relative to the amount of data it's trained on tends to swing wildly depending on exactly which rows happened to land in the training set. That's a variance problem more than a bias problem. Regularization trades away a little bit of fit on the training data in exchange for a model that doesn't swing so hard from one dataset to the next. For linear models specifically, that trade shows up as a small addition to the training objective. The exact shape of that addition, whether it's Ridge, Lasso, or something in between, changes what the fitted coefficients end up looking like, in ways that matter well beyond a validation score.
       </Paragraph>
 
       <Heading level={2} delay={0.20}>
@@ -37,7 +37,7 @@ export const regularizedLinearModels: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.35}>
-        Nothing in that objective penalizes a coefficient for being large. If two features are correlated with each other, OLS is perfectly happy to assign one of them a huge positive coefficient and the other a huge negative one, as long as the two cancel out enough to fit the training rows well. Add more features than the data can comfortably support and this gets worse, the fitted coefficients start absorbing sampling noise instead of the actual relationship between inputs and target, and a slightly different training sample would have produced a noticeably different set of coefficients. That instability is the whole problem regularization is aimed at, not a claim that OLS is calculating something wrong, just that an unconstrained fit has no mechanism telling it "not so big" when the data alone can't justify a big coefficient.
+        Nothing in that objective penalizes a coefficient for being large. If two features are correlated with each other, OLS is perfectly happy to assign one of them a huge positive coefficient and the other a huge negative one, as long as the two cancel out enough to fit the training rows well. Add more features than the data can comfortably support and this gets worse. The fitted coefficients start absorbing sampling noise instead of the actual relationship between inputs and target, and a slightly different training sample would have produced a noticeably different set of coefficients. That instability is the whole problem regularization is aimed at. This isn't a claim that OLS is calculating something wrong, it's just that an unconstrained fit has no mechanism telling it "not so big" when the data alone can't justify a big coefficient.
       </Paragraph>
 
       <Heading level={2} delay={0.40}>
@@ -77,11 +77,11 @@ export const regularizedLinearModels: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.85}>
-        That single change in exponent has a much bigger effect on the result than it looks like it should. The squared penalty gets gentler and gentler as a coefficient approaches zero, its slope shrinks along with it, so it never quite finishes pushing a coefficient all the way there. The absolute-value penalty has a constant slope no matter how small the coefficient gets, so it keeps pushing right up to zero and, for weakly supported features, past the point where the data can justify keeping the coefficient nonzero at all. The geometric intuition is that the <InlineCode>L1</InlineCode> penalty's constraint region has sharp corners sitting exactly on the axes, and the optimal solution tends to land on one of those corners, which means some coefficient is exactly zero.
+        That single change in exponent has a much bigger effect on the result than it looks like it should. The squared penalty gets gentler and gentler as a coefficient approaches zero, since its slope shrinks along with it. It never quite finishes pushing a coefficient all the way there. The absolute-value penalty has a constant slope no matter how small the coefficient gets, so it keeps pushing right up to zero and, for weakly supported features, past the point where the data can justify keeping the coefficient nonzero at all. The geometric intuition is that the <InlineCode>L1</InlineCode> penalty's constraint region has sharp corners sitting exactly on the axes. The optimal solution tends to land on one of those corners, which means some coefficient ends up exactly zero.
       </Paragraph>
 
       <Paragraph delay={0.90}>
-        Practically, this makes Lasso do automatic feature selection as a side effect of fitting. Features that don't carry real signal get dropped from the model entirely rather than just shrunk down to something small, which is a genuinely different outcome from Ridge, not just a matter of degree. That's useful when there's a suspicion that only a handful of the available features actually matter, and it comes at a cost, when two features are strongly correlated, Lasso tends to arbitrarily keep one and zero out the other rather than splitting credit between them the way Ridge does.
+        Practically, this makes Lasso do automatic feature selection as a side effect of fitting. Features that don't carry real signal get dropped from the model entirely rather than just shrunk down to something small, which is a genuinely different outcome from Ridge, not just a matter of degree. That's useful when there's a suspicion that only a handful of the available features actually matter. It comes at a cost, though: when two features are strongly correlated, Lasso tends to arbitrarily keep one and zero out the other, rather than splitting credit between them the way Ridge does.
       </Paragraph>
 
       <Heading level={2} delay={0.95}>
@@ -109,7 +109,7 @@ export const regularizedLinearModels: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={1.25}>
-        The fix is to standardize every feature before fitting, subtract its mean and divide by its standard deviation, so every feature enters the penalty on the same footing, one standard deviation of movement. Ridge, Lasso, and Elastic Net all assume this implicitly, and skipping it doesn't cause an error, it just silently changes which features the model decides to keep or shrink, for reasons that have nothing to do with the actual relationship being modeled. The worked example below shows exactly how large that effect can be.
+        The fix is to standardize every feature before fitting: subtract its mean and divide by its standard deviation. That puts every feature on the same footing in the penalty, one standard deviation of movement. Ridge, Lasso, and Elastic Net all assume this implicitly. Skipping it doesn't cause an error, it just silently changes which features the model decides to keep or shrink, for reasons that have nothing to do with the actual relationship being modeled. The worked example below shows exactly how large that effect can be.
       </Paragraph>
 
       <Heading level={2} delay={1.30}>
@@ -150,7 +150,7 @@ print("Lasso coef ", np.round(lasso.coef_, 3))
       />
 
       <Paragraph delay={1.45}>
-        OLS lands close to the true coefficients on the first three features, but it also hands the two noise features nonzero coefficients, 0.302 and 0.017, purely because with only twenty-five rows there's always some spurious correlation to latch onto. Ridge shrinks all five coefficients toward zero, including the noise features, but doesn't eliminate them, 0.254 and 0.018 are smaller than OLS's but still both nonzero. Lasso is the one that actually zeroes out both noise features while leaving the three real ones intact, at the cost of shrinking the real coefficients a bit harder than Ridge does, 3.676 instead of Ridge's 3.856 on the strongest feature. The overall coefficient vector also shrinks in aggregate. The OLS coefficients have an <Formula>{`L2`}</Formula> norm of 5.751, Ridge brings that down to 5.564, a modest but real reduction obtained just by adding the penalty term.
+        OLS lands close to the true coefficients on the first three features, but it also hands the two noise features nonzero coefficients, 0.302 and 0.017, purely because with only twenty-five rows there's always some spurious correlation to latch onto. Ridge shrinks all five coefficients toward zero, including the noise features, but doesn't eliminate them. Its 0.254 and 0.018 are smaller than OLS's, but still both nonzero. Lasso is the one that actually zeroes out both noise features while leaving the three real ones intact. That comes at the cost of shrinking the real coefficients a bit harder than Ridge does, 3.676 instead of Ridge's 3.856 on the strongest feature. The overall coefficient vector also shrinks in aggregate. The OLS coefficients have an <Formula>{`L2`}</Formula> norm of 5.751, Ridge brings that down to 5.564, a modest but real reduction obtained just by adding the penalty term.
       </Paragraph>
 
       <Paragraph delay={1.50}>
@@ -186,7 +186,7 @@ print("standardized", np.round(ridge_scaled.coef_, 4))
       />
 
       <Paragraph delay={1.70}>
-        On the Ridge side, all three lines bend downward as the penalty grows but keep going, none of them touch zero even at the strongest penalty shown. On the Lasso side, the noise feature's coefficient collapses to exactly zero almost immediately, around a penalty strength of 0.018, well before either real feature is affected much at all. The moderate signal follows at a penalty strength around 2.46, and the strongest signal holds out until around 4.96. That ordering isn't a coincidence, Lasso zeroes out the features it's least sure matter first, and keeps a feature nonzero for exactly as long as the data still supports it. Reading a path like this left to right, before ever touching a validation set, already tells a useful story about which features the model treats as reliable.
+        On the Ridge side, all three lines bend downward as the penalty grows but keep going, none of them touch zero even at the strongest penalty shown. On the Lasso side, the noise feature's coefficient collapses to exactly zero almost immediately, around a penalty strength of 0.018, well before either real feature is affected much at all. The moderate signal follows at a penalty strength around 2.46, and the strongest signal holds out until around 4.96. That ordering isn't a coincidence. Lasso zeroes out the features it's least sure matter first, and keeps a feature nonzero for exactly as long as the data still supports it. Reading a path like this left to right, before ever touching a validation set, already tells a useful story about which features the model treats as reliable.
       </Paragraph>
 
       <Heading level={2} delay={1.75}>
@@ -212,7 +212,7 @@ print("LassoCV coef      ", np.round(lasso_cv.coef_, 3))
       />
 
       <Paragraph delay={1.90}>
-        Cross-validation picks a Lasso penalty of about 0.153 on this dataset, weaker than the 0.3 used in the worked example above, and at that strength one of the two noise features (0.077) hasn't been fully zeroed out yet, a reminder that cross-validation optimizes for held-out prediction error, not for a perfectly clean feature selection, those two goals usually agree closely but aren't mathematically the same thing. <InlineCode>RidgeCV</InlineCode> and <InlineCode>LassoCV</InlineCode> both do this grid search internally and efficiently, but the underlying idea is identical to running an ordinary cross-validation loop over any other hyperparameter, only the thing being tuned is <Formula>{`\\lambda`}</Formula> instead of a tree depth or a learning rate.
+        Cross-validation picks a Lasso penalty of about 0.153 on this dataset, weaker than the 0.3 used in the worked example above. At that strength, one of the two noise features (0.077) hasn't been fully zeroed out yet. That's a reminder that cross-validation optimizes for held-out prediction error, not for a perfectly clean feature selection, the two goals usually agree closely but aren't mathematically the same thing. <InlineCode>RidgeCV</InlineCode> and <InlineCode>LassoCV</InlineCode> both do this grid search internally and efficiently, but the underlying idea is identical to running an ordinary cross-validation loop over any other hyperparameter, only the thing being tuned is <Formula>{`\\lambda`}</Formula> instead of a tree depth or a learning rate.
       </Paragraph>
 
       <Heading level={2} delay={1.95}>
