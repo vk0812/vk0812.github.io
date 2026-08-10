@@ -18,11 +18,11 @@ export const dimensionalityReductionManifoldLearning: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        A dataset with a hundred features sounds like a hundred separate pieces of information. In practice it rarely is. A customer record with age, income, years employed, and credit score carries four columns that mostly move together, since income and years employed tend to rise and fall in tandem, and a lot of what looks like a hundred-dimensional cloud of points is really a much lower-dimensional shape wearing a hundred-dimensional costume. Redundant, correlated columns aren't a data quality problem to clean up, they're the normal state of real data, and they're exactly what dimensionality reduction is built to exploit.
+        A dataset with a hundred features sounds like a hundred separate pieces of information. In practice it rarely is. A customer record with age, income, years employed, and credit score carries four columns that mostly move together, since income and years employed tend to rise and fall in tandem. A lot of what looks like a hundred-dimensional cloud of points is really a much lower-dimensional shape wearing a hundred-dimensional costume. Redundant, correlated columns aren't a data quality problem to clean up. They're the normal state of real data, and they're exactly what dimensionality reduction is built to exploit.
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        There's also a more practical reason to care. A scatter plot works in two dimensions and squints its way through three. Past that, there's no direct way to look at a cloud of points and see its shape at all. And the trouble compounds as dimensions pile up, ten thousand points that comfortably cover a two-dimensional square leave a hundred-dimensional cube almost entirely empty, distances between points start looking similar to each other, and "nearest neighbor" stops meaning much of anything. That's the informal shape of the <strong>curse of dimensionality</strong>, and it's the backdrop against which every technique below is trying to find a smaller, honest description of what the data is actually doing.
+        There's also a more practical reason to care. A scatter plot works in two dimensions and squints its way through three. Past that, there's no direct way to look at a cloud of points and see its shape at all. And the trouble compounds as dimensions pile up. Ten thousand points that comfortably cover a two-dimensional square leave a hundred-dimensional cube almost entirely empty. Distances between points start looking similar to each other, and "nearest neighbor" stops meaning much of anything. That's the informal shape of the <strong>curse of dimensionality</strong>, and it's the backdrop against which every technique below is trying to find a smaller, honest description of what the data is actually doing.
       </Paragraph>
 
       <Heading level={2} delay={0.20}>
@@ -54,7 +54,7 @@ export const dimensionalityReductionManifoldLearning: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.55}>
-        In practice, choosing how many components to keep usually comes down to picking a target, keep enough components that their explained variance ratios add up to some threshold like 95%, or plot the ratios in order and look for the point where adding another component stops buying much (the "elbow" in that plot). Neither rule is exact science, they're both just ways of asking "how many of these directions are pulling their weight."
+        In practice, choosing how many components to keep usually comes down to picking a target: keep enough components that their explained variance ratios add up to some threshold like 95%, or plot the ratios in order and look for the point where adding another component stops buying much (the "elbow" in that plot). Neither rule is exact science. They're both just ways of asking "how many of these directions are pulling their weight."
       </Paragraph>
 
       <Heading level={2} delay={0.60}>
@@ -102,7 +102,7 @@ print("1D projection:", projected)
       />
 
       <Paragraph delay={0.75}>
-        The first eigenvalue, <Formula>{`1.284`}</Formula>, dwarfs the second, <Formula>{`0.049`}</Formula>, which is exactly what "one dominant direction" looks like numerically. The explained variance ratio makes it explicit, the first principal component alone accounts for <Formula>{`96.3\\%`}</Formula> of the total variance in the data, leaving only <Formula>{`3.7\\%`}</Formula> for the second. Dropping the second dimension entirely and keeping only the projection onto the first, ten single numbers instead of ten coordinate pairs, throws away almost none of the real structure. The reconstruction error from doing exactly that (projecting to one dimension, then mapping back to two) comes out to a mean squared error of about <Formula>{`0.022`}</Formula>, tiny relative to the spread of the original data.
+        The first eigenvalue, <Formula>{`1.284`}</Formula>, dwarfs the second, <Formula>{`0.049`}</Formula>, which is exactly what "one dominant direction" looks like numerically. The explained variance ratio makes it explicit: the first principal component alone accounts for <Formula>{`96.3\\%`}</Formula> of the total variance in the data, leaving only <Formula>{`3.7\\%`}</Formula> for the second. Dropping the second dimension entirely and keeping only the projection onto the first, ten single numbers instead of ten coordinate pairs, throws away almost none of the real structure. The reconstruction error from doing exactly that (projecting to one dimension, then mapping back to two) comes out to a mean squared error of about <Formula>{`0.022`}</Formula>, tiny relative to the spread of the original data.
       </Paragraph>
 
       <PcaAxisDiagram
@@ -123,7 +123,7 @@ print("1D projection:", projected)
       </Formula>
 
       <Paragraph delay={0.95}>
-        Here <Formula>{`V`}</Formula>'s columns turn out to be exactly the same principal component directions computed above, and the singular values in <Formula>{`S`}</Formula> relate to the eigenvalues of the covariance matrix by <Formula>{`\\lambda_i = S_i^2 / (n-1)`}</Formula>. Running the same ten points through <InlineCode>np.linalg.svd</InlineCode> instead of an eigendecomposition gives singular values <Formula>{`3.399`}</Formula> and <Formula>{`0.665`}</Formula>, and squaring and dividing those by <Formula>{`n - 1 = 9`}</Formula> reproduces the same two eigenvalues, <Formula>{`1.284`}</Formula> and <Formula>{`0.049`}</Formula>, to four decimal places. No need to derive the full mechanics of SVD to use this, the practical takeaway is just that whenever a library's <InlineCode>PCA</InlineCode> call runs under the hood, it's almost certainly computing this factorization directly on the data rather than building a covariance matrix first, because it's more numerically stable and scales better to data with far more features than examples.
+        Here <Formula>{`V`}</Formula>'s columns turn out to be exactly the same principal component directions computed above, and the singular values in <Formula>{`S`}</Formula> relate to the eigenvalues of the covariance matrix by <Formula>{`\\lambda_i = S_i^2 / (n-1)`}</Formula>. Running the same ten points through <InlineCode>np.linalg.svd</InlineCode> instead of an eigendecomposition gives singular values <Formula>{`3.399`}</Formula> and <Formula>{`0.665`}</Formula>, and squaring and dividing those by <Formula>{`n - 1 = 9`}</Formula> reproduces the same two eigenvalues, <Formula>{`1.284`}</Formula> and <Formula>{`0.049`}</Formula>, to four decimal places. No need to derive the full mechanics of SVD to use this. The practical takeaway is just that whenever a library's <InlineCode>PCA</InlineCode> call runs under the hood, it's almost certainly computing this factorization directly on the data rather than building a covariance matrix first, because it's more numerically stable and scales better to data with far more features than examples.
       </Paragraph>
 
       <Heading level={2} delay={1.00}>
@@ -131,15 +131,19 @@ print("1D projection:", projected)
       </Heading>
 
       <Paragraph delay={1.05}>
-        PCA optimizes for one specific property, that the projected directions be uncorrelated and rank-ordered by variance. That's a useful property, but it's not the same thing as finding the actual underlying signals that generated the data. Two variables can have exactly zero correlation and still be tightly, deterministically related to each other in a nonlinear way, correlation only measures the linear part of the relationship.
+        PCA optimizes for one specific property: that the projected directions be uncorrelated and rank-ordered by variance. That's a useful property, but it's not the same thing as finding the actual underlying signals that generated the data. Two variables can have exactly zero correlation and still be tightly, deterministically related to each other in a nonlinear way. Correlation only measures the linear part of the relationship.
       </Paragraph>
 
       <Paragraph delay={1.10}>
-        <strong>Independent Component Analysis</strong> (ICA) targets a stronger property, statistical independence, knowing the value of one component gives no information at all about another, not just no linear information. The classic framing is the "cocktail party problem", several microphones each pick up a different mixture of several people talking at once, and the goal is recovering each individual voice from only the mixed recordings, with no direct access to the original signals. PCA on that same microphone data finds the directions of maximum variance in the mixed recordings, which generally isn't the same as separating out each speaker's voice, since the mixture directions PCA prefers are shaped by how the microphones happen to be positioned, not by which combinations correspond to a single independent speaker. ICA instead searches for a set of directions along which the projected signals look as statistically independent (and as non-Gaussian) as possible, and under fairly general conditions on how the sources were mixed, that search actually recovers something close to the original individual voices.
+        <strong>Independent Component Analysis</strong> (ICA) targets a stronger property: statistical independence. Knowing the value of one component gives no information at all about another, not just no linear information. The classic framing is the "cocktail party problem." Several microphones each pick up a different mixture of several people talking at once, and the goal is recovering each individual voice from only the mixed recordings, with no direct access to the original signals.
+      </Paragraph>
+
+      <Paragraph delay={1.12}>
+        PCA on that same microphone data finds the directions of maximum variance in the mixed recordings, which generally isn't the same as separating out each speaker's voice. The mixture directions PCA prefers are shaped by how the microphones happen to be positioned, not by which combinations correspond to a single independent speaker. ICA instead searches for a set of directions along which the projected signals look as statistically independent (and as non-Gaussian) as possible. Under fairly general conditions on how the sources were mixed, that search actually recovers something close to the original individual voices.
       </Paragraph>
 
       <Paragraph delay={1.15}>
-        The tradeoff is that ICA needs its independence assumption to actually hold, and it needs at least as many mixed recordings as there are original sources. PCA makes no such claim, it just reports the directions with the most variance, uncorrelated but not necessarily independent, which is the right tool when the goal is compression rather than recovering specific hidden signals.
+        The tradeoff is that ICA needs its independence assumption to actually hold, and it needs at least as many mixed recordings as there are original sources. PCA makes no such claim. It just reports the directions with the most variance, uncorrelated but not necessarily independent, which is the right tool when the goal is compression rather than recovering specific hidden signals.
       </Paragraph>
 
       <Heading level={2} delay={1.20}>
@@ -147,15 +151,15 @@ print("1D projection:", projected)
       </Heading>
 
       <Paragraph delay={1.25}>
-        PCA and SVD both require looking at the whole dataset to figure out which directions matter. There's a much cheaper alternative that skips that step entirely, pick a random projection matrix and multiply. That sounds like it should destroy the data's structure, and in general reducing dimensions randomly on an arbitrary matrix absolutely can. But when the thing being preserved is just the pairwise distances between points, random projections turn out to be surprisingly effective, and there's a real theoretical result behind why.
+        PCA and SVD both require looking at the whole dataset to figure out which directions matter. There's a much cheaper alternative that skips that step entirely: pick a random projection matrix and multiply. That sounds like it should destroy the data's structure, and in general reducing dimensions randomly on an arbitrary matrix absolutely can. But when the thing being preserved is just the pairwise distances between points, random projections turn out to be surprisingly effective, and there's a real theoretical result behind why.
       </Paragraph>
 
       <Paragraph delay={1.30}>
-        The <strong>Johnson-Lindenstrauss lemma</strong> says, informally, that a set of points in a very high-dimensional space can be projected down to a much lower dimension, chosen based only on how many points there are and how much distortion is tolerable, while keeping every pairwise distance approximately preserved. Crucially, the target dimension in the lemma depends on the number of points, not on the original number of features, so a million-feature dataset with a thousand points can often be projected down to a few hundred dimensions with distances still holding up close to their original values, regardless of how enormous the starting dimension was.
+        The <strong>Johnson-Lindenstrauss lemma</strong> says, informally, that a set of points in a very high-dimensional space can be projected down to a much lower dimension, chosen based only on how many points there are and how much distortion is tolerable, while keeping every pairwise distance approximately preserved. Crucially, the target dimension in the lemma depends on the number of points, not on the original number of features. So a million-feature dataset with a thousand points can often be projected down to a few hundred dimensions with distances still holding up close to their original values, regardless of how enormous the starting dimension was.
       </Paragraph>
 
       <Paragraph delay={1.35}>
-        A quick empirical check confirms the intuition. Twenty random points in 500 dimensions, projected down to 50 dimensions with a random matrix scaled by <Formula>{`1/\\sqrt{k}`}</Formula>, keep every pairwise distance within roughly plus or minus 25% of its original value, averaging almost exactly 1.0 across all pairs, with no attempt made to pick a good projection, just a random one. That's the appeal of the technique, one matrix multiply, no training step, and a distance-preservation guarantee that PCA's careful variance-maximizing doesn't actually make (PCA guarantees maximum retained variance, not that any specific pair of points stays a fixed distance apart).
+        A quick empirical check confirms the intuition. Twenty random points in 500 dimensions, projected down to 50 dimensions with a random matrix scaled by <Formula>{`1/\\sqrt{k}`}</Formula>, keep every pairwise distance within roughly plus or minus 25% of its original value, averaging almost exactly 1.0 across all pairs. No attempt was made to pick a good projection, just a random one. That's the appeal of the technique: one matrix multiply, no training step, and a distance-preservation guarantee that PCA's careful variance-maximizing doesn't actually make (PCA guarantees maximum retained variance, not that any specific pair of points stays a fixed distance apart).
       </Paragraph>
 
       <Heading level={2} delay={1.40}>
@@ -163,7 +167,7 @@ print("1D projection:", projected)
       </Heading>
 
       <Paragraph delay={1.45}>
-        Everything so far assumes the useful structure in the data is a flat, straight subspace, a well-chosen set of axes that happens to catch most of the spread. Plenty of real data doesn't cooperate with that assumption. A classic example is a set of points sitting on a curled-up sheet, like a Swiss roll, where two points that sit right next to each other on the unrolled sheet can end up on opposite sides of the roll once it's coiled, physically close in three dimensions but far apart along the sheet's actual surface. A straight line, which is all PCA has to work with, cuts straight through the coil and treats "close in space" as "close in the data's real structure", which is exactly backwards for points like that.
+        Everything so far assumes the useful structure in the data is a flat, straight subspace, a well-chosen set of axes that happens to catch most of the spread. Plenty of real data doesn't cooperate with that assumption. A classic example is a set of points sitting on a curled-up sheet, like a Swiss roll. Two points that sit right next to each other on the unrolled sheet can end up on opposite sides of the roll once it's coiled — physically close in three dimensions but far apart along the sheet's actual surface. A straight line, which is all PCA has to work with, cuts straight through the coil and treats "close in space" as "close in the data's real structure." That's exactly backwards for points like that.
       </Paragraph>
 
       <ManifoldFlattenDiagram
@@ -180,7 +184,7 @@ print("1D projection:", projected)
       </Paragraph>
 
       <Paragraph delay={1.60}>
-        The problem both methods solve is exactly the one PCA can't. A curled manifold has no single flat direction that captures its structure, but it does have a well-defined notion of "who's nearby", and that's the thing both t-SNE and UMAP are explicitly optimizing to preserve, at the direct cost of no longer promising anything about which directions in the resulting plot correspond to variance, or about distances between points that started out far apart.
+        The problem both methods solve is exactly the one PCA can't. A curled manifold has no single flat direction that captures its structure, but it does have a well-defined notion of "who's nearby." That's the thing both t-SNE and UMAP are explicitly optimizing to preserve, at the direct cost of no longer promising anything about which directions in the resulting plot correspond to variance, or about distances between points that started out far apart.
       </Paragraph>
 
       <Heading level={2} delay={1.65}>
@@ -198,7 +202,7 @@ print("1D projection:", projected)
       </List>
 
       <Paragraph delay={1.80}>
-        None of this makes t-SNE or UMAP untrustworthy, it makes them tools for a narrower job than the one they're often asked to do. They're genuinely good at answering "which points tend to sit near which other points", and genuinely bad at answering "how far apart are these two groups, really" or "which cluster contains more points." Reading a t-SNE plot honestly means treating apparent global geometry, the size, shape, and distance between the blobs, as decoration rather than data.
+        None of this makes t-SNE or UMAP untrustworthy. It makes them tools for a narrower job than the one they're often asked to do. They're genuinely good at answering "which points tend to sit near which other points", and genuinely bad at answering "how far apart are these two groups, really" or "which cluster contains more points." Reading a t-SNE plot honestly means treating apparent global geometry, the size, shape, and distance between the blobs, as decoration rather than data.
       </Paragraph>
 
       <Heading level={2} delay={1.85}>
@@ -206,7 +210,7 @@ print("1D projection:", projected)
       </Heading>
 
       <Paragraph delay={1.90}>
-        Put the whole set side by side and the choice mostly comes down to what's actually being asked. Compressing correlated features into fewer, well-understood, linear combinations, with an honest accounting of how much information survives, is PCA's job, computed in practice through SVD rather than a raw covariance eigendecomposition. Recovering distinct, statistically independent source signals from a mixture is ICA's job. Preserving pairwise distances cheaply, with no fitting step and a real theoretical guarantee, is what random projections are for. And turning a genuinely curved, high-dimensional shape into something a human can actually look at, at the cost of any claim about global distances, is what t-SNE and UMAP are for. None of these techniques replace each other, they answer different questions about the same underlying problem, that most of the interesting structure in high-dimensional data lives in far fewer dimensions than the data was originally given in.
+        Put the whole set side by side and the choice mostly comes down to what's actually being asked. Compressing correlated features into fewer, well-understood, linear combinations, with an honest accounting of how much information survives, is PCA's job, computed in practice through SVD rather than a raw covariance eigendecomposition. Recovering distinct, statistically independent source signals from a mixture is ICA's job. Preserving pairwise distances cheaply, with no fitting step and a real theoretical guarantee, is what random projections are for. And turning a genuinely curved, high-dimensional shape into something a human can actually look at, at the cost of any claim about global distances, is what t-SNE and UMAP are for. None of these techniques replace each other. They answer different questions about the same underlying problem: that most of the interesting structure in high-dimensional data lives in far fewer dimensions than the data was originally given in.
       </Paragraph>
 
       <Heading level={2} delay={1.95}>
@@ -222,7 +226,7 @@ print("1D projection:", projected)
       </List>
 
       <Paragraph delay={2.05}>
-        The common thread underneath every one of these methods is the same bet, that the true shape of the data is smaller and simpler than the number of columns in the spreadsheet suggests, and that with the right assumptions, most of what matters survives being written down in far fewer numbers. Which assumption to lean on, linear variance, statistical independence, plain distance preservation, or local neighborhood structure on a curved surface, is the real decision being made every time one of these tools gets reached for. Thanks for reading.
+        The common thread underneath every one of these methods is the same bet: that the true shape of the data is smaller and simpler than the number of columns in the spreadsheet suggests, and that with the right assumptions, most of what matters survives being written down in far fewer numbers. Which assumption to lean on, linear variance, statistical independence, plain distance preservation, or local neighborhood structure on a curved surface, is the real decision being made every time one of these tools gets reached for. Thanks for reading.
       </Paragraph>
     </>
   ),

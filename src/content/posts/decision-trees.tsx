@@ -21,7 +21,7 @@ export const decisionTrees: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.15}>
-        Every prediction a tree makes comes from walking down one of these question chains until there's nowhere left to go. What makes the whole thing interesting is not the walking, it's how the tree decides which question to ask at each fork, and that turns out to rest on a small, checkable piece of arithmetic repeated over and over.
+        Every prediction a tree makes comes from walking down one of these question chains until there's nowhere left to go. What makes the whole thing interesting is not the walking. It's how the tree decides which question to ask at each fork, and that turns out to rest on a small, checkable piece of arithmetic repeated over and over.
       </Paragraph>
 
       <Heading level={2} delay={0.20}>
@@ -29,11 +29,11 @@ export const decisionTrees: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.25}>
-        Picture the training data as points scattered across a plane, one axis per feature. A <strong>decision tree</strong> builds its predictions by repeatedly slicing that plane with a straight cut, always parallel to one of the axes, always answering a single question like "is hours studied greater than 3.5." Each cut splits whatever region it's applied to into two smaller rectangular regions. Do this recursively, cutting each new region again and again, and the whole feature space ends up carved into a patchwork of non-overlapping rectangles. Every point that lands inside the same rectangle gets the same prediction, the majority class for classification, the average target value for regression.
+        Picture the training data as points scattered across a plane, one axis per feature. A <strong>decision tree</strong> builds its predictions by repeatedly slicing that plane with a straight cut. Each cut is always parallel to one of the axes, and always answers a single question, like "is hours studied greater than 3.5." Each cut splits whatever region it's applied to into two smaller rectangular regions. Do this recursively, cutting each new region again and again, and the whole feature space ends up carved into a patchwork of non-overlapping rectangles. Every point that lands inside the same rectangle gets the same prediction: the majority class for classification, or the average target value for regression.
       </Paragraph>
 
       <Paragraph delay={0.30}>
-        That's the entire structure. A tree isn't fitting a curve or a weighted sum of features the way a linear model does, it's answering a sequence of threshold questions and reporting whatever the training examples in the resulting region mostly looked like. The mechanism that decides which question to ask, and where to put the threshold, is what the rest of this post is about.
+        That's the entire structure. A tree isn't fitting a curve or a weighted sum of features the way a linear model does. It's answering a sequence of threshold questions and reporting whatever the training examples in the resulting region mostly looked like. The mechanism that decides which question to ask, and where to put the threshold, is what the rest of this post is about.
       </Paragraph>
 
       <Heading level={2} delay={0.35}>
@@ -68,7 +68,7 @@ result = ["fail", "fail", "fail", "pass", "fail", "pass", "pass", "pass"]`}
       </Formula>
 
       <Paragraph delay={0.70}>
-        It's zero when every example at a node shares the same label (nothing left to be uncertain about) and reaches its maximum when classes are perfectly balanced. <strong>Gini impurity</strong> asks a closely related question in a slightly different way, roughly "if a random example were labeled according to the node's class proportions instead of its true label, how often would that guess be wrong."
+        It's zero when every example at a node shares the same label (nothing left to be uncertain about), and it reaches its maximum when classes are perfectly balanced. <strong>Gini impurity</strong> asks a closely related question in a slightly different way: roughly, "if a random example were labeled according to the node's class proportions instead of its true label, how often would that guess be wrong."
       </Paragraph>
 
       <Formula block delay={0.75}>
@@ -112,7 +112,7 @@ print(entropy(parent), gini(parent))
       />
 
       <Paragraph delay={0.95}>
-        Entropy of exactly <Formula>{`1.0`}</Formula> bit and Gini of exactly <Formula>{`0.5`}</Formula>, both sitting at their ceiling, which makes sense, a node split evenly between two classes is as uncertain as it can possibly be. Now try the candidate split "hours studied greater than 3.5." Three students land on the low side, all three failed. Five land on the high side, four passed and one failed.
+        Entropy comes out to exactly <Formula>{`1.0`}</Formula> bit, and Gini to exactly <Formula>{`0.5`}</Formula>, both sitting at their ceiling. That makes sense: a node split evenly between two classes is as uncertain as it can possibly be. Now try the candidate split "hours studied greater than 3.5." Three students land on the low side, all three failed. Five land on the high side, four passed and one failed.
       </Paragraph>
 
       <CodeBlock
@@ -133,7 +133,7 @@ print(weighted_gini, 0.5 - weighted_gini)          # 0.2        0.3        (gini
       />
 
       <Paragraph delay={1.05}>
-        The low-hours side comes out perfectly pure, entropy and Gini both zero, since every one of those three students failed. The high-hours side is still a little mixed, entropy of <Formula>{`0.722`}</Formula>, Gini of <Formula>{`0.32`}</Formula>. Weighting each side by how many examples it holds and subtracting from the parent's impurity gives the improvement this split buys, an <strong>information gain</strong> of <Formula>{`0.549`}</Formula> bits using entropy, or a Gini reduction of <Formula>{`0.3`}</Formula> using Gini. Either criterion agrees this candidate split is a real improvement, not just noise.
+        The low-hours side comes out perfectly pure, entropy and Gini both zero, since every one of those three students failed. The high-hours side is still a little mixed: entropy of <Formula>{`0.722`}</Formula>, Gini of <Formula>{`0.32`}</Formula>. Weighting each side by how many examples it holds and subtracting from the parent's impurity gives the improvement this split buys. That's an <strong>information gain</strong> of <Formula>{`0.549`}</Formula> bits using entropy, or a Gini reduction of <Formula>{`0.3`}</Formula> using Gini. Either criterion agrees this candidate split is a real improvement, not just noise.
       </Paragraph>
 
       <DecisionTreeDiagram
@@ -146,7 +146,7 @@ print(weighted_gini, 0.5 - weighted_gini)          # 0.2        0.3        (gini
       </Heading>
 
       <Paragraph delay={1.15}>
-        Impurity only makes sense for a categorical label. When the target is a number instead, a tree swaps entropy or Gini for <strong>variance</strong>, the average squared distance from the mean, and picks whichever split shrinks the weighted variance of the two resulting sides the most. The logic is identical, a node's variance measures how spread out its target values currently are, and a good split is one that leaves both children more tightly clustered around their own means than the parent was.
+        Impurity only makes sense for a categorical label. When the target is a number instead, a tree swaps entropy or Gini for <strong>variance</strong>, the average squared distance from the mean, and picks whichever split shrinks the weighted variance of the two resulting sides the most. The logic is identical: a node's variance measures how spread out its target values currently are, and a good split is one that leaves both children more tightly clustered around their own means than the parent was.
       </Paragraph>
 
       <CodeBlock
@@ -167,7 +167,7 @@ print(parent_var - weighted_var)  # 10.0278, the variance reduction`}
       />
 
       <Paragraph delay={1.25}>
-        The six targets start out spread from 2 to 10 with a variance over ten. Splitting at <Formula>{`x \\le 3`}</Formula> separates the tightly clustered low values (2, 3, 3) from the tightly clustered high values (8, 9, 10), and each side's variance collapses to well under one. That's the same story as the classification example in different units, a split is good exactly when it leaves each side more homogeneous than it found it.
+        The six targets start out spread from 2 to 10 with a variance over ten. Splitting at <Formula>{`x \\le 3`}</Formula> separates the tightly clustered low values (2, 3, 3) from the tightly clustered high values (8, 9, 10), and each side's variance collapses to well under one. That's the same story as the classification example in different units. A split is good exactly when it leaves each side more homogeneous than it found it.
       </Paragraph>
 
       <Heading level={2} delay={1.30}>
@@ -179,7 +179,7 @@ print(parent_var - weighted_var)  # 10.0278, the variance reduction`}
       </Paragraph>
 
       <Paragraph delay={1.40}>
-        This is a <strong>greedy</strong> search, at every node it takes whichever split looks best right now, with no lookahead into how that choice will constrain later splits further down the tree. Running the search over every threshold in the eight-student example confirms the split used above really was the best available one, not a split that only looked reasonable in isolation.
+        This is a <strong>greedy</strong> search. At every node it takes whichever split looks best right now, with no lookahead into how that choice will constrain later splits further down the tree. Running the search over every threshold in the eight-student example confirms the split used above really was the best available one, not a split that only looked reasonable in isolation.
       </Paragraph>
 
       <CodeBlock
@@ -212,7 +212,7 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </Heading>
 
       <Paragraph delay={1.60}>
-        That stopping rule matters more than it sounds. Left alone, a tree keeps splitting until every leaf is pure or has a single example in it, which means training accuracy can reach 100 percent by construction. A leaf with exactly one training example predicts that example perfectly and tells you nothing about any other example that happens to land nearby. This is the same underfitting-versus-overfitting tension that shows up whenever a model's flexibility isn't matched to how much real signal the data can support, a tree with unlimited depth has essentially unlimited capacity, and it will use every bit of it to fit the specific noise in whatever data it was handed, at the direct expense of doing well on anything new.
+        That stopping rule matters more than it sounds. Left alone, a tree keeps splitting until every leaf is pure or has a single example in it, which means training accuracy can reach 100 percent by construction. A leaf with exactly one training example predicts that example perfectly and tells you nothing about any other example that happens to land nearby. This is the same underfitting-versus-overfitting tension that shows up whenever a model's flexibility isn't matched to how much real signal the data can support. A tree with unlimited depth has essentially unlimited capacity, and it will use every bit of it to fit the specific noise in whatever data it was handed, at the direct expense of doing well on anything new.
       </Paragraph>
 
       <Paragraph delay={1.65}>
@@ -224,7 +224,7 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </Heading>
 
       <Paragraph delay={1.75}>
-        <strong>Pre-pruning</strong> stops the tree from growing past a limit decided up front. A <InlineCode>max_depth</InlineCode> caps how many questions deep any path is allowed to go. A <InlineCode>min_samples_split</InlineCode> or <InlineCode>min_samples_leaf</InlineCode> refuses to split a node, or refuses to create a leaf, once too few examples remain to make the split trustworthy. These are cheap and fast, training simply halts early, but picking the right limit usually means trying a few values and checking each against a validation set, since too shallow a limit underfits just as badly as no limit overfits.
+        <strong>Pre-pruning</strong> stops the tree from growing past a limit decided up front. A <InlineCode>max_depth</InlineCode> caps how many questions deep any path is allowed to go. A <InlineCode>min_samples_split</InlineCode> or <InlineCode>min_samples_leaf</InlineCode> refuses to split a node, or refuses to create a leaf, once too few examples remain to make the split trustworthy. These are cheap and fast, since training simply halts early. But picking the right limit usually means trying a few values and checking each against a validation set, since too shallow a limit underfits just as badly as no limit overfits.
       </Paragraph>
 
       <Paragraph delay={1.80}>
@@ -236,7 +236,11 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </Formula>
 
       <Paragraph delay={1.90}>
-        Here <Formula>{`R(T)`}</Formula> is the tree's error on training data, <Formula>{`|T|`}</Formula> is its number of leaves, and <Formula>{`\\alpha`}</Formula> is a penalty knob. At <Formula>{`\\alpha = 0`}</Formula> the fully grown tree wins outright, more leaves can only help training error. Raise <Formula>{`\\alpha`}</Formula> and every extra leaf has to earn its keep, branches that barely improve training fit get pruned back into their parent because the leaf-count penalty outweighs the tiny accuracy gain they were buying. Sweeping <Formula>{`\\alpha`}</Formula> across a range and picking whichever value scores best on a validation set is the same idea as tuning <InlineCode>max_depth</InlineCode>, just applied after the fact instead of during growth, and it tends to find a better trade-off than a depth limit chosen blind, since it can prune unevenly, keeping a deep, useful branch on one side of the tree while trimming a shallow, useless one on the other.
+        Here <Formula>{`R(T)`}</Formula> is the tree's error on training data, <Formula>{`|T|`}</Formula> is its number of leaves, and <Formula>{`\\alpha`}</Formula> is a penalty knob. At <Formula>{`\\alpha = 0`}</Formula> the fully grown tree wins outright, since more leaves can only help training error. Raise <Formula>{`\\alpha`}</Formula> and every extra leaf has to earn its keep. Branches that barely improve training fit get pruned back into their parent, because the leaf-count penalty outweighs the tiny accuracy gain they were buying.
+      </Paragraph>
+
+      <Paragraph delay={1.92}>
+        Sweeping <Formula>{`\\alpha`}</Formula> across a range and picking whichever value scores best on a validation set is the same idea as tuning <InlineCode>max_depth</InlineCode>, just applied after the fact instead of during growth. It tends to find a better trade-off than a depth limit chosen blind, since it can prune unevenly, keeping a deep, useful branch on one side of the tree while trimming a shallow, useless one on the other.
       </Paragraph>
 
       <Heading level={2} delay={1.95}>
@@ -256,7 +260,7 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </Paragraph>
 
       <Paragraph delay={2.15}>
-        That measure has a real blind spot worth knowing about. A feature with many distinct values (a raw user ID, a fine-grained timestamp, anything close to unique per row) has far more candidate thresholds to try during the greedy search than a feature with only a couple of possible values, purely by having more places to cut. That extra freedom lets the search find a split that looks like a bigger impurity improvement on the training set even when the feature carries no real signal, which inflates its reported importance relative to a coarser but more genuinely useful feature. Reading a tree's feature importances at face value, without accounting for how many distinct values each candidate feature had to search over, is a common way to walk away with the wrong takeaway about what actually drives the model's predictions.
+        That measure has a real blind spot worth knowing about. A feature with many distinct values (a raw user ID, a fine-grained timestamp, anything close to unique per row) has far more candidate thresholds to try during the greedy search than a feature with only a couple of possible values, purely by having more places to cut. That extra freedom lets the search find a split that looks like a bigger impurity improvement on the training set, even when the feature carries no real signal. That inflates its reported importance relative to a coarser but more genuinely useful feature. Reading a tree's feature importances at face value, without accounting for how many distinct values each candidate feature had to search over, is a common way to walk away with the wrong takeaway about what actually drives the model's predictions.
       </Paragraph>
 
       <Heading level={2} delay={2.20}>
@@ -264,11 +268,11 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </Heading>
 
       <Paragraph delay={2.25}>
-        One more property is worth sitting with before reaching for a tree in practice. Because every split is chosen greedily from whatever training examples happen to be present, a small change in the data, dropping a handful of rows, adding a few new ones, can flip which feature and threshold win at the very first split. And because every split downstream depends on which examples ended up in that node, one different root question can cascade into an entirely different-looking tree from the same underlying relationship. Two trees trained on two slightly different samples from the same population can end up making genuinely different predictions on the same new example, even though neither one is unreasonable given the data it saw.
+        One more property is worth sitting with before reaching for a tree in practice. Because every split is chosen greedily from whatever training examples happen to be present, a small change in the data — dropping a handful of rows, adding a few new ones — can flip which feature and threshold win at the very first split. And because every split downstream depends on which examples ended up in that node, one different root question can cascade into an entirely different-looking tree from the same underlying relationship. Two trees trained on two slightly different samples from the same population can end up making genuinely different predictions on the same new example, even though neither one is unreasonable given the data it saw.
       </Paragraph>
 
       <Paragraph delay={2.30}>
-        That instability isn't a bug to be patched inside a single tree, it's close to structural, a direct consequence of how a greedy, hard-threshold search commits fully to one split before ever seeing the next one. It's exactly the reason so much practical modeling built on top of trees doesn't stop at training one, training many trees on different random slices of the data and averaging their predictions turns that same instability into a source of strength instead of a weakness, since the individual trees' idiosyncrasies tend to cancel out rather than compound. A single tree's fragility is the whole motivation for that direction.
+        That instability isn't a bug to be patched inside a single tree. It's close to structural, a direct consequence of how a greedy, hard-threshold search commits fully to one split before ever seeing the next one. It's exactly the reason so much practical modeling built on top of trees doesn't stop at training one. Training many trees on different random slices of the data and averaging their predictions turns that same instability into a source of strength instead of a weakness, since the individual trees' idiosyncrasies tend to cancel out rather than compound. A single tree's fragility is the whole motivation for that direction.
       </Paragraph>
 
       <Heading level={2} delay={2.35}>
@@ -284,7 +288,7 @@ print(best_thresh, best_gain)  # 3.5, 0.5488 (tied with 5.5)`}
       </List>
 
       <Paragraph delay={2.45}>
-        None of this makes a decision tree a weak model, a well-pruned tree on the right problem is fast, genuinely interpretable (the flowchart really is the model), and handles mixed numeric and categorical features without much preprocessing. The honest picture is just that a single tree is a high-variance building block, easy to overfit and sensitive to exactly which rows it happened to be trained on. Knowing that is what makes the next step, combining many of them, feel less like a trick and more like the obvious fix. Thanks for reading.
+        None of this makes a decision tree a weak model. A well-pruned tree on the right problem is fast, genuinely interpretable (the flowchart really is the model), and handles mixed numeric and categorical features without much preprocessing. The honest picture is just that a single tree is a high-variance building block, easy to overfit and sensitive to exactly which rows it happened to be trained on. Knowing that is what makes the next step, combining many of them, feel less like a trick and more like the obvious fix. Thanks for reading.
       </Paragraph>
     </>
   ),

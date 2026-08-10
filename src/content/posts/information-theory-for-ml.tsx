@@ -39,7 +39,7 @@ export const informationTheoryForMl: BlogPostData = {
   content: (
     <>
       <Paragraph delay={0.10}>
-        A classifier's training loss ticks down from 1.9 to 0.4 over a few epochs. Somewhere inside that graph, the phrase <InlineCode>cross-entropy loss</InlineCode> is doing the actual work. A language model release announces a perplexity of 12 on some benchmark and calls it state of the art. Neither number means much on its own. Both are dressed-up versions of the same handful of ideas from information theory, a field built to answer one question, how much uncertainty is actually in this thing, and how many bits does it take to describe it.
+        A classifier's training loss ticks down from 1.9 to 0.4 over a few epochs. Somewhere inside that graph, the phrase <InlineCode>cross-entropy loss</InlineCode> is doing the actual work. A language model release announces a perplexity of 12 on some benchmark and calls it state of the art. Neither number means much on its own. Both are dressed-up versions of the same handful of ideas from information theory, a field built to answer one question: how much uncertainty is actually in this thing, and how many bits does it take to describe it.
       </Paragraph>
 
       <Paragraph delay={0.15}>
@@ -141,7 +141,7 @@ export const informationTheoryForMl: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={1.30}>
-        KL divergence is not symmetric, and that asymmetry is not a technicality, it changes what the number means. Take a true label distribution <Formula>{`P = [0.6, 0.3, 0.1]`}</Formula> and a badly calibrated model prediction <Formula>{`Q = [0.3, 0.3, 0.4]`}</Formula>.
+        KL divergence is not symmetric, and that asymmetry is not a technicality. It changes what the number means. Take a true label distribution <Formula>{`P = [0.6, 0.3, 0.1]`}</Formula> and a badly calibrated model prediction <Formula>{`Q = [0.3, 0.3, 0.4]`}</Formula>.
       </Paragraph>
 
       <CodeBlock

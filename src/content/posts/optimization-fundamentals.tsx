@@ -71,15 +71,15 @@ export const optimizationFundamentals: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.70}>
-        Setting the gradient of <Formula>{`\\mathcal{L}`}</Formula> with respect to both <Formula>{`x`}</Formula> and <Formula>{`\\lambda`}</Formula> to zero recovers exactly the constraint (from the <Formula>{`\\lambda`}</Formula> equation) plus a condition that the unconstrained gradient of <Formula>{`f`}</Formula> points in the same direction as the constraint's gradient at the optimum. That second condition is the actual insight, at the constrained optimum, there's no direction left that improves <Formula>{`f`}</Formula> without also leaving the constraint surface.
+        Setting the gradient of <Formula>{`\\mathcal{L}`}</Formula> with respect to both <Formula>{`x`}</Formula> and <Formula>{`\\lambda`}</Formula> to zero recovers exactly the constraint (from the <Formula>{`\\lambda`}</Formula> equation) plus a condition that the unconstrained gradient of <Formula>{`f`}</Formula> points in the same direction as the constraint's gradient at the optimum. That second condition is the actual insight: at the constrained optimum, there's no direction left that improves <Formula>{`f`}</Formula> without also leaving the constraint surface.
       </Paragraph>
 
       <Paragraph delay={0.75}>
-        A concrete example. Maximize <Formula>{`xy`}</Formula> subject to <Formula>{`x + y = 10`}</Formula>. The Lagrangian is <Formula>{`\\mathcal{L}(x,y,\\lambda) = xy - \\lambda(x + y - 10)`}</Formula>. Taking partial derivatives and setting them to zero gives <Formula>{`y = \\lambda`}</Formula> and <Formula>{`x = \\lambda`}</Formula>, so <Formula>{`x = y`}</Formula>. Combined with the constraint <Formula>{`x + y = 10`}</Formula>, that pins down <Formula>{`x = y = 5`}</Formula>, giving a maximum value of <Formula>{`25`}</Formula>. The multiplier <Formula>{`\\lambda = 5`}</Formula> itself has a reading too, it's the marginal value of loosening the constraint, how much the maximum would improve if the budget of 10 crept up by one unit.
+        A concrete example. Maximize <Formula>{`xy`}</Formula> subject to <Formula>{`x + y = 10`}</Formula>. The Lagrangian is <Formula>{`\\mathcal{L}(x,y,\\lambda) = xy - \\lambda(x + y - 10)`}</Formula>. Taking partial derivatives and setting them to zero gives <Formula>{`y = \\lambda`}</Formula> and <Formula>{`x = \\lambda`}</Formula>, so <Formula>{`x = y`}</Formula>. Combined with the constraint <Formula>{`x + y = 10`}</Formula>, that pins down <Formula>{`x = y = 5`}</Formula>, giving a maximum value of <Formula>{`25`}</Formula>. The multiplier <Formula>{`\\lambda = 5`}</Formula> itself has a reading too: it's the marginal value of loosening the constraint, how much the maximum would improve if the budget of 10 crept up by one unit.
       </Paragraph>
 
       <Paragraph delay={0.80}>
-        This exact machinery is what sits underneath support vector machine margins, entropy-regularized objectives, and any loss with a hard normalization or budget constraint bolted on. The full treatment with inequality constraints (the Karush-Kuhn-Tucker conditions) adds more moving parts, but the core idea stays the same, turn a constraint into a price, then optimize as if there were no constraint at all.
+        This exact machinery is what sits underneath support vector machine margins, entropy-regularized objectives, and any loss with a hard normalization or budget constraint bolted on. The full treatment with inequality constraints (the Karush-Kuhn-Tucker conditions) adds more moving parts, but the core idea stays the same: turn a constraint into a price, then optimize as if there were no constraint at all.
       </Paragraph>
 
       <Heading level={2} delay={0.85}>
@@ -87,7 +87,7 @@ export const optimizationFundamentals: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.90}>
-        The gradient of a loss <Formula>{`\\mathcal{L}(\\theta)`}</Formula> points in the direction that increases the loss fastest at the current point. That's a direct consequence of a first-order Taylor approximation, moving a small step <Formula>{`\\epsilon`}</Formula> in direction <Formula>{`d`}</Formula> changes the loss by roughly <Formula>{`\\epsilon \\, \\nabla \\mathcal{L}(\\theta) \\cdot d`}</Formula>, and that dot product is most negative (the loss drops fastest) exactly when <Formula>{`d`}</Formula> points opposite the gradient. So the negative gradient is, by construction, the steepest way down available at that point. <strong>Gradient descent</strong> just takes that step repeatedly.
+        The gradient of a loss <Formula>{`\\mathcal{L}(\\theta)`}</Formula> points in the direction that increases the loss fastest at the current point. That's a direct consequence of a first-order Taylor approximation: moving a small step <Formula>{`\\epsilon`}</Formula> in direction <Formula>{`d`}</Formula> changes the loss by roughly <Formula>{`\\epsilon \\, \\nabla \\mathcal{L}(\\theta) \\cdot d`}</Formula>, and that dot product is most negative (the loss drops fastest) exactly when <Formula>{`d`}</Formula> points opposite the gradient. So the negative gradient is, by construction, the steepest way down available at that point. <strong>Gradient descent</strong> just takes that step repeatedly.
       </Paragraph>
 
       <Formula block delay={0.95}>
@@ -118,7 +118,7 @@ for step in range(6):
       />
 
       <Paragraph delay={1.10}>
-        Each step multiplies the distance to the minimum by <Formula>{`1 - 2\\eta`}</Formula>, here <Formula>{`0.8`}</Formula>, so the sequence shrinks geometrically toward zero without ever quite reaching it in finitely many steps. Pick <Formula>{`\\eta`}</Formula> too large on this same problem, anything past <Formula>{`\\eta = 1`}</Formula>, and the update starts overshooting and diverging instead of converging, which is the single-variable version of the same instability that shows up when a learning rate is set too aggressively for a real network.
+        Each step multiplies the distance to the minimum by <Formula>{`1 - 2\\eta`}</Formula>, here <Formula>{`0.8`}</Formula>, so the sequence shrinks geometrically toward zero without ever quite reaching it in finitely many steps. Pick <Formula>{`\\eta`}</Formula> too large on this same problem, anything past <Formula>{`\\eta = 1`}</Formula>, and the update starts overshooting and diverging instead of converging. That's the single-variable version of the same instability that shows up when a learning rate is set too aggressively for a real network.
       </Paragraph>
 
       <Heading level={2} delay={1.15}>
@@ -130,7 +130,7 @@ for step in range(6):
       </Paragraph>
 
       <Paragraph delay={1.25}>
-        That noise sounds like a downside, and in one sense it is, the direction of any single mini-batch's gradient can point somewhat away from the true full-dataset direction. But the noise buys something valuable in return. A full-batch gradient descent step follows the exact downhill direction of the training loss it's given, which means it can settle into any nearby dip, including a shallow, narrow one that a slightly different path would have skipped past entirely. The jitter in a mini-batch gradient acts like a small random kick at every step, and that kick is often enough to bounce a trajectory out of a shallow bad region before it settles there, while a deep, wide minimum is easy to keep sliding into regardless of the noise. This is one real piece of the folklore that a smaller batch size can generalize better, not because smaller batches see more data (they see less per step), but because the extra gradient noise biases training toward the wide, flat regions of the loss surface that tend to generalize well, rather than the sharp, narrow ones that fit the training set more precisely and the test set less reliably.
+        That noise sounds like a downside, and in one sense it is: the direction of any single mini-batch's gradient can point somewhat away from the true full-dataset direction. But the noise buys something valuable in return. A full-batch gradient descent step follows the exact downhill direction of the training loss it's given, which means it can settle into any nearby dip, including a shallow, narrow one that a slightly different path would have skipped past entirely. The jitter in a mini-batch gradient acts like a small random kick at every step, and that kick is often enough to bounce a trajectory out of a shallow bad region before it settles there, while a deep, wide minimum is easy to keep sliding into regardless of the noise. This is one real piece of the folklore that a smaller batch size can generalize better. It's not because smaller batches see more data, they actually see less per step. It's because the extra gradient noise biases training toward the wide, flat regions of the loss surface that tend to generalize well, rather than the sharp, narrow ones that fit the training set more precisely and the test set less reliably.
       </Paragraph>
 
       <Paragraph delay={1.30}>
@@ -146,7 +146,7 @@ for step in range(6):
       </Paragraph>
 
       <Paragraph delay={1.45}>
-        Gradient descent doesn't know the surface has this shape, it just follows whatever the local gradient says. On an ill-conditioned bowl, that gradient has a large component in the steep direction and a small one in the flat direction, so a single learning rate that's small enough to avoid overshooting the steep direction ends up taking tiny, overly cautious steps in the flat direction too. The visible symptom is a path that bounces back and forth across the narrow direction while barely creeping forward along the wide one, exactly the zigzag that shows up whenever a loss curve stalls out at a plateau for a long stretch before finally making progress. That plateau usually isn't the optimizer being stuck at a minimum, it's the optimizer crawling along a flat direction while wasting most of its steps correcting overshoot in a steep one.
+        Gradient descent doesn't know the surface has this shape. It just follows whatever the local gradient says. On an ill-conditioned bowl, that gradient has a large component in the steep direction and a small one in the flat direction, so a single learning rate that's small enough to avoid overshooting the steep direction ends up taking tiny, overly cautious steps in the flat direction too. The visible symptom is a path that bounces back and forth across the narrow direction while barely creeping forward along the wide one, exactly the zigzag that shows up whenever a loss curve stalls out at a plateau for a long stretch before finally making progress. That plateau usually isn't the optimizer being stuck at a minimum. It's the optimizer crawling along a flat direction while wasting most of its steps correcting overshoot in a steep one.
       </Paragraph>
 
       <Heading level={2} delay={1.50}>
@@ -171,7 +171,7 @@ for step in range(6):
       />
 
       <Paragraph delay={1.70}>
-        Momentum is not the only trick for taming a badly conditioned loss surface, adaptive per-parameter step sizes and learning rate schedules pick up a lot of the remaining slack, and that's a big enough topic on its own to deserve its own separate post later. The point to take from this section is narrower and more durable, once a loss surface stops being a nice round bowl and starts having very different curvature in different directions, the plain gradient stops being the most useful direction to move in on its own, and something has to account for the history of recent gradients to move efficiently at all.
+        Momentum is not the only trick for taming a badly conditioned loss surface, adaptive per-parameter step sizes and learning rate schedules pick up a lot of the remaining slack, and that's a big enough topic on its own to deserve its own separate post later. The point to take from this section is narrower and more durable. Once a loss surface stops being a nice round bowl and starts having very different curvature in different directions, the plain gradient stops being the most useful direction to move in on its own. Something has to account for the history of recent gradients to move efficiently at all.
       </Paragraph>
 
       <Heading level={2} delay={1.75}>
@@ -179,7 +179,7 @@ for step in range(6):
       </Heading>
 
       <Paragraph delay={1.80}>
-        A <strong>saddle point</strong> is a point where the gradient is zero but it isn't a minimum in every direction, the surface curves upward along some directions and downward along others, like the middle of a horse's saddle. Early intuitions about neural network training worried mostly about getting trapped in a bad local minimum. In practice, for a loss surface with millions of parameters, saddle points turn out to be the far more common and far more troublesome obstacle.
+        A <strong>saddle point</strong> is a point where the gradient is zero but it isn't a minimum in every direction: the surface curves upward along some directions and downward along others, like the middle of a horse's saddle. Early intuitions about neural network training worried mostly about getting trapped in a bad local minimum. In practice, for a loss surface with millions of parameters, saddle points turn out to be the far more common and far more troublesome obstacle.
       </Paragraph>
 
       <Paragraph delay={1.85}>
@@ -195,7 +195,7 @@ for step in range(6):
       </Paragraph>
 
       <Paragraph delay={2.00}>
-        None of the tricks that show up in modern training loops are decoration. Momentum exists specifically to cope with ill-conditioning and to carry a trajectory through the nearly flat regions around a saddle instead of stalling there. Adaptive step sizes, learning rate warmup, and decay schedules exist to cope with the fact that a fixed learning rate is a bad fit for a surface whose curvature keeps changing, both across parameters and over the course of training, which is exactly the deeper dive a future post on optimizers and learning rate schedules is for. What's here is the foundation underneath all of it, the shape of the problem those tricks are built to solve.
+        None of the tricks that show up in modern training loops are decoration. Momentum exists specifically to cope with ill-conditioning and to carry a trajectory through the nearly flat regions around a saddle instead of stalling there. Adaptive step sizes, learning rate warmup, and decay schedules exist to cope with the fact that a fixed learning rate is a bad fit for a surface whose curvature keeps changing, both across parameters and over the course of training. That's exactly the deeper dive a future post on optimizers and learning rate schedules is for. What's here is the foundation underneath all of it: the shape of the problem those tricks are built to solve.
       </Paragraph>
 
       <Heading level={2} delay={2.05}>
@@ -211,7 +211,7 @@ for step in range(6):
       </List>
 
       <Paragraph delay={2.15}>
-        Every one of these ideas keeps showing up under a different name later, in why a learning rate schedule warms up before decaying, in why Adam tracks a per-parameter second moment, in why a wide flat minimum tends to generalize better than a sharp narrow one. Optimization theory doesn't replace the intuition of "just follow the gradient down", it explains exactly where that intuition needs help. Thanks for reading.
+        Every one of these ideas keeps showing up under a different name later, in why a learning rate schedule warms up before decaying, in why Adam tracks a per-parameter second moment, in why a wide flat minimum tends to generalize better than a sharp narrow one. Optimization theory doesn't replace the intuition of "just follow the gradient down". It explains exactly where that intuition needs help. Thanks for reading.
       </Paragraph>
     </>
   ),

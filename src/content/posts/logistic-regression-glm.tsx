@@ -83,7 +83,7 @@ export const logisticRegressionGlm: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.85}>
-        This is <strong>binary cross-entropy</strong>, the negative log-likelihood of the Bernoulli model above, averaged over the training set. Each term only keeps the piece that matches the true label, when <Formula>{`y_i = 1`}</Formula> the second term vanishes and the example is penalized by <Formula>{`-\\log \\hat y_i`}</Formula>, confident and correct costs almost nothing while confident and wrong costs a lot, since <Formula>{`-\\log`}</Formula> of a number near zero blows up.
+        This is <strong>binary cross-entropy</strong>, the negative log-likelihood of the Bernoulli model above, averaged over the training set. Each term only keeps the piece that matches the true label: when <Formula>{`y_i = 1`}</Formula> the second term vanishes and the example is penalized by <Formula>{`-\\log \\hat y_i`}</Formula>. Confident and correct costs almost nothing, while confident and wrong costs a lot, since <Formula>{`-\\log`}</Formula> of a number near zero blows up.
       </Paragraph>
 
       <Paragraph delay={0.90}>
@@ -95,7 +95,7 @@ export const logisticRegressionGlm: BlogPostData = {
       </Formula>
 
       <Paragraph delay={1.00}>
-        The update at each step is proportional to the prediction error, <Formula>{`\\hat y_i - y_i`}</Formula>, times the input itself. Bigger mistakes push the weights harder. Correct, confident predictions push them barely at all. That's a satisfying result given how it was derived, a probabilistic argument about plausibility and a calculus exercise on a loss function land on the exact same update rule any gradient descent implementation actually runs.
+        The update at each step is proportional to the prediction error, <Formula>{`\\hat y_i - y_i`}</Formula>, times the input itself. Bigger mistakes push the weights harder. Correct, confident predictions push them barely at all. That's a satisfying result given how it was derived: a probabilistic argument about plausibility and a calculus exercise on a loss function land on the exact same update rule any gradient descent implementation actually runs.
       </Paragraph>
 
       <Heading level={2} delay={1.05}>
@@ -119,7 +119,7 @@ export const logisticRegressionGlm: BlogPostData = {
       </Formula>
 
       <Paragraph delay={1.30}>
-        Set <Formula>{`K = 2`}</Formula> and this reduces algebraically back to the plain sigmoid, logistic regression is the two-class special case of softmax regression, not a different model. The loss generalizes the same way, categorical cross-entropy against a one-hot label replaces binary cross-entropy, and the gradient keeps the same shape, prediction error times input, just with a vector of class probabilities instead of a single scalar.
+        Set <Formula>{`K = 2`}</Formula> and this reduces algebraically back to the plain sigmoid. Logistic regression is the two-class special case of softmax regression, not a different model. The loss generalizes the same way, categorical cross-entropy against a one-hot label replaces binary cross-entropy, and the gradient keeps the same shape, prediction error times input, just with a vector of class probabilities instead of a single scalar.
       </Paragraph>
 
       <Heading level={2} delay={1.35}>
@@ -127,7 +127,7 @@ export const logisticRegressionGlm: BlogPostData = {
       </Heading>
 
       <Paragraph delay={1.40}>
-        Because the model is linear in log-odds rather than in probability, a coefficient <Formula>{`w_j`}</Formula> has a specific and useful reading. Increasing feature <Formula>{`x_j`}</Formula> by one unit, holding everything else fixed, adds <Formula>{`w_j`}</Formula> to the log-odds, which multiplies the odds themselves by <Formula>{`e^{w_j}`}</Formula>. A coefficient of <Formula>{`0.7`}</Formula> means the odds of the positive class get multiplied by roughly <Formula>{`e^{0.7} \\approx 2.0`}</Formula> for each extra unit of that feature, not that the probability itself goes up by 0.7. That distinction matters, doubling the odds moves a 10% probability to about 18%, but it moves a 50% probability to about 67%, the same odds multiplier produces a different change in probability depending on where the starting point sits.
+        Because the model is linear in log-odds rather than in probability, a coefficient <Formula>{`w_j`}</Formula> has a specific and useful reading. Increasing feature <Formula>{`x_j`}</Formula> by one unit, holding everything else fixed, adds <Formula>{`w_j`}</Formula> to the log-odds, which multiplies the odds themselves by <Formula>{`e^{w_j}`}</Formula>. A coefficient of <Formula>{`0.7`}</Formula> means the odds of the positive class get multiplied by roughly <Formula>{`e^{0.7} \\approx 2.0`}</Formula> for each extra unit of that feature, not that the probability itself goes up by 0.7. That distinction matters. Doubling the odds moves a 10% probability to about 18%, but it moves a 50% probability to about 67%. The same odds multiplier produces a different change in probability depending on where the starting point sits.
       </Paragraph>
 
       <Heading level={2} delay={1.45}>
@@ -160,7 +160,7 @@ export const logisticRegressionGlm: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={1.75}>
-        Consider a fraud detection model. Missing an actual fraudulent transaction (a false negative) might cost the full amount of the fraud plus a customer dispute. Flagging a legitimate transaction for extra review (a false positive) costs a support ticket and an annoyed customer, real, but far cheaper. When one type of mistake is that much more expensive than the other, the threshold should move to catch more of the costly kind, even at the price of more of the cheap kind. Lowering the cutoff to, say, 0.2 flags more transactions overall, catching more real fraud at the cost of more manual reviews on transactions that turn out fine. Raising it toward 0.8 does the opposite, fewer false alarms, but some fraud slips through uncaught. There's no universal right answer, the correct threshold is wherever the expected cost of the two error types actually balances for the business in question, and that number comes from outside the model, not from the training process itself.
+        Consider a fraud detection model. Missing an actual fraudulent transaction (a false negative) might cost the full amount of the fraud plus a customer dispute. Flagging a legitimate transaction for extra review (a false positive) costs a support ticket and an annoyed customer, real, but far cheaper. When one type of mistake is that much more expensive than the other, the threshold should move to catch more of the costly kind, even at the price of more of the cheap kind. Lowering the cutoff to, say, 0.2 flags more transactions overall, catching more real fraud at the cost of more manual reviews on transactions that turn out fine. Raising it toward 0.8 does the opposite: fewer false alarms, but some fraud slips through uncaught. There's no universal right answer. The correct threshold is wherever the expected cost of the two error types actually balances for the business in question, and that number comes from outside the model, not from the training process itself.
       </Paragraph>
 
       <Heading level={2} delay={1.80}>
@@ -168,15 +168,15 @@ export const logisticRegressionGlm: BlogPostData = {
       </Heading>
 
       <Paragraph delay={1.85}>
-        Logistic regression looks like a special trick for binary labels, but it's actually one instance of a general recipe called a <strong>generalized linear model</strong> (GLM). Every GLM has three pieces, a linear predictor <Formula>{`z = w \\cdot x + b`}</Formula> built the same way regardless of what's being predicted, a chosen probability distribution for the outcome (Bernoulli for a 0/1 label, Poisson for a count, Gaussian for a continuous value), and a <strong>link function</strong> that connects the linear predictor to the mean of that distribution.
+        Logistic regression looks like a special trick for binary labels, but it's actually one instance of a general recipe called a <strong>generalized linear model</strong> (GLM). Every GLM has three pieces: a linear predictor <Formula>{`z = w \\cdot x + b`}</Formula> built the same way regardless of what's being predicted; a chosen probability distribution for the outcome (Bernoulli for a 0/1 label, Poisson for a count, Gaussian for a continuous value); and a <strong>link function</strong> that connects the linear predictor to the mean of that distribution.
       </Paragraph>
 
       <Paragraph delay={1.90}>
-        Plain linear regression is the GLM where the outcome is modeled as Gaussian and the link function is the identity, the linear predictor directly is the predicted mean, no transform needed. Logistic regression is the GLM where the outcome is Bernoulli and the link function is the logit, the linear predictor equals log-odds rather than the probability itself, which is exactly the sigmoid inversion worked through earlier.
+        Plain linear regression is the GLM where the outcome is modeled as Gaussian and the link function is the identity: the linear predictor directly is the predicted mean, no transform needed. Logistic regression is the GLM where the outcome is Bernoulli and the link function is the logit: the linear predictor equals log-odds rather than the probability itself, which is exactly the sigmoid inversion worked through earlier.
       </Paragraph>
 
       <Paragraph delay={1.95}>
-        <strong>Poisson regression</strong> is the same recipe applied to count data, the number of failed logins in an hour, the number of claims filed against an insurance policy, values that are non-negative integers rather than a probability. It pairs a Poisson distribution with a log link, so the linear predictor equals the log of the expected count. Exponentiating the linear predictor rather than pushing it through a sigmoid keeps the predicted mean positive, the same way the sigmoid kept logistic regression's predicted mean between 0 and 1. The pattern is identical across all of it, take the same linear score, choose the link function that maps it to whatever range the outcome actually lives in, and fit by maximum likelihood under the matching distribution.
+        <strong>Poisson regression</strong> is the same recipe applied to count data, the number of failed logins in an hour, the number of claims filed against an insurance policy, values that are non-negative integers rather than a probability. It pairs a Poisson distribution with a log link, so the linear predictor equals the log of the expected count. Exponentiating the linear predictor rather than pushing it through a sigmoid keeps the predicted mean positive, the same way the sigmoid kept logistic regression's predicted mean between 0 and 1. The pattern is identical across all of it: take the same linear score, choose the link function that maps it to whatever range the outcome actually lives in, and fit by maximum likelihood under the matching distribution.
       </Paragraph>
 
       <Heading level={2} delay={2.00}>
@@ -214,7 +214,7 @@ for h in [1, 2, 3, 4, 5]:
       />
 
       <Paragraph delay={2.15}>
-        The fitted coefficient of about <Formula>{`0.996`}</Formula> per hour means each additional hour studied multiplies the odds of passing by roughly <Formula>{`e^{0.996} \\approx 2.71`}</Formula>. The predicted probabilities climb smoothly from 12% at one hour to 88% at five, crossing 50% right around three hours, which is exactly where the intercept and coefficient place the log-odds at zero. Checked against its own twenty training labels, this model gets 16 out of 20 right, 80% accuracy, on a dataset this small a handful of students who studied a similar number of hours but landed on opposite sides of pass and fail.
+        The fitted coefficient of about <Formula>{`0.996`}</Formula> per hour means each additional hour studied multiplies the odds of passing by roughly <Formula>{`e^{0.996} \\approx 2.71`}</Formula>. The predicted probabilities climb smoothly from 12% at one hour to 88% at five, crossing 50% right around three hours, which is exactly where the intercept and coefficient place the log-odds at zero. Checked against its own twenty training labels, this model gets 16 out of 20 right, 80% accuracy. On a dataset this small, that's mostly a handful of students who studied a similar number of hours but landed on opposite sides of pass and fail.
       </Paragraph>
 
       <Heading level={2} delay={2.20}>

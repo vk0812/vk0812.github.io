@@ -42,7 +42,7 @@ export const statisticsEstimationUncertainty: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.30}>
-        Because a sample only ever covers part of the population, the statistic almost never exactly equals the parameter. That gap is <strong>sampling error</strong>, and it's not a mistake anyone made, it's a direct consequence of not having measured everything. Two different samples of the same size, drawn the same way, will produce two different statistics purely by chance. This is exactly why a single test-set score is a noisy read on a model's real-world performance, not a certificate of it.
+        Because a sample only ever covers part of the population, the statistic almost never exactly equals the parameter. That gap is <strong>sampling error</strong>. It's not a mistake anyone made, it's a direct consequence of not having measured everything. Two different samples of the same size, drawn the same way, will produce two different statistics purely by chance. This is exactly why a single test-set score is a noisy read on a model's real-world performance, not a certificate of it.
       </Paragraph>
 
       <SamplingDistributionNarrowing
@@ -77,7 +77,7 @@ export const statisticsEstimationUncertainty: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.70}>
-        <strong>Bias</strong> is the gap between the expected value of the estimator and the true parameter, averaged over all possible samples. An estimator that's biased will systematically over- or under-shoot no matter how much data arrives. <strong>Variance</strong> here is how much the estimator's value swings from one sample to the next. An estimator can be unbiased on average yet still be wildly noisy on any single sample, and a slightly biased estimator with much lower variance can beat an unbiased but jittery one in practice.
+        <strong>Bias</strong> is the gap between the expected value of the estimator and the true parameter, averaged over all possible samples. An estimator that's biased will systematically over- or under-shoot no matter how much data arrives. <strong>Variance</strong> here is how much the estimator's value swings from one sample to the next. An estimator can be unbiased on average yet still be wildly noisy on any single sample. A slightly biased estimator with much lower variance can beat an unbiased but jittery one in practice.
       </Paragraph>
 
       <Paragraph delay={0.75}>
@@ -144,7 +144,7 @@ print(mean, mle_var, unbiased_var)  # 11.0  2.0  2.5`}
       />
 
       <Paragraph delay={1.35}>
-        That gap between <Formula>{`2.0`}</Formula> and <Formula>{`2.5`}</Formula> is not a rounding artifact. Dividing by <Formula>{`n`}</Formula> instead of <Formula>{`n-1`}</Formula> makes the maximum-likelihood variance <strong>biased downward</strong>, it systematically underestimates spread because the sample mean it's built from was itself fit to that same data, using up one degree of freedom. Dividing by <Formula>{`n-1`}</Formula> corrects the bias, which is exactly why every standard library's variance function defaults to it. This is the estimator bias-versus-variance idea from a couple of sections up, made concrete in a single line of arithmetic.
+        That gap between <Formula>{`2.0`}</Formula> and <Formula>{`2.5`}</Formula> is not a rounding artifact. Dividing by <Formula>{`n`}</Formula> instead of <Formula>{`n-1`}</Formula> makes the maximum-likelihood variance <strong>biased downward</strong>. It systematically underestimates spread, because the sample mean it's built from was itself fit to that same data, using up one degree of freedom. Dividing by <Formula>{`n-1`}</Formula> corrects the bias, which is exactly why every standard library's variance function defaults to it. This is the estimator bias-versus-variance idea from a couple of sections up, made concrete in a single line of arithmetic.
       </Paragraph>
 
       <Heading level={2} delay={1.40}>
@@ -168,7 +168,7 @@ print(mean, mle_var, unbiased_var)  # 11.0  2.0  2.5`}
       </Formula>
 
       <Paragraph delay={1.65}>
-        Here's the part that gets misquoted constantly. A 95% confidence interval does not mean there's a 95% probability the true latency falls inside <Formula>{`(40.71, 43.89)`}</Formula>. Once the interval is computed from one sample, the true value either is or isn't in there, there's no probability left to talk about for that specific interval. What "95%" actually refers to is the procedure. If this same sampling-and-interval-building process were repeated many times, 95% of the resulting intervals would contain the true parameter. It's a statement about the method's long-run reliability, not a probability statement about one fixed interval.
+        Here's the part that gets misquoted constantly. A 95% confidence interval does not mean there's a 95% probability the true latency falls inside <Formula>{`(40.71, 43.89)`}</Formula>. Once the interval is computed from one sample, the true value either is or isn't in there. There's no probability left to talk about for that specific interval. What "95%" actually refers to is the procedure. If this same sampling-and-interval-building process were repeated many times, 95% of the resulting intervals would contain the true parameter. It's a statement about the method's long-run reliability, not a probability statement about one fixed interval.
       </Paragraph>
 
       <Heading level={2} delay={1.70}>
@@ -176,7 +176,7 @@ print(mean, mle_var, unbiased_var)  # 11.0  2.0  2.5`}
       </Heading>
 
       <Paragraph delay={1.75}>
-        The confidence interval above leaned on a known formula for the standard error of a mean. Plenty of statistics used in practice, a median, a 95th-percentile latency, the difference between two correlation coefficients, don't have a tidy closed-form standard error. <strong>Bootstrapping</strong> sidesteps the formula entirely. It resamples the observed data with replacement, over and over, recomputing the statistic each time, and treats the spread of those recomputed values as a stand-in for the true sampling distribution.
+        The confidence interval above leaned on a known formula for the standard error of a mean. Plenty of statistics used in practice, a median, a 95th-percentile latency, the difference between two correlation coefficients, don't have a tidy closed-form standard error. <strong>Bootstrapping</strong> sidesteps the formula entirely. It resamples the observed data with replacement, over and over, recomputing the statistic each time. It then treats the spread of those recomputed values as a stand-in for the true sampling distribution.
       </Paragraph>
 
       <CodeBlock
@@ -219,7 +219,7 @@ print(latencies.mean(), ci_low, ci_high)  # 11.0  roughly 9.9  roughly 12.1`}
       </Paragraph>
 
       <Paragraph delay={2.10}>
-        What a p-value is emphatically not. It is not the probability that the null hypothesis is true. It is not the probability that the result happened "by chance" in some general sense. It is not a measure of how large or practically important the effect is, a tiny, meaningless difference can still produce a small p-value if the sample is large enough. It's one specific conditional probability, how surprising the observed data would be if the null hypothesis were exactly true, nothing more.
+        What a p-value is emphatically not. It is not the probability that the null hypothesis is true. It is not the probability that the result happened "by chance" in some general sense. It is not a measure of how large or practically important the effect is. A tiny, meaningless difference can still produce a small p-value if the sample is large enough. It's one specific conditional probability, how surprising the observed data would be if the null hypothesis were exactly true, nothing more.
       </Paragraph>
 
       <Heading level={2} delay={2.15}>
@@ -235,7 +235,7 @@ print(latencies.mean(), ci_low, ci_high)  # 11.0  roughly 9.9  roughly 12.1`}
       </Formula>
 
       <Paragraph delay={2.30}>
-        Not a small chance of a false alarm, a coin flip. Run enough tests and something will look significant, that's practically guaranteed rather than a lucky find. One common fix is the <strong>Bonferroni correction</strong>, dividing the significance threshold by the number of tests, so twenty tests each get checked against <Formula>{`0.05/20=0.0025`}</Formula> instead of <Formula>{`0.05`}</Formula>. It's a conservative fix, it makes every individual test harder to pass, but it keeps the overall false-positive rate for the whole batch back down near the intended 5%.
+        Not a small chance of a false alarm, a coin flip. Run enough tests and something will look significant. That's practically guaranteed, not a lucky find. One common fix is the <strong>Bonferroni correction</strong>, dividing the significance threshold by the number of tests, so twenty tests each get checked against <Formula>{`0.05/20=0.0025`}</Formula> instead of <Formula>{`0.05`}</Formula>. It's a conservative fix. It makes every individual test harder to pass, but it keeps the overall false-positive rate for the whole batch down near the intended 5%.
       </Paragraph>
 
       <Heading level={2} delay={2.35}>

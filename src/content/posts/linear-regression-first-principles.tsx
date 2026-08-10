@@ -45,7 +45,7 @@ export const linearRegressionFirstPrinciples: BlogPostData = {
       </Heading>
 
       <Paragraph delay={0.45}>
-        Squared error rather than plain error mostly for convenience, it penalizes big misses much harder than small ones, and it's smooth everywhere, which means calculus applies cleanly. The quantity being minimized is the sum of squared residuals, written compactly as a single expression over the whole dataset at once.
+        Squared error is used rather than plain error mostly for convenience. It penalizes big misses much harder than small ones, and it's smooth everywhere, which means calculus applies cleanly. The quantity being minimized is the sum of squared residuals, written compactly as a single expression over the whole dataset at once.
       </Paragraph>
 
       <Formula block delay={0.50}>
@@ -69,7 +69,7 @@ export const linearRegressionFirstPrinciples: BlogPostData = {
       </Formula>
 
       <Paragraph delay={0.75}>
-        That's the entire closed-form solution to linear regression, one formula, no iteration, no learning rate to tune. It exists for a specific reason worth naming. The squared-error loss is a quadratic function of <Formula>{`\\beta`}</Formula>, and a quadratic bowl has exactly one minimum, with a derivative that's linear in <Formula>{`\\beta`}</Formula>. Setting a linear equation to zero and solving is something linear algebra can do in one shot, there's no need to inch toward the answer the way most loss surfaces demand. That's also exactly why this trick doesn't extend to logistic regression or a neural network, their loss surfaces aren't quadratic, so setting the gradient to zero produces an equation that can't be solved directly.
+        That's the entire closed-form solution to linear regression, one formula, no iteration, no learning rate to tune. It exists for a specific reason worth naming. The squared-error loss is a quadratic function of <Formula>{`\\beta`}</Formula>, and a quadratic bowl has exactly one minimum, with a derivative that's linear in <Formula>{`\\beta`}</Formula>. Setting a linear equation to zero and solving is something linear algebra can do in one shot. There's no need to inch toward the answer the way most loss surfaces demand. That's also exactly why this trick doesn't extend to logistic regression or a neural network: their loss surfaces aren't quadratic, so setting the gradient to zero produces an equation that can't be solved directly.
       </Paragraph>
 
       <Heading level={2} delay={0.80}>
@@ -81,7 +81,7 @@ export const linearRegressionFirstPrinciples: BlogPostData = {
       </Paragraph>
 
       <Paragraph delay={0.90}>
-        This is where <strong>gradient descent</strong> earns its keep as the general-purpose alternative. Instead of solving for the minimum directly, it starts from some initial guess for <Formula>{`\\beta`}</Formula> and repeatedly nudges it a small step in the direction that decreases the loss fastest, the negative gradient, until the steps stop making meaningful progress. For linear regression specifically the two methods are guaranteed to agree, since the loss surface is quadratic and has only one minimum, gradient descent just walks there instead of solving for it in one algebraic step. The real payoff of understanding gradient descent here is that the exact same procedure, no closed form required, is what trains logistic regression, and what trains every layer of a neural network, once the loss surface stops being a simple quadratic bowl.
+        This is where <strong>gradient descent</strong> earns its keep as the general-purpose alternative. Instead of solving for the minimum directly, it starts from some initial guess for <Formula>{`\\beta`}</Formula> and repeatedly nudges it a small step in the direction that decreases the loss fastest, the negative gradient, until the steps stop making meaningful progress. For linear regression specifically, the two methods are guaranteed to agree, since the loss surface is quadratic and has only one minimum. Gradient descent just walks there instead of solving for it in one algebraic step. The real payoff of understanding gradient descent here is that the exact same procedure, no closed form required, is what trains logistic regression, and what trains every layer of a neural network, once the loss surface stops being a simple quadratic bowl.
       </Paragraph>
 
       <Heading level={2} delay={0.95}>
@@ -141,18 +141,18 @@ print(r_squared)    # 0.81`}
       </Heading>
 
       <Paragraph delay={1.35}>
-        Ordinary least squares always returns some line, it never refuses to fit. Whether that line means anything depends on four assumptions the derivation quietly leans on.
+        Ordinary least squares always returns some line. It never refuses to fit. Whether that line means anything depends on four assumptions the derivation quietly leans on.
       </Paragraph>
 
       <List delay={1.40}>
         <ListItem><strong>Linearity.</strong> The true relationship between the features and the target is (approximately) a straight line, or a straight combination of features. Fit a line through data that actually curves and every prediction carries a systematic error that no amount of extra data ever fixes, since the model's whole hypothesis space is lines.</ListItem>
         <ListItem><strong>Homoscedasticity.</strong> The scatter of residuals around the line has roughly constant spread across the whole range of x, not tight near one end and wide near the other. Violate it and the model's error bars and significance tests, which all assume one shared noise level, become wrong exactly where the spread is widest.</ListItem>
-        <ListItem><strong>Independence.</strong> One observation's error doesn't leak information about the next one's. Time series data is the classic violator, today's residual and tomorrow's residual are correlated, and treating them as independent makes the model look far more confident than the data actually supports.</ListItem>
+        <ListItem><strong>Independence.</strong> One observation's error doesn't leak information about the next one's. Time series data is the classic violator: today's residual and tomorrow's residual are correlated, and treating them as independent makes the model look far more confident than the data actually supports.</ListItem>
         <ListItem><strong>No severe multicollinearity.</strong> The feature columns in <Formula>{`X`}</Formula> aren't near-exact linear combinations of each other. Two features that move almost in lockstep make <Formula>{`X^{\\top}X`}</Formula> close to singular, and the coefficients the normal equations return become numerically unstable, swinging wildly with tiny changes in the data even though the model's overall predictions barely move.</ListItem>
       </List>
 
       <Paragraph delay={1.45}>
-        None of these assumptions being violated stops the arithmetic from running. <Formula>{`(X^{\\top}X)^{-1}X^{\\top}y`}</Formula> computes a number regardless. What breaks is the ability to trust that number, the coefficients, their confidence intervals, and any claim about which feature matters more, all quietly assume these four things hold.
+        Violating any of these assumptions doesn't stop the arithmetic from running. <Formula>{`(X^{\\top}X)^{-1}X^{\\top}y`}</Formula> computes a number regardless. What breaks is the ability to trust that number: the coefficients, their confidence intervals, and any claim about which feature matters more all quietly assume these four things hold.
       </Paragraph>
 
       <Heading level={2} delay={1.50}>
@@ -160,15 +160,15 @@ print(r_squared)    # 0.81`}
       </Heading>
 
       <Paragraph delay={1.55}>
-        Checking those assumptions rarely happens by staring at a formula, it happens by plotting residuals against the fitted values or against each feature. A <strong>residual plot</strong> puts <Formula>{`\\hat y`}</Formula> (or <Formula>{`x`}</Formula>) on one axis and <Formula>{`y - \\hat y`}</Formula> on the other, and what shows up there is the fastest read on whether the model's assumptions hold.
+        Checking those assumptions rarely happens by staring at a formula. It happens by plotting residuals against the fitted values or against each feature. A <strong>residual plot</strong> puts <Formula>{`\\hat y`}</Formula> (or <Formula>{`x`}</Formula>) on one axis and <Formula>{`y - \\hat y`}</Formula> on the other, and what shows up there is the fastest read on whether the model's assumptions hold.
       </Paragraph>
 
       <Paragraph delay={1.60}>
-        A good fit produces a residual plot that looks like formless static, points scattered evenly above and below zero with no visible pattern and roughly constant spread left to right. That randomness is the whole point, it means whatever structure the line could capture, it captured, and what's left over really is noise. A bad fit tends to show up in one of two recognizable shapes. A curve, residuals trending negative, then positive, then negative again as <Formula>{`x`}</Formula> increases, is the signature of a linear model forced onto a nonlinear relationship, the line is missing a pattern it doesn't have the shape to represent. A funnel, residuals tightly bunched near one end of the x-axis and fanned out wide near the other, is the signature of heteroscedasticity, the violated constant-spread assumption showing up visually instead of algebraically.
+        A good fit produces a residual plot that looks like formless static, points scattered evenly above and below zero with no visible pattern and roughly constant spread left to right. That randomness is the whole point. It means whatever structure the line could capture, it captured, and what's left over really is noise. A bad fit tends to show up in one of two recognizable shapes. A curve — residuals trending negative, then positive, then negative again as <Formula>{`x`}</Formula> increases — is the signature of a linear model forced onto a nonlinear relationship. The line is missing a pattern it doesn't have the shape to represent. A funnel — residuals tightly bunched near one end of the x-axis and fanned out wide near the other — is the signature of heteroscedasticity: the violated constant-spread assumption showing up visually instead of algebraically.
       </Paragraph>
 
       <Paragraph delay={1.65}>
-        Both patterns point to a fix. A curved residual pattern usually means adding a polynomial or interaction term, or switching to a model family built for curvature. A funnel usually means transforming the target (a log transform is the common first try) or switching to a regression variant that explicitly models changing variance. Either way, the residual plot is doing something a single R-squared number can't, it shows exactly where and how the model is wrong, not just how much.
+        Both patterns point to a fix. A curved residual pattern usually means adding a polynomial or interaction term, or switching to a model family built for curvature. A funnel usually means transforming the target (a log transform is the common first try) or switching to a regression variant that explicitly models changing variance. Either way, the residual plot is doing something a single R-squared number can't: it shows exactly where and how the model is wrong, not just how much.
       </Paragraph>
 
       <Heading level={2} delay={1.70}>
@@ -188,10 +188,10 @@ print(r_squared)    # 0.81`}
       </Paragraph>
 
       <List delay={1.90}>
-        <ListItem><strong>It only ever goes up (or stays flat) as more features get added</strong>, regardless of whether those features are meaningful, since an extra column gives the optimizer one more way to fit the training data more closely. Comparing models with different numbers of features on raw R-squared rewards throwing in more columns for no real reason, adjusted R-squared exists specifically to penalize that.</ListItem>
+        <ListItem><strong>It only ever goes up (or stays flat) as more features get added</strong>, regardless of whether those features are meaningful, since an extra column gives the optimizer one more way to fit the training data more closely. Comparing models with different numbers of features on raw R-squared rewards throwing in more columns for no real reason. Adjusted R-squared exists specifically to penalize that.</ListItem>
         <ListItem><strong>A high R-squared says nothing about whether the assumptions above hold.</strong> A curved relationship crammed into a straight line, or heteroscedastic residuals, can still produce a deceptively high R-squared while the underlying fit is genuinely unreliable in specific regions of x.</ListItem>
-        <ListItem><strong>It's a summary of fit on the data it was computed on</strong>, not a guarantee of how the model performs on new data. A model can post a strong R-squared on its training set and still generalize poorly, the same overfitting story that shows up everywhere else in modeling.</ListItem>
-        <ListItem><strong>It says nothing about the size or practical relevance of the error</strong>, a huge dataset can produce a statistically real but practically tiny R-squared, and a small one can produce a large R-squared purely from having little natural variance to explain in the first place.</ListItem>
+        <ListItem><strong>It's a summary of fit on the data it was computed on</strong>, not a guarantee of how the model performs on new data. A model can post a strong R-squared on its training set and still generalize poorly. That's the same overfitting story that shows up everywhere else in modeling.</ListItem>
+        <ListItem><strong>It says nothing about the size or practical relevance of the error.</strong> A huge dataset can produce a statistically real but practically tiny R-squared, and a small one can produce a large R-squared purely from having little natural variance to explain in the first place.</ListItem>
       </List>
 
       <Paragraph delay={1.95}>
@@ -211,7 +211,7 @@ print(r_squared)    # 0.81`}
       </List>
 
       <Paragraph delay={2.10}>
-        The line through the points is never the interesting part, it's the cheapest thing to compute in the whole pipeline. What actually separates a trustworthy fit from a misleading one is everything covered above, checking that the assumptions hold, reading the residuals instead of just the summary statistic, and knowing which parts of this derivation still apply once the model stops being linear. Thanks for reading.
+        The line through the points is never the interesting part. It's the cheapest thing to compute in the whole pipeline. What actually separates a trustworthy fit from a misleading one is everything covered above, checking that the assumptions hold, reading the residuals instead of just the summary statistic, and knowing which parts of this derivation still apply once the model stops being linear. Thanks for reading.
       </Paragraph>
     </>
   ),

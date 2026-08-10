@@ -73,7 +73,7 @@ X_test, y_test = X[150:], price[150:]`}
       </Heading>
 
       <Paragraph delay={0.55}>
-        The simplest possible explanation is also the one every other method gets compared against. Fit an ordinary linear regression and each coefficient is already a complete local and global explanation at once, holding every other feature fixed, a one-unit increase in this feature changes the prediction by exactly this many dollars, everywhere in the input space, for every prediction the model makes.
+        The simplest possible explanation is also the one every other method gets compared against. Fit an ordinary linear regression and each coefficient is already a complete local and global explanation at once. Holding every other feature fixed, a one-unit increase in this feature changes the prediction by exactly this many dollars, everywhere in the input space, for every prediction the model makes.
       </Paragraph>
 
       <CodeBlock
@@ -98,7 +98,7 @@ print("test R^2:", round(lin.score(X_test, y_test), 4))
       </Heading>
 
       <Paragraph delay={0.75}>
-        A random forest doesn't have a coefficient to read off, its predictions come from averaging hundreds of trees, each one carving the input space into its own patchwork of rectangles. A <strong>partial dependence plot</strong> (PDP) recovers something coefficient-shaped anyway, sweep one feature across a grid of values, holding every other feature at each of its actual observed values, average the model's prediction at each grid point over the whole dataset, and plot the result. The curve that comes out is the model's average marginal response to that one feature, exactly the same question a linear coefficient answers, just estimated instead of read directly off a formula.
+        A random forest doesn't have a coefficient to read off, its predictions come from averaging hundreds of trees, each one carving the input space into its own patchwork of rectangles. A <strong>partial dependence plot</strong> (PDP) recovers something coefficient-shaped anyway. Sweep one feature across a grid of values, hold every other feature at its actual observed values, average the model's prediction at each grid point over the whole dataset, and plot the result. The curve that comes out is the model's average marginal response to that one feature, exactly the same question a linear coefficient answers, just estimated instead of read directly off a formula.
       </Paragraph>
 
       <CodeBlock
@@ -117,7 +117,7 @@ print(np.round(pd_result["average"][0], 2))
       />
 
       <Paragraph delay={0.85}>
-        The curve climbs steadily and close to a straight line across the whole range, from about <Formula>{`\\$218k`}</Formula> at 888 square feet to about <Formula>{`\\$641k`}</Formula> at 2,911 square feet, which is exactly what a genuinely linear underlying effect looks like when a nonparametric model is asked to rediscover it from scratch. A PDP earns its keep specifically when the true curve isn't a straight line, a feature with a threshold effect, or one that matters a lot at low values and barely at all past some point, shows up as a bend or a flattening that a single linear coefficient could never represent. The tradeoff, worth knowing before trusting one, is that averaging over every other feature's observed values can blur together combinations that never actually happen together in the real data, and can also hide the fact that the feature's effect on any one particular prediction depends on which other features that prediction happens to have.
+        The curve climbs steadily and close to a straight line across the whole range, from about <Formula>{`\\$218k`}</Formula> at 888 square feet to about <Formula>{`\\$641k`}</Formula> at 2,911 square feet, which is exactly what a genuinely linear underlying effect looks like when a nonparametric model is asked to rediscover it from scratch. A PDP earns its keep specifically when the true curve isn't a straight line. A feature with a threshold effect, or one that matters a lot at low values and barely at all past some point, shows up as a bend or a flattening that a single linear coefficient could never represent. The tradeoff, worth knowing before trusting one, is that averaging over every other feature's observed values can blur together combinations that never actually happen together in the real data, and can also hide the fact that the feature's effect on any one particular prediction depends on which other features that prediction happens to have.
       </Paragraph>
 
       <Heading level={2} delay={0.90}>
@@ -153,7 +153,7 @@ for name, mean, std in zip(["size", "bedrooms", "age", "distance"], result.impor
       />
 
       <Paragraph delay={1.15}>
-        Two things are easy to get wrong with permutation importance. It measures how much the model relied on a feature, not how much that feature actually drives the real-world outcome, a model that never learned a real effect reports zero importance for it regardless of whether that effect exists in the world. And it splits credit unpredictably between correlated features, if two columns carry almost the same information, shuffling either one alone barely hurts the score because the model can lean on the other, which can make two genuinely important, correlated features both look unimportant on their own.
+        Two things are easy to get wrong with permutation importance. First, it measures how much the model relied on a feature, not how much that feature actually drives the real-world outcome. A model that never learned a real effect reports zero importance for it, regardless of whether that effect exists in the world. Second, it splits credit unpredictably between correlated features. If two columns carry almost the same information, shuffling either one alone barely hurts the score, because the model can lean on the other. That can make two genuinely important, correlated features both look unimportant on their own.
       </Paragraph>
 
       <Heading level={2} delay={1.20}>
@@ -161,7 +161,7 @@ for name, mean, std in zip(["size", "bedrooms", "age", "distance"], result.impor
       </Heading>
 
       <Paragraph delay={1.25}>
-        Permutation importance and a PDP both answer global questions. Explaining one specific prediction, why this house came out at $185,600 and not the training average, needs a local method, and the most principled one borrows an idea from cooperative game theory called the <strong>Shapley value</strong>. Treat the four features as players cooperating to produce a prediction, starting from a baseline (the model's average prediction with no information at all) and asking how much each player's presence changes the payout. The fair way to split credit, the Shapley value's whole contribution, is to average each feature's marginal effect over every possible order the features could have been "added" to the model, so that a feature which only matters when paired with another one still gets credit proportional to how much it actually changed the outcome across all those orderings, rather than however the credit happens to fall out from whichever single order a naive analysis defaults to.
+        Permutation importance and a PDP both answer global questions. Explaining one specific prediction, why this house came out at $185,600 and not the training average, needs a local method, and the most principled one borrows an idea from cooperative game theory called the <strong>Shapley value</strong>. Treat the four features as players cooperating to produce a prediction, starting from a baseline (the model's average prediction with no information at all) and asking how much each player's presence changes the payout. The fair way to split credit, the Shapley value's whole contribution, is to average each feature's marginal effect over every possible order the features could have been "added" to the model. That way, a feature which only matters when paired with another one still gets credit proportional to how much it actually changed the outcome across all those orderings, rather than however the credit happens to fall out from whichever single order a naive analysis defaults to.
       </Paragraph>
 
       <Paragraph delay={1.30}>
@@ -203,7 +203,7 @@ print("direct prediction:", round(pred0, 3))                                    
       />
 
       <Paragraph delay={1.55}>
-        That additive, exact structure is a property of linear models specifically. A real SHAP value on a random forest or a neural network is an approximation to this same idea, computed by sampling feature orderings or by faster model-specific shortcuts, and it inherits the same guarantee only approximately, in the limit of enough samples the contributions still add up to the difference between the baseline and the actual prediction, but any single run carries some sampling noise. The intuition, though, transfers cleanly, a Shapley-style attribution is answering "how much did this feature's actual value, compared to its typical value, push this one prediction away from average," which is a genuinely different question from permutation importance's "how much does the model rely on this feature overall."
+        That additive, exact structure is a property of linear models specifically. A real SHAP value on a random forest or a neural network is an approximation to this same idea, computed by sampling feature orderings or by faster model-specific shortcuts. It inherits the same guarantee only approximately: in the limit of enough samples, the contributions still add up to the difference between the baseline and the actual prediction, but any single run carries some sampling noise. The intuition, though, transfers cleanly, a Shapley-style attribution is answering "how much did this feature's actual value, compared to its typical value, push this one prediction away from average," which is a genuinely different question from permutation importance's "how much does the model rely on this feature overall."
       </Paragraph>
 
       <Heading level={2} delay={1.60}>
@@ -230,7 +230,7 @@ print("check:", round(lin.predict([[x0[0], x0[1], x0[2], needed_distance]])[0], 
       />
 
       <Paragraph delay={1.75}>
-        This house is 4.99 kilometers from the nearest transit stop and predicted at <Formula>{`\\$185.6k`}</Formula>. Solving the linear model's equation for whatever distance would bring the prediction down to <Formula>{`\\$150k`}</Formula>, holding size, bedrooms, and age exactly where they are, gives 8.92 kilometers. That's a genuinely actionable statement in a way none of the attribution numbers above quite are, "move about four kilometers farther from transit and this model's estimate drops by roughly $35,600." For a linear model the algebra is trivial, one variable, solve directly. For a black box the same question usually gets answered by search instead, perturb the input repeatedly, nudging it toward the desired outcome while penalizing how far the search strays from the original row, and stop at the smallest change found that flips the prediction. The two counterfactuals answer the same kind of question with different amounts of certainty behind the answer, exact algebra for a linear model, a best-effort search result for anything more complex.
+        This house is 4.99 kilometers from the nearest transit stop and predicted at <Formula>{`\\$185.6k`}</Formula>. Solving the linear model's equation for whatever distance would bring the prediction down to <Formula>{`\\$150k`}</Formula>, holding size, bedrooms, and age exactly where they are, gives 8.92 kilometers. That's a genuinely actionable statement in a way none of the attribution numbers above quite are, "move about four kilometers farther from transit and this model's estimate drops by roughly $35,600." For a linear model the algebra is trivial, one variable, solve directly. For a black box, the same question usually gets answered by search instead. Perturb the input repeatedly, nudging it toward the desired outcome while penalizing how far the search strays from the original row, and stop at the smallest change found that flips the prediction. The two counterfactuals answer the same kind of question with different amounts of certainty behind the answer, exact algebra for a linear model, a best-effort search result for anything more complex.
       </Paragraph>
 
       <Heading level={2} delay={1.80}>
@@ -238,7 +238,7 @@ print("check:", round(lin.predict([[x0[0], x0[1], x0[2], needed_distance]])[0], 
       </Heading>
 
       <Paragraph delay={1.85}>
-        Every method so far explains a black box while leaving it exactly as complicated as it was. A <strong>surrogate model</strong> takes a different approach entirely, train a genuinely interpretable model, usually a shallow decision tree or a linear model, not on the true labels, but on the black box's own predictions. If the surrogate can reproduce what the black box outputs closely enough, its simple, readable structure becomes a stand-in explanation for the more complex model it was trained to imitate.
+        Every method so far explains a black box while leaving it exactly as complicated as it was. A <strong>surrogate model</strong> takes a different approach entirely. Train a genuinely interpretable model, usually a shallow decision tree or a linear model, not on the true labels, but on the black box's own predictions. If the surrogate can reproduce what the black box outputs closely enough, its simple, readable structure becomes a stand-in explanation for the more complex model it was trained to imitate.
       </Paragraph>
 
       <CodeBlock
@@ -258,7 +258,7 @@ print("surrogate fidelity vs the random forest's own predictions:", round(fideli
       />
 
       <Paragraph delay={1.95}>
-        The shallow tree recovers <Formula>{`97.6\\%`}</Formula> of the variance in the random forest's own predictions, using nothing but repeated threshold splits on <InlineCode>size</InlineCode>, exactly the feature permutation importance already flagged as dominant. Reading the printed tree shows something genuinely useful, small houses under about 922 square feet get the lowest predicted band, and each successive size threshold steps the prediction up to the next band, an honest, human-readable sketch of what the forest is doing overall, even though the forest itself never made a single hard threshold decision anywhere in its own internals.
+        The shallow tree recovers <Formula>{`97.6\\%`}</Formula> of the variance in the random forest's own predictions, using nothing but repeated threshold splits on <InlineCode>size</InlineCode>, exactly the feature permutation importance already flagged as dominant. Reading the printed tree shows something genuinely useful: small houses under about 922 square feet get the lowest predicted band, and each successive size threshold steps the prediction up to the next band. It's an honest, human-readable sketch of what the forest is doing overall, even though the forest itself never made a single hard threshold decision anywhere in its own internals.
       </Paragraph>
 
       <Paragraph delay={2.00}>
@@ -288,7 +288,7 @@ r_pert = permutation_importance(rf_pert, X_test, y_test, n_repeats=30, random_st
       />
 
       <Paragraph delay={2.20}>
-        In this particular case the ranking barely moves, size still dominates by roughly the same margin after retraining on a slightly different sample, which is what happens when one feature's real effect is large enough to swamp everything else regardless of exactly which rows the model happened to see. That reassuring result doesn't generalize to every dataset. The moment two or more features carry genuinely overlapping information, correlated features that could each explain roughly the same variance, a small change in which rows get sampled, or even just a different random seed in the model itself, can flip which of those correlated features an importance ranking or a Shapley value credits more. Neither answer is wrong exactly, both features really were available to lean on, but the specific split of credit between them is far more sensitive to incidental noise than the prediction itself ever was. Treating a single explanation run as the final word on which feature matters, without checking whether it holds up under a resample or a different random seed, is one of the more common ways an explanation ends up more confident than it has any right to be.
+        In this particular case the ranking barely moves, size still dominates by roughly the same margin after retraining on a slightly different sample, which is what happens when one feature's real effect is large enough to swamp everything else regardless of exactly which rows the model happened to see. That reassuring result doesn't generalize to every dataset. The moment two or more features carry genuinely overlapping information, correlated features that could each explain roughly the same variance, things get less stable. A small change in which rows get sampled, or even just a different random seed in the model itself, can flip which of those correlated features an importance ranking or a Shapley value credits more. Neither answer is wrong exactly, both features really were available to lean on, but the specific split of credit between them is far more sensitive to incidental noise than the prediction itself ever was. Treating a single explanation run as the final word on which feature matters, without checking whether it holds up under a resample or a different random seed, is one of the more common ways an explanation ends up more confident than it has any right to be.
       </Paragraph>
 
       <Heading level={2} delay={2.25}>
