@@ -1,4 +1,13 @@
 import { BlogPostData } from "./types";
+import { searchSemanticRetrievalAnn } from "./search-semantic-retrieval-ann";
+import { profilingAcceleratingTraining } from "./profiling-accelerating-training";
+import { distributedTraining } from "./distributed-training";
+import { mixedPrecisionGradientAccumulationActivationCheckpointing } from "./mixed-precision-gradient-accumulation-activation-checkpointing";
+import { pruningSparsityQuantization } from "./pruning-sparsity-quantization";
+import { knowledgeDistillation } from "./knowledge-distillation";
+import { curriculumLearningSamplingHardExampleMining } from "./curriculum-learning-sampling-hard-example-mining";
+import { selfSupervisedPretraining } from "./self-supervised-pretraining";
+import { transferLearningFineTuning } from "./transfer-learning-fine-tuning";
 import { exampleShowcase } from "./example-showcase";
 import { internExp } from "./intern-exp";
 import { contrastiveLearning } from "./contrastive-learning";
@@ -70,6 +79,15 @@ import { activationsInitializationGradientFlow } from "./activations-initializat
 import { embeddingsRepresentationLearning } from "./embeddings-representation-learning";
 
 export const blogPosts: Record<string, BlogPostData> = {
+  "search-semantic-retrieval-ann": searchSemanticRetrievalAnn,
+  "profiling-accelerating-training": profilingAcceleratingTraining,
+  "distributed-training": distributedTraining,
+  "mixed-precision-gradient-accumulation-activation-checkpointing": mixedPrecisionGradientAccumulationActivationCheckpointing,
+  "pruning-sparsity-quantization": pruningSparsityQuantization,
+  "knowledge-distillation": knowledgeDistillation,
+  "curriculum-learning-sampling-hard-example-mining": curriculumLearningSamplingHardExampleMining,
+  "self-supervised-pretraining": selfSupervisedPretraining,
+  "transfer-learning-fine-tuning": transferLearningFineTuning,
   "embeddings-representation-learning": embeddingsRepresentationLearning,
   "activations-initialization-gradient-flow": activationsInitializationGradientFlow,
   "attention-and-transformers": attentionAndTransformers,

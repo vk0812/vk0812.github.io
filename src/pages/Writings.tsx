@@ -15,6 +15,15 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "search-semantic-retrieval-ann", title: "Search, Semantic Retrieval, and Approximate Nearest Neighbors (ANN)", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "profiling-accelerating-training", title: "Profiling and Accelerating Training", date: "09/08", tag: "Machine Learning", year: 2026 },
+  { id: "distributed-training", title: "Distributed Training", date: "08/08", tag: "Machine Learning", year: 2026 },
+  { id: "mixed-precision-gradient-accumulation-activation-checkpointing", title: "Mixed Precision, Gradient Accumulation, and Activation Checkpointing", date: "07/08", tag: "Machine Learning", year: 2026 },
+  { id: "pruning-sparsity-quantization", title: "Pruning, Sparsity, and Quantization", date: "06/08", tag: "Machine Learning", year: 2026 },
+  { id: "knowledge-distillation", title: "Knowledge Distillation", date: "05/08", tag: "Machine Learning", year: 2026 },
+  { id: "curriculum-learning-sampling-hard-example-mining", title: "Curriculum Learning, Sampling, and Hard-Example Mining", date: "04/08", tag: "Machine Learning", year: 2026 },
+  { id: "self-supervised-pretraining", title: "Self-Supervised Pretraining", date: "03/08", tag: "Machine Learning", year: 2026 },
+  { id: "transfer-learning-fine-tuning", title: "Transfer Learning and Fine-Tuning", date: "02/08", tag: "Machine Learning", year: 2026 },
   { id: "embeddings-representation-learning", title: "Embeddings and Representation Learning", date: "01/08", tag: "Machine Learning", year: 2026 },
   { id: "activations-initialization-gradient-flow", title: "Activations, Initialization, and Gradient Flow", date: "01/08", tag: "Machine Learning", year: 2026 },
   { id: "attention-and-transformers", title: "Attention and Transformers", date: "01/08", tag: "Machine Learning", year: 2026 },
