@@ -34,7 +34,7 @@ The two reference posts that define the voice are `src/content/posts/intern-exp.
 - Mix short and long sentences. Drop one-line punches occasionally ("That's it." or "Six lines of real work.").
 - Concrete beats abstract. If the reference material has an example (a dog photo, a number, a code snippet), use it explicitly in the prose.
 
-**Clarity, one idea per sentence, important.** The site's recent System Design posts (`designing-ticketmaster.tsx`, `designing-typeahead.tsx`) read easier than some of the earlier ML posts did, and a full editing pass was later needed on ~30 ML posts to fix this after the fact. Don't repeat that, write it simple the first time.
+**Clarity, one idea per sentence, important.** 
 - Default to one idea per sentence. A sentence that chains three or four clauses together with commas ("X does A, which means B, so the model ends up doing C, and that's why D matters") is a comma splice, split it into two or three shorter sentences instead, even if that makes the post a little longer. Length is not the thing being optimized, ease of reading is.
 - Watch for idea jumps, a sentence or paragraph that moves from concept A to concept B without a bridge sentence connecting them. If a reader would have to stop and reread to see how B follows from A, add the missing connective sentence rather than trusting the reader to infer it.
 - Favor plain, common words over formal or academic phrasing when both say the same thing ("shows" over "demonstrates", "because" over "given that", "use" over "utilize"). This is the same "smart friend over coffee" register the Tone section already asks for, applied at the word-choice level too.
