@@ -15,6 +15,26 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "llm-and-agent-security", title: "LLM and Agent Security", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "agents-planning-and-memory", title: "Agents, Planning, and Memory", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "llm-evaluation", title: "LLM Evaluation", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "efficient-llm-serving", title: "Efficient LLM Serving", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "generation-decoding-strategies", title: "Generation and Decoding Strategies", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "reasoning-model-post-training", title: "Reasoning-Model Post-Training", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "direct-preference-optimization", title: "Direct Preference Optimization and Related Objectives", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "reinforcement-learning-from-human-feedback", title: "Reinforcement Learning from Human Feedback", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "lora-qlora-parameter-efficient-fine-tuning", title: "LoRA, QLoRA, and Parameter-Efficient Fine-Tuning", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "supervised-fine-tuning", title: "Supervised Fine-Tuning", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "transformer-language-models-in-detail", title: "Transformer Language Models in Detail", date: "11/08", tag: "Machine Learning", year: 2026 },
+  { id: "reward-design-safe-exploration-rl-evaluation", title: "Reward Design, Safe Exploration, and RL Evaluation", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "model-based-multi-agent-hierarchical-rl", title: "Model-Based, Multi-Agent, and Hierarchical RL", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "offline-rl-imitation-learning", title: "Offline Reinforcement Learning and Imitation Learning", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "actor-critic-proximal-policy-optimization", title: "Actor-Critic Methods and Proximal Policy Optimization", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "policy-gradients", title: "Policy Gradients", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "deep-q-learning", title: "Deep Q-Learning", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "monte-carlo-temporal-difference-learning", title: "Monte Carlo and Temporal-Difference Learning", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "markov-decision-processes-dynamic-programming", title: "Markov Decision Processes and Dynamic Programming", date: "10/08", tag: "Machine Learning", year: 2026 },
+  { id: "multi-armed-bandits", title: "Multi-Armed Bandits", date: "10/08", tag: "Machine Learning", year: 2026 },
   { id: "search-semantic-retrieval-ann", title: "Search, Semantic Retrieval, and Approximate Nearest Neighbors (ANN)", date: "10/08", tag: "Machine Learning", year: 2026 },
   { id: "profiling-accelerating-training", title: "Profiling and Accelerating Training", date: "09/08", tag: "Machine Learning", year: 2026 },
   { id: "distributed-training", title: "Distributed Training", date: "08/08", tag: "Machine Learning", year: 2026 },
@@ -95,7 +115,6 @@ const blogPosts: BlogPost[] = [
 ];
 
 const tagColors: Record<string, string> = {
-  LLMs: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
   "Machine Learning": "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
   Book: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
   Intern: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
@@ -104,7 +123,6 @@ const tagColors: Record<string, string> = {
 };
 
 const tagAccent: Record<string, string> = {
-  LLMs: "bg-green-400/80 dark:bg-green-500/70",
   "Machine Learning": "bg-purple-400/80 dark:bg-purple-500/70",
   Book: "bg-yellow-400/80 dark:bg-yellow-500/70",
   Intern: "bg-blue-400/80 dark:bg-blue-500/70",

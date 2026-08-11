@@ -85,3 +85,16 @@ export { JobLifecycleDiagram, LeaseReclaimDiagram, DagReleaseDiagram } from "./a
 export { TokenLatencyRaceDiagram, ContinuousBatchingDiagram, PagedKvCacheDiagram } from "./animations/designing-chatgpt/ConceptViz";
 export { IntentFanoutDiagram, PreferenceGateDiagram, RetryBackoffDiagram } from "./animations/designing-notification-system/ConceptViz";
 export { DualWriteOutboxDiagram, WriteAheadLogDiagram, CdcTailingLogDiagram } from "./animations/change-data-capture-outbox/ConceptViz";
+export { GroupAdvantageDiagram } from "./animations/grpo/ConceptViz";
+export { StrategyComparisonPanels } from "./animations/multi-armed-bandits/ConceptViz";
+export { ProbabilityPushDiagram } from "./animations/policy-gradients/ConceptViz";
+export { DistributionShiftDiagram } from "./animations/offline-rl-imitation-learning/ConceptViz";
+export { HeadSharingDiagram, RotaryRotationDiagram } from "./animations/transformer-language-models-in-detail/ConceptViz";
+export { LossMaskDiagram } from "./animations/supervised-fine-tuning/ConceptViz";
+export { MatrixDecompositionDiagram } from "./animations/lora-qlora-parameter-efficient-fine-tuning/ConceptViz";
+export {
+  TemperatureReshapeDiagram,
+  TopKToppCutoffDiagram,
+  BeamSearchTreeDiagram,
+  SpeculativeDecodeDiagram,
+} from "./animations/generation-decoding-strategies/ConceptViz";

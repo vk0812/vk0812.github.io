@@ -1,4 +1,24 @@
 import { BlogPostData } from "./types";
+import { llmAndAgentSecurity } from "./llm-and-agent-security";
+import { agentsPlanningAndMemory } from "./agents-planning-and-memory";
+import { llmEvaluation } from "./llm-evaluation";
+import { efficientLlmServing } from "./efficient-llm-serving";
+import { generationDecodingStrategies } from "./generation-decoding-strategies";
+import { reasoningModelPostTraining } from "./reasoning-model-post-training";
+import { directPreferenceOptimization } from "./direct-preference-optimization";
+import { reinforcementLearningFromHumanFeedback } from "./reinforcement-learning-from-human-feedback";
+import { loraQloraParameterEfficientFineTuning } from "./lora-qlora-parameter-efficient-fine-tuning";
+import { supervisedFineTuning } from "./supervised-fine-tuning";
+import { transformerLanguageModelsInDetail } from "./transformer-language-models-in-detail";
+import { rewardDesignSafeExplorationRlEvaluation } from "./reward-design-safe-exploration-rl-evaluation";
+import { modelBasedMultiAgentHierarchicalRl } from "./model-based-multi-agent-hierarchical-rl";
+import { offlineRlImitationLearning } from "./offline-rl-imitation-learning";
+import { actorCriticProximalPolicyOptimization } from "./actor-critic-proximal-policy-optimization";
+import { policyGradients } from "./policy-gradients";
+import { deepQLearning } from "./deep-q-learning";
+import { monteCarloTemporalDifferenceLearning } from "./monte-carlo-temporal-difference-learning";
+import { markovDecisionProcessesDynamicProgramming } from "./markov-decision-processes-dynamic-programming";
+import { multiArmedBandits } from "./multi-armed-bandits";
 import { searchSemanticRetrievalAnn } from "./search-semantic-retrieval-ann";
 import { profilingAcceleratingTraining } from "./profiling-accelerating-training";
 import { distributedTraining } from "./distributed-training";
@@ -79,6 +99,26 @@ import { activationsInitializationGradientFlow } from "./activations-initializat
 import { embeddingsRepresentationLearning } from "./embeddings-representation-learning";
 
 export const blogPosts: Record<string, BlogPostData> = {
+  "llm-and-agent-security": llmAndAgentSecurity,
+  "agents-planning-and-memory": agentsPlanningAndMemory,
+  "llm-evaluation": llmEvaluation,
+  "efficient-llm-serving": efficientLlmServing,
+  "generation-decoding-strategies": generationDecodingStrategies,
+  "reasoning-model-post-training": reasoningModelPostTraining,
+  "direct-preference-optimization": directPreferenceOptimization,
+  "reinforcement-learning-from-human-feedback": reinforcementLearningFromHumanFeedback,
+  "lora-qlora-parameter-efficient-fine-tuning": loraQloraParameterEfficientFineTuning,
+  "supervised-fine-tuning": supervisedFineTuning,
+  "transformer-language-models-in-detail": transformerLanguageModelsInDetail,
+  "reward-design-safe-exploration-rl-evaluation": rewardDesignSafeExplorationRlEvaluation,
+  "model-based-multi-agent-hierarchical-rl": modelBasedMultiAgentHierarchicalRl,
+  "offline-rl-imitation-learning": offlineRlImitationLearning,
+  "actor-critic-proximal-policy-optimization": actorCriticProximalPolicyOptimization,
+  "policy-gradients": policyGradients,
+  "deep-q-learning": deepQLearning,
+  "monte-carlo-temporal-difference-learning": monteCarloTemporalDifferenceLearning,
+  "markov-decision-processes-dynamic-programming": markovDecisionProcessesDynamicProgramming,
+  "multi-armed-bandits": multiArmedBandits,
   "search-semantic-retrieval-ann": searchSemanticRetrievalAnn,
   "profiling-accelerating-training": profilingAcceleratingTraining,
   "distributed-training": distributedTraining,
