@@ -1,4 +1,8 @@
 import { BlogPostData } from "./types";
+import { toolUseFunctionCallingAndMcp } from "./tool-use-function-calling-and-mcp";
+import { retrievalAugmentedGeneration } from "./retrieval-augmented-generation";
+import { multimodalAndAnyToAnyModels } from "./multimodal-and-any-to-any-models";
+import { mixtureOfExpertsAndSparseModels } from "./mixture-of-experts-and-sparse-models";
 import { llmAndAgentSecurity } from "./llm-and-agent-security";
 import { agentsPlanningAndMemory } from "./agents-planning-and-memory";
 import { llmEvaluation } from "./llm-evaluation";
@@ -100,6 +104,10 @@ import { activationsInitializationGradientFlow } from "./activations-initializat
 import { embeddingsRepresentationLearning } from "./embeddings-representation-learning";
 
 export const blogPosts: Record<string, BlogPostData> = {
+  "tool-use-function-calling-and-mcp": toolUseFunctionCallingAndMcp,
+  "retrieval-augmented-generation": retrievalAugmentedGeneration,
+  "multimodal-and-any-to-any-models": multimodalAndAnyToAnyModels,
+  "mixture-of-experts-and-sparse-models": mixtureOfExpertsAndSparseModels,
   "llm-and-agent-security": llmAndAgentSecurity,
   "agents-planning-and-memory": agentsPlanningAndMemory,
   "llm-evaluation": llmEvaluation,

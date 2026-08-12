@@ -7,6 +7,7 @@ Usage:
 The JSON format is intentionally renderer-agnostic:
 
 {
+  "canvas": {"width": 900, "height": 520},
   "boxes": [{"id": "parent", "x": 100, "y": 40, "width": 120, "height": 50}],
   "labels": [{"id": "caption", "x": 20, "y": 10, "width": 80, "height": 16}],
   "edges": [
@@ -18,7 +19,20 @@ The JSON format is intentionally renderer-agnostic:
 Coordinates are in the same space as the visual. Edge points can describe a
 straight line or a polyline. The checker reports duplicate identities, box and
 label overlaps, missing edge targets, connector crossings through unrelated
-boxes, and endpoints placed inside any box.
+boxes, endpoints placed inside any box, and (when "canvas" is given) any box
+or label that extends past the canvas/viewBox bounds, the exact bug class
+that let an expert box and a narration string clip past a bespoke animation's
+viewBox undetected, see "Real incident" in the blogger SKILL.md.
+
+**"canvas" is required whenever the layout represents a real SVG viewBox**,
+not optional polish. Set it to the same width/height as the component's
+`viewBox="0 0 W H"`. For a GSAP timeline that swaps text into the same
+element over time (a "phase" narration line, a running counter), include a
+separate label entry for EVERY distinct string the timeline ever assigns,
+not just whatever the initial/empty value is, the longest one is usually the
+one that actually clips. Estimate each label's width with
+`scripts/estimate_text_width.py` (or the equivalent formula in SKILL.md)
+rather than guessing.
 """
 
 from __future__ import annotations
@@ -78,8 +92,29 @@ def points(edge: dict[str, Any]) -> list[Point]:
     return [(float(point[0]), float(point[1])) for point in edge["points"]]
 
 
+def check_canvas_bounds(layout: dict[str, Any]) -> list[str]:
+    canvas = layout.get("canvas")
+    if not canvas:
+        return []
+    canvas_rect: Rect = (0.0, 0.0, float(canvas["width"]), float(canvas["height"]))
+    issues: list[str] = []
+    for kind in ("boxes", "labels"):
+        for item in layout.get(kind, []):
+            item_rect = rect(item)
+            x, y, width, height = item_rect
+            cx, cy, cwidth, cheight = canvas_rect
+            if x < cx or y < cy or x + width > cx + cwidth or y + height > cy + cheight:
+                issues.append(
+                    f"{kind[:-1]} exceeds canvas bounds: {item['id']} "
+                    f"(rect {item_rect}) vs canvas {cwidth}x{cheight}"
+                )
+    return issues
+
+
 def check_layout(layout: dict[str, Any]) -> list[str]:
     issues: list[str] = []
+
+    issues.extend(check_canvas_bounds(layout))
 
     for kind in ("boxes", "labels", "edges"):
         seen: set[str] = set()

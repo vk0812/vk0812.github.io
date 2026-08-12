@@ -98,3 +98,7 @@ export {
   BeamSearchTreeDiagram,
   SpeculativeDecodeDiagram,
 } from "./animations/generation-decoding-strategies/ConceptViz";
+export { TokenRoutingOverflowDiagram } from "./animations/mixture-of-experts-and-sparse-models/ConceptViz";
+export { PatchTokenFlowDiagram } from "./animations/multimodal-and-any-to-any-models/ConceptViz";
+export { LostInMiddleDiagram } from "./animations/retrieval-augmented-generation/ConceptViz";
+export { ToolCallRoundTripDiagram } from "./animations/tool-use-function-calling-and-mcp/ConceptViz";

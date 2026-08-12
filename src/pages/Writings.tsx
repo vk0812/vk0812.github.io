@@ -15,6 +15,10 @@ interface BlogPost {
 }
 
 const blogPosts: BlogPost[] = [
+  { id: "tool-use-function-calling-and-mcp", title: "Tool Use, Function Calling, and the Model Context Protocol (MCP)", date: "12/08", tag: "Machine Learning", year: 2026 },
+  { id: "retrieval-augmented-generation", title: "Retrieval-Augmented Generation (RAG)", date: "12/08", tag: "Machine Learning", year: 2026 },
+  { id: "multimodal-and-any-to-any-models", title: "Multimodal and Any-to-Any Models", date: "12/08", tag: "Machine Learning", year: 2026 },
+  { id: "mixture-of-experts-and-sparse-models", title: "Mixture-of-Experts and Sparse Models", date: "12/08", tag: "Machine Learning", year: 2026 },
   { id: "llm-and-agent-security", title: "LLM and Agent Security", date: "11/08", tag: "Machine Learning", year: 2026 },
   { id: "agents-planning-and-memory", title: "Agents, Planning, and Memory", date: "11/08", tag: "Machine Learning", year: 2026 },
   { id: "llm-evaluation", title: "LLM Evaluation", date: "11/08", tag: "Machine Learning", year: 2026 },
