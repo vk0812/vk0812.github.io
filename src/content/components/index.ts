@@ -102,3 +102,15 @@ export { TokenRoutingOverflowDiagram } from "./animations/mixture-of-experts-and
 export { PatchTokenFlowDiagram } from "./animations/multimodal-and-any-to-any-models/ConceptViz";
 export { LostInMiddleDiagram } from "./animations/retrieval-augmented-generation/ConceptViz";
 export { ToolCallRoundTripDiagram } from "./animations/tool-use-function-calling-and-mcp/ConceptViz";
+export { PreflightRoundTripDiagram } from "./animations/cors/ConceptViz";
+export { LruEvictionDiagram } from "./animations/caching/ConceptViz";
+export { WebSocketHandshakeDiagram } from "./animations/web-protocols/ConceptViz";
+export { QuorumOverlapDiagram } from "./animations/quorum/ConceptViz";
+export { AlgorithmDistributorDiagram } from "./animations/load-balancing/ConceptViz";
+export { CapTriangleDiagram } from "./animations/cap-theorem/ConceptViz";
+export { SyncAsyncTimingDiagram } from "./animations/redundancy-and-replication/ConceptViz";
+export { QueueFlowDiagram } from "./animations/message-queues/ConceptViz";
+export { HeartbeatPulseDiagram } from "./animations/heartbeat-and-checksum/ConceptViz";
+export { HashRingDiagram } from "./animations/consistent-hashing/ConceptViz";
+export { BitArrayDiagram } from "./animations/bloom-filters/ConceptViz";
+export { TokenBucketDiagram, WindowBoundaryDiagram } from "./animations/rate-limiting/ConceptViz";
