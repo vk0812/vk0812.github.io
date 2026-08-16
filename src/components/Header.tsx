@@ -8,6 +8,7 @@ interface NavItem {
   label: string;
   type: "route" | "anchor" | "external";
   to: string;
+  newTab?: boolean;
 }
 
 const Header = () => {
@@ -21,8 +22,8 @@ const Header = () => {
     { label: "Home", type: "route", to: "/" },
     { label: "About", type: "anchor", to: onHome ? "#about" : "/#about" },
     { label: "Contact", type: "anchor", to: onHome ? "#contact" : "/#contact" },
-    { label: "Resume", type: "external", to: "/Vidit_Khazanchi_Resume.pdf" },
-    { label: "Writings", type: "route", to: "/writings" },
+    { label: "Resume", type: "external", to: "/Vidit_Khazanchi_Resume.pdf", newTab: true },
+    { label: "Writings", type: "external", to: "https://softwarebutsimple.com/" },
   ];
 
   const toggleTheme = () => {
@@ -61,8 +62,8 @@ const Header = () => {
         <a
           key={item.label}
           href={item.to}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={item.newTab ? "_blank" : undefined}
+          rel={item.newTab ? "noopener noreferrer" : undefined}
           className={className}
           onClick={() => setMobileOpen(false)}
         >

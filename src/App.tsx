@@ -7,13 +7,20 @@ import { ThemeProvider } from "next-themes";
 import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import Index from "./pages/Index";
-import Writings from "./pages/Writings";
-import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import PageWrapper from "./components/PageWrapper";
 import RecallSitePage from "./pages/recall";
 
 const queryClient = new QueryClient();
+const WRITINGS_URL = "https://softwarebutsimple.com/";
+
+const WritingsRedirect = () => {
+  useEffect(() => {
+    window.location.replace(WRITINGS_URL);
+  }, []);
+
+  return null;
+};
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -29,8 +36,7 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
-        <Route path="/writings" element={<PageWrapper><Writings /></PageWrapper>} />
-        <Route path="/writings/:slug" element={<PageWrapper><BlogPost /></PageWrapper>} />
+        <Route path="/writings/*" element={<WritingsRedirect />} />
         {/* Recall product site — isolated, owns its own nav/footer */}
         <Route path="/recall" element={<RecallSitePage />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
