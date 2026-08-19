@@ -1,38 +1,35 @@
 #!/usr/bin/env python3
-"""Check boxes, labels, and SVG connector geometry from a JSON layout.
+"""Offline geometry checks for bespoke SVG and GSAP visuals.
 
 Usage:
     python3 scripts/check-svg-layout.py layout.json
 
-The JSON format is intentionally renderer-agnostic:
+The input may describe one layout directly or several under a top-level
+`layouts` array. Coordinates use the visual's own SVG viewBox space.
 
-{
-  "canvas": {"width": 900, "height": 520},
-  "boxes": [{"id": "parent", "x": 100, "y": 40, "width": 120, "height": 50}],
-  "labels": [{"id": "caption", "x": 20, "y": 10, "width": 80, "height": 16}],
-  "edges": [
-    {"id": "parent-child", "from": "parent", "to": "child",
-     "points": [[160, 90], [160, 120]]}
-  ]
-}
+Text can be described in two ways. Existing width/height rectangles remain
+supported. New visuals should prefer text-aware labels such as:
 
-Coordinates are in the same space as the visual. Edge points can describe a
-straight line or a polyline. The checker reports duplicate identities, box and
-label overlaps, missing edge targets, connector crossings through unrelated
-boxes, endpoints placed inside any box, and (when "canvas" is given) any box
-or label that extends past the canvas/viewBox bounds, the exact bug class
-that let an expert box and a narration string clip past a bespoke animation's
-viewBox undetected, see "Real incident" in the blogger SKILL.md.
+    {
+      "id": "approval-sub",
+      "text": "explicit boundary crossing",
+      "preset": "viz-label-sm",
+      "x": 760,
+      "y": 262,
+      "anchor": "middle",
+      "inside": "approval",
+      "padding": 8
+    }
 
-**"canvas" is required whenever the layout represents a real SVG viewBox**,
-not optional polish. Set it to the same width/height as the component's
-`viewBox="0 0 W H"`. For a GSAP timeline that swaps text into the same
-element over time (a "phase" narration line, a running counter), include a
-separate label entry for EVERY distinct string the timeline ever assigns,
-not just whatever the initial/empty value is, the longest one is usually the
-one that actually clips. Estimate each label's width with
-`scripts/estimate_text_width.py` (or the equivalent formula in SKILL.md)
-rather than guessing.
+When `text` and `preset` are present, width is estimated conservatively with
+`estimate_text_width.py`. This catches the common failure where a centered
+label looks fine in source but renders wider than its containing box.
+
+Boxes may declare `inside` when they are intentionally nested. Labels may
+declare `inside` to require containment in a particular box, and
+`allow_overlap_with` for deliberate boundary-label crossings. Edges may use
+`allow_cross` for deliberate crossings such as a line that exits a sandbox
+boundary. These exceptions must be explicit rather than silently ignored.
 """
 
 from __future__ import annotations
@@ -43,18 +40,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from estimate_text_width import PRESETS, estimate_width  # noqa: E402
 
 Point = tuple[float, float]
 Rect = tuple[float, float, float, float]
 
 
 def rect(item: dict[str, Any]) -> Rect:
-    return (float(item["x"]), float(item["y"]), float(item["width"]), float(item["height"]))
-
-
-def contains(r: Rect, p: Point) -> bool:
-    x, y, width, height = r
-    return x < p[0] < x + width and y < p[1] < y + height
+    return float(item["x"]), float(item["y"]), float(item["width"]), float(item["height"])
 
 
 def overlaps(a: Rect, b: Rect) -> bool:
@@ -63,8 +57,38 @@ def overlaps(a: Rect, b: Rect) -> bool:
     return ax < bx + bw and ax + aw > bx and ay < by + bh and ay + ah > by
 
 
+def contains_rect(outer: Rect, inner: Rect, padding: float = 0) -> bool:
+    ox, oy, ow, oh = outer
+    ix, iy, iw, ih = inner
+    return (
+        ix >= ox + padding
+        and iy >= oy + padding
+        and ix + iw <= ox + ow - padding
+        and iy + ih <= oy + oh - padding
+    )
+
+
+def label_rect(item: dict[str, Any]) -> Rect:
+    if "width" in item and "height" in item:
+        return rect(item)
+    if "text" not in item or "preset" not in item:
+        raise ValueError(f"label {item.get('id')} needs width/height or text/preset")
+    preset = item["preset"]
+    if preset not in PRESETS:
+        raise ValueError(f"label {item.get('id')} uses unknown preset {preset}")
+    style = PRESETS[preset]
+    width = estimate_width(item["text"], **style)
+    font_size = float(style["font_size"])
+    height = font_size * 1.3
+    x = float(item["x"])
+    baseline = float(item["y"])
+    anchor = item.get("anchor", "start")
+    left = x - width / 2 if anchor == "middle" else x - width if anchor == "end" else x
+    top = baseline - height
+    return left, top, width, height
+
+
 def segment_hits_rect(start: Point, end: Point, box: Rect) -> bool:
-    """Use Liang-Barsky clipping to detect interior segment intersections."""
     x, y, width, height = box
     dx = end[0] - start[0]
     dy = end[1] - start[1]
@@ -88,105 +112,119 @@ def segment_hits_rect(start: Point, end: Point, box: Rect) -> bool:
     return lower < upper and upper > 0 and lower < 1
 
 
-def points(edge: dict[str, Any]) -> list[Point]:
-    return [(float(point[0]), float(point[1])) for point in edge["points"]]
+def check_one(layout: dict[str, Any]) -> list[str]:
+    name = layout.get("name", "layout")
+    issues: list[str] = []
+    box_defs = {item["id"]: item for item in layout.get("boxes", [])}
+    boxes = {item_id: rect(item) for item_id, item in box_defs.items()}
+    label_defs = {item["id"]: item for item in layout.get("labels", [])}
 
+    try:
+        labels = {item_id: label_rect(item) for item_id, item in label_defs.items()}
+    except ValueError as error:
+        return [f"{name}: {error}"]
 
-def check_canvas_bounds(layout: dict[str, Any]) -> list[str]:
+    def ancestors(box_id: str) -> set[str]:
+        found: set[str] = set()
+        current = box_id
+        while current in box_defs and box_defs[current].get("inside"):
+            current = box_defs[current]["inside"]
+            if current in found:
+                issues.append(f"{name}: cyclic box nesting involving {current}")
+                break
+            found.add(current)
+        return found
+
     canvas = layout.get("canvas")
-    if not canvas:
-        return []
-    canvas_rect: Rect = (0.0, 0.0, float(canvas["width"]), float(canvas["height"]))
-    issues: list[str] = []
-    for kind in ("boxes", "labels"):
-        for item in layout.get(kind, []):
-            item_rect = rect(item)
-            x, y, width, height = item_rect
-            cx, cy, cwidth, cheight = canvas_rect
-            if x < cx or y < cy or x + width > cx + cwidth or y + height > cy + cheight:
-                issues.append(
-                    f"{kind[:-1]} exceeds canvas bounds: {item['id']} "
-                    f"(rect {item_rect}) vs canvas {cwidth}x{cheight}"
-                )
-    return issues
+    if canvas:
+        canvas_rect: Rect = (0.0, 0.0, float(canvas["width"]), float(canvas["height"]))
+        for kind, items in (("box", boxes), ("label", labels)):
+            for item_id, item_rect in items.items():
+                if not contains_rect(canvas_rect, item_rect):
+                    issues.append(f"{name}: {kind} exceeds canvas: {item_id} {item_rect}")
 
+    ids = list(boxes)
+    for index, first_id in enumerate(ids):
+        for second_id in ids[index + 1 :]:
+            if box_defs[first_id].get("inside") == second_id or box_defs[second_id].get("inside") == first_id:
+                continue
+            if overlaps(boxes[first_id], boxes[second_id]):
+                issues.append(f"{name}: box overlap: {first_id} with {second_id}")
 
-def check_layout(layout: dict[str, Any]) -> list[str]:
-    issues: list[str] = []
+    for label_id, label_box in labels.items():
+        definition = label_defs[label_id]
+        inside = definition.get("inside")
+        ignored = set(definition.get("allow_overlap_with", []))
+        if inside:
+            if inside not in boxes:
+                issues.append(f"{name}: label {label_id} references missing container {inside}")
+            else:
+                padding = float(definition.get("padding", 6))
+                if not contains_rect(boxes[inside], label_box, padding):
+                    issues.append(
+                        f"{name}: label escapes box: {label_id} not safely inside {inside}; "
+                        f"label={label_box} box={boxes[inside]} padding={padding}"
+                    )
+                ignored |= {inside} | ancestors(inside)
+        for box_id, box_rect in boxes.items():
+            if box_id in ignored:
+                continue
+            if overlaps(label_box, box_rect):
+                issues.append(f"{name}: label overlap: {label_id} with box {box_id}")
 
-    issues.extend(check_canvas_bounds(layout))
-
-    for kind in ("boxes", "labels", "edges"):
-        seen: set[str] = set()
-        for item in layout.get(kind, []):
-            item_id = item["id"]
-            if item_id in seen:
-                issues.append(f"duplicate {kind[:-1]} id: {item_id}")
-            seen.add(item_id)
-
-    boxes = {item["id"]: (item, rect(item)) for item in layout.get("boxes", [])}
-    labels = {item["id"]: (item, rect(item)) for item in layout.get("labels", [])}
-
-    box_items = list(boxes.items())
-    for index, (first_id, (_, first_rect)) in enumerate(box_items):
-        for second_id, (_, second_rect) in box_items[index + 1 :]:
-            if overlaps(first_rect, second_rect):
-                issues.append(f"box overlap: {first_id} with {second_id}")
-
-    label_items = list(labels.items())
-    for label_id, (_, label_rect) in label_items:
-        for box_id, (_, box_rect) in boxes.items():
-            if overlaps(label_rect, box_rect):
-                issues.append(f"label overlap: {label_id} with box {box_id}")
-    for index, (first_id, (_, first_rect)) in enumerate(label_items):
-        for second_id, (_, second_rect) in label_items[index + 1 :]:
-            if overlaps(first_rect, second_rect):
-                issues.append(f"label overlap: {first_id} with {second_id}")
+    label_ids = list(labels)
+    for index, first_id in enumerate(label_ids):
+        for second_id in label_ids[index + 1 :]:
+            if overlaps(labels[first_id], labels[second_id]):
+                issues.append(f"{name}: label overlap: {first_id} with {second_id}")
 
     for edge in layout.get("edges", []):
         edge_id = edge["id"]
-        edge_points = points(edge)
-        if len(edge_points) < 2:
-            issues.append(f"edge has fewer than two points: {edge_id}")
+        points = [(float(x), float(y)) for x, y in edge.get("points", [])]
+        if len(points) < 2:
+            issues.append(f"{name}: edge has fewer than two points: {edge_id}")
             continue
         for endpoint_name in ("from", "to"):
             endpoint_id = edge.get(endpoint_name)
             if endpoint_id and endpoint_id not in boxes:
-                issues.append(f"edge references missing box: {edge_id} {endpoint_name}={endpoint_id}")
-
-        for endpoint_name, endpoint in (("start", edge_points[0]), ("end", edge_points[-1])):
-            for box_id, (_, box_rect) in boxes.items():
-                if contains(box_rect, endpoint):
-                    issues.append(f"edge endpoint inside box: {edge_id} {endpoint_name} in {box_id}")
-
-        for start, end in zip(edge_points, edge_points[1:]):
-            for box_id, (_, box_rect) in boxes.items():
-                if box_id in {edge.get("from"), edge.get("to")}:
+                issues.append(f"{name}: edge references missing box: {edge_id} {endpoint_name}={endpoint_id}")
+        ignored = {edge.get("from"), edge.get("to")} | set(edge.get("allow_cross", []))
+        if edge.get("from"):
+            ignored |= ancestors(edge["from"])
+        if edge.get("to"):
+            ignored |= ancestors(edge["to"])
+        for start, end in zip(points, points[1:]):
+            for box_id, box_rect in boxes.items():
+                if box_id in ignored:
                     continue
                 if segment_hits_rect(start, end, box_rect):
-                    issues.append(f"edge crosses unrelated box: {edge_id} through {box_id}")
+                    issues.append(f"{name}: edge crosses unrelated box: {edge_id} through {box_id}")
 
     return issues
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("layout", type=Path, help="JSON layout file to check")
     args = parser.parse_args()
 
     try:
-        layout = json.loads(args.layout.read_text())
+        data = json.loads(args.layout.read_text())
     except (OSError, json.JSONDecodeError) as error:
         print(f"Unable to read layout: {error}", file=sys.stderr)
         return 2
 
-    issues = check_layout(layout)
+    layouts = data.get("layouts", [data])
+    issues: list[str] = []
+    for layout in layouts:
+        issues.extend(check_one(layout))
+
     if issues:
         print("\n".join(issues))
-        print(f"{len(issues)} layout issue(s) found", file=sys.stderr)
+        print(f"{len(issues)} visual layout issue(s) found", file=sys.stderr)
         return 1
 
-    print("No box, label, endpoint, or connector collisions found")
+    print(f"No visual layout issues found across {len(layouts)} layout(s)")
     return 0
 
 

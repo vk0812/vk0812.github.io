@@ -227,10 +227,10 @@ All animation-aware components take a `delay` prop. Convention: start at `0.1`, 
 | Component | Use for | Props |
 |---|---|---|
 | `Paragraph` | Body text | `delay` |
-| `Heading` | Section headers | `level={2 \| 3 \| 4}`, `delay` |
+| `Heading` | Section headers | `level={2 | 3 | 4}`, `delay` |
 | `InlineCode` | Single-token code in prose | (children only) |
 | `CodeBlock` | Multi-line code with syntax highlighting | `language` (e.g. `"Python"`, `"TypeScript"`), `code`, `delay` |
-| `BlogImage` | Figures, screenshots | `src`, `alt`, `caption`, `size={"sm"\|"md"\|"lg"\|"full"}` (default `md`), `delay` |
+| `BlogImage` | Figures, screenshots | `src`, `alt`, `caption`, `size={"sm"|"md"|"lg"|"full"}` (default `md`), `delay` |
 | `Formula` | KaTeX-rendered math | `block` (display mode), `delay`. Children must be a LaTeX string. |
 | `Quote` | Pull quote | `author`, `delay` |
 | `List` + `ListItem` | Bulleted, numbered list | `ordered` on `List`, `delay` on `List` |
@@ -430,3 +430,143 @@ The script assigns `0.1`, `0.15`, `0.2`, and so on to normal content in source o
 - Don't crop reference images or embed them as-is in case study posts. The user supplies them to communicate the desired content and composition. Recreate the figure with code, and only use the original image as a final asset when the post is not a case study and the user explicitly intends it as an image.
 - A new **static, data-driven figure** in `figures/` (a table, a card grid, a stat row) is fine to add directly when the post's content genuinely needs it, follow the existing `StaticCards.tsx` pattern (props in, plain Tailwind out, no gsap). A new **bespoke animation** in `animations/<slug>/`, or any component that introduces a new interaction pattern, gets proposed to the user first.
 - Don't add internal links to other posts on this site (no `<Link to="/writings/...">` in post prose). Reference a related concept by name in plain text if it helps, without turning it into a hyperlink.
+
+# Visual density and verification
+
+These additional rules are mandatory for technical posts, especially system design, AI, ML, LLM, agent, and infrastructure explainers. They capture the visual failures and fixes that have already happened in real posts so those mistakes do not repeat.
+
+## Visual density is part of the writing
+
+A technical post should not read as a long wall of prose with one diagram dropped in the middle. Visuals are part of the explanation and part of the pacing.
+
+- For a normal 1500 to 2500 word technical post, actively look for roughly **3 to 5 distinct visual teaching moments** when the content genuinely supports them. This is a target, not a quota. A short post may need fewer. A dense system-design case study may need more.
+- Distribute visuals through the article near the mechanism they explain. Do not cluster every figure in one section.
+- Use a mix of static and animated visuals. Motion is useful when movement, ordering, a race, a state transition, or a changing boundary is itself the idea. A static SVG, comparison, table, schema, or architecture figure is better when the reader only needs a stable mental model.
+- Prefer a useful static figure over a decorative animation. Prefer a bespoke animation over a generic reused architecture only when the mechanism is genuinely different.
+- Every figure must compress information, clarify a relationship, or make a mechanism easier to retain. Do not add filler visuals simply to hit a count.
+- Update the post's figure count metadata to match the actual in-article visual count.
+
+A useful review question after the prose is drafted is: **where does the reader have to hold several relationships in working memory at once?** Those are the best places for another figure.
+
+## Every Software But Simple post needs a topic-specific library card visual
+
+The library/landing card artwork is part of the post, not an optional finishing touch. A new SBS post must never ship using the generic/default card visual.
+
+For Software But Simple, inspect `app/content/figures/card/` and the `cardFigures` lookup. Add a compact, topic-specific card SVG for the new slug and register it in the current card-figure barrel/batch structure. The card should communicate the core mechanism at a glance rather than being a cropped copy of a full article figure.
+
+Card visual rules:
+
+- **Design for the real 200 x 110 thumbnail, not for a zoomed-in screenshot.** The card must still read cleanly when seen at normal library size.
+- Prefer **shape language over text**. A strong card often needs zero visible labels. Use recognizable silhouettes, arrows, boundaries, locks, queues, nodes, bars, or other topic-specific geometry instead of trying to explain the post in miniature.
+- If text is used, keep it to one or two extremely short tokens. Never put a sentence, long noun phrase, or full mechanism name inside a card node.
+- Keep the composition simple. Usually 2 to 5 primary shapes plus connectors is enough. If the card needs several labels to be understandable, simplify the idea instead of shrinking the text.
+- Use the same `.viz-*` semantic classes and theme-aware palette as the rest of the site.
+- Prefer a distinct silhouette for each topic so the library does not become a grid of near-identical mini architecture diagrams.
+- No generic placeholder/default visual for a newly created post.
+- The card visual does **not** count toward the article body's `figures` metadata unless it is also rendered inside the article.
+- Before finalizing, verify the slug exists in `cardFigures` and that the library/landing card lookup resolves to the topic-specific artwork rather than its fallback.
+
+**Thumbnail QA is separate from article-figure QA.** A card can be mathematically inside its SVG and still be visually broken because typography becomes huge relative to the tiny composition. Inspect the card at its actual rendered library size, not only enlarged. Reject it if text dominates the drawing, touches arrows, approaches box edges, or is only legible when zoomed in. When browser access is unavailable, render the 200 x 110 SVG at approximately its real CSS display size and inspect that small image. Do not validate a thumbnail solely from an enlarged diagnostic render.
+
+Treat missing or unreadable card artwork as an incomplete registration bug, the same way a missing post metadata or lazy-loader entry is incomplete.
+
+## Hand-positioned SVGs require a companion layout spec
+
+Every bespoke SVG or GSAP visual that manually positions boxes, labels, and connectors must have a companion layout JSON during verification. It can live beside the animation when it is useful for future edits, or in a temporary scratch directory for a one-off check.
+
+The JSON should describe the real viewBox dimensions and the exact geometry used by the component. Use a top-level `layouts` array when one post has several bespoke visuals.
+
+For text inside a box, do not guess a width manually. Describe the actual string and text preset. Use `inside` to make containment a hard invariant and require real padding. The checker must fail if the conservative string footprint can escape the intended box. Nested boxes can use `inside` too. Deliberate boundary crossings must be explicit with `allow_overlap_with` for labels or `allow_cross` for edges. Never globally ignore a collision class just to silence one intentional crossing.
+
+## Mandatory offline QA, works without a dev server
+
+For every bespoke visual, run the repository geometry checker before a PR is considered complete:
+
+```bash
+python3 scripts/check-svg-layout.py /tmp/<slug>-visual-layout.json
+```
+
+It must return zero issues. It checks canvas bounds, box collisions, text-to-box containment, label collisions, missing edge targets, and connectors crossing unrelated boxes.
+
+Then render the same layout to disposable diagnostics:
+
+```bash
+python3 scripts/render-svg-layout.py /tmp/<slug>-visual-layout.json
+```
+
+The renderer writes SVG diagnostics and, when CairoSVG is available, PNGs under `/tmp/blogger-visual-qa` by default. Inspect every generated image. Check text clearance, box sizing, arrow direction, whitespace, and whether the composition still communicates the intended idea. Delete the temporary directory after a clean pass. Keep it only when debugging a failure.
+
+This offline path is the required fallback when a private repository cannot be cloned or a full React server cannot be launched. Do not claim a visual was verified merely from coordinates by eye.
+
+## Browser-level QA when a checkout is available
+
+Offline geometry is necessary, but the browser is the final authority because real font metrics, responsive scaling, theme CSS, and GSAP state only exist at runtime.
+
+For Software But Simple, start the local server and run:
+
+```bash
+node scripts/visual-audit.mjs <slug>
+```
+
+The audit should check the post in desktop light, mobile light, and desktop dark modes, inspect SVG text with real `getBBox()` measurements at several animation checkpoints, and fail on text leaving the viewBox, text escaping a filled node, text collisions, or a non-responsive SVG. Successful runs should delete their temporary screenshots. Failed runs should keep screenshots and an audit report in `/tmp` for debugging.
+
+Also manually inspect the screenshots when a visual is complicated. Automated geometry cannot decide whether an arrow points to the semantically wrong node or whether a diagram is technically valid but visually confusing.
+
+Never say a visual was browser-tested when only the offline checker was run. State exactly which layer passed.
+
+## Minimum spacing rules
+
+- Text intentionally inside a box should have at least 8 to 12 viewBox units of horizontal and vertical safety margin after conservative width estimation.
+- Text outside a box should have at least 25 to 30 viewBox units of visible breathing room from the nearest box edge when practical.
+- Edge labels need visible clearance from the stroke they describe.
+- A connector must not pass through an unrelated box merely because the endpoints are correct.
+- Phase narration must be checked using the longest string the timeline can display, not the initial empty string.
+- Replay must restore every animated opacity, transform, stroke dash, and temporary label state before rebuilding the timeline.
+- Responsive SVGs must use a stable viewBox and `preserveAspectRatio`; do not solve mobile by shrinking text until it is unreadable.
+
+## Software But Simple adaptation and registration
+
+When this skill is used to author in `vk0812/sbs`, preserve the writing rules above but adapt the file workflow to the actual SBS repository instead of blindly using `vk0812.github.io` paths.
+
+A new SBS post is incomplete until all current registration points are wired. At minimum, verify:
+
+- the post TSX exists under `app/content/posts/`
+- `app/content/posts/meta.ts` has the new `PostMeta` entry in the appropriate topic/category position
+- `app/content/posts/index.ts` has the matching lazy loader/export registration
+- any new animation/figure exports required by the current SBS structure are present
+- the metadata `figures` count equals the actual in-article visual count
+- a topic-specific library card SVG exists under `app/content/figures/card/` and the `cardFigures` lookup resolves the slug to it
+- the article can be discovered and opened through the normal local library/read flow rather than existing only as an orphan TSX file
+
+Preserve all existing registry entries. Add only the new entry. Never regenerate or rewrite a whole registry merely to add one post when a small insertion is sufficient.
+
+## Daily PR workflow for automated SBS drafts
+
+When the user explicitly asks the skill to create the GitHub draft/PR rather than just author files, the completion standard is stricter:
+
+- Build the entire draft first, including prose, all in-article visuals, card artwork, registration, exports, layout specs, and fixes discovered during QA.
+- The final branch must contain **exactly one commit relative to `main`** for the daily draft. Intermediate connector commits are implementation noise. Squash/rewrite before handing back the PR.
+- Never merge to `main` and never deploy. Open a draft PR only.
+- The branch/PR is not complete until the article is locally discoverable by registration and the custom card no longer falls back to default artwork.
+- Report exactly which visual-QA layers actually ran. Do not call an offline geometry pass a browser/runtime pass.
+
+## Review before commit
+
+Before the final commit, verify all of the following:
+
+- the post has enough visual teaching moments for its length and density
+- visuals are distributed near the prose they explain
+- the new slug has a topic-specific library/landing card visual and does not fall back to the default
+- the card remains clean and understandable at its actual thumbnail size, not only when enlarged
+- every bespoke visual has passed the offline checker
+- temporary diagnostic PNGs have been inspected
+- browser-level audit has been run when a checkout/server is available
+- figure count metadata matches the in-article visuals
+- no text collides, clips, escapes a box, or leaves the viewBox
+- no arrow crosses the wrong box or communicates the wrong relationship
+- light and dark themes remain legible
+- replay works from a clean state
+- all registry and loader entries needed for normal local navigation exist
+- if a PR is being created, it contains one complete commit rather than a chain of incremental fix commits
+
+Visual QA is a blocking requirement. Fix the figure before opening the PR rather than leaving visual cleanup as post-processing for the user.
